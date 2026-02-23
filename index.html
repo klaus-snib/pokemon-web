@@ -2,18 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Pokemon Roguelike</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="game-container">
         <header>
-            <h1>🎮 Pokemon Roguelike</h1>
+            <h1>Pokemon Roguelike</h1>
             <div id="stats-bar">
                 <span id="badges">Badges: 0/8</span>
                 <span id="money">$1000</span>
                 <span id="strikes">❤️❤️❤️</span>
+                <span id="events-count">Events: 0</span>
             </div>
         </header>
 
@@ -40,7 +41,7 @@
                 <div id="message-log">
                     <div class="message">Welcome to Pokemon Roguelike!</div>
                 </div>
-                
+
                 <div id="team-display">
                     <h3>Your Team</h3>
                     <div id="team-pokemon">
@@ -64,6 +65,7 @@
                         <div id="enemy-info">
                             <span id="enemy-name">???</span>
                             <div class="hp-bar"><div id="enemy-hp" class="hp-fill"></div></div>
+                            <span id="enemy-hp-text" class="hp-text"></span>
                         </div>
                     </div>
                     <div id="player-pokemon" class="pokemon-display">
@@ -71,12 +73,14 @@
                         <div id="player-info">
                             <span id="player-name">???</span>
                             <div class="hp-bar"><div id="player-hp" class="hp-fill"></div></div>
+                            <span id="player-hp-text" class="hp-text"></span>
                         </div>
                     </div>
                 </div>
                 <div id="battle-actions">
                     <button class="action-btn" data-action="fight">⚔️ Fight</button>
                     <button class="action-btn" data-action="catch">🔴 Catch</button>
+                    <button class="action-btn" data-action="item">💊 Item</button>
                     <button class="action-btn" data-action="switch">🔄 Switch</button>
                     <button class="action-btn" data-action="run">🏃 Run</button>
                 </div>
@@ -96,6 +100,7 @@
             <button id="bag-btn">🎒 Bag</button>
             <button id="team-btn">👥 Team</button>
             <button id="stats-btn">📊 Stats</button>
+            <button id="achievements-btn">🏆</button>
         </footer>
     </div>
 
