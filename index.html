@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Roguelike</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <header>
+            <h1>🎮 Pokemon Roguelike</h1>
+            <div id="stats-bar">
+                <span id="badges">Badges: 0/8</span>
+                <span id="money">$1000</span>
+                <span id="strikes">❤️❤️❤️</span>
+            </div>
+        </header>
+
+        <main>
+            <!-- Start Screen -->
+            <div id="start-screen" class="screen active">
+                <h2>Choose Your Starter!</h2>
+                <div id="starter-selection" class="pokemon-grid">
+                    <!-- Populated by JS -->
+                </div>
+                <div id="difficulty-selection">
+                    <label>Difficulty:</label>
+                    <select id="difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="normal" selected>Normal</option>
+                        <option value="hard">Hard</option>
+                        <option value="nightmare">Nightmare</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Main Game Screen -->
+            <div id="game-screen" class="screen">
+                <div id="message-log">
+                    <div class="message">Welcome to Pokemon Roguelike!</div>
+                </div>
+                
+                <div id="team-display">
+                    <h3>Your Team</h3>
+                    <div id="team-pokemon">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div id="route-choices">
+                    <h3>Choose Your Path</h3>
+                    <div id="choices">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Battle Screen -->
+            <div id="battle-screen" class="screen">
+                <div id="battle-field">
+                    <div id="enemy-pokemon" class="pokemon-display">
+                        <img id="enemy-sprite" src="" alt="Enemy">
+                        <div id="enemy-info">
+                            <span id="enemy-name">???</span>
+                            <div class="hp-bar"><div id="enemy-hp" class="hp-fill"></div></div>
+                        </div>
+                    </div>
+                    <div id="player-pokemon" class="pokemon-display">
+                        <img id="player-sprite" src="" alt="Your Pokemon">
+                        <div id="player-info">
+                            <span id="player-name">???</span>
+                            <div class="hp-bar"><div id="player-hp" class="hp-fill"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="battle-actions">
+                    <button class="action-btn" data-action="fight">⚔️ Fight</button>
+                    <button class="action-btn" data-action="catch">🔴 Catch</button>
+                    <button class="action-btn" data-action="switch">🔄 Switch</button>
+                    <button class="action-btn" data-action="run">🏃 Run</button>
+                </div>
+                <div id="battle-log"></div>
+            </div>
+
+            <!-- Game Over Screen -->
+            <div id="gameover-screen" class="screen">
+                <h2 id="gameover-title">Game Over</h2>
+                <p id="gameover-message"></p>
+                <div id="run-stats"></div>
+                <button id="restart-btn">Play Again</button>
+            </div>
+        </main>
+
+        <footer>
+            <button id="bag-btn">🎒 Bag</button>
+            <button id="team-btn">👥 Team</button>
+            <button id="stats-btn">📊 Stats</button>
+        </footer>
+    </div>
+
+    <!-- Modal for bag/team/etc -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="pokemon-data.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
