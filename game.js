@@ -255,6 +255,11 @@ class Game {
             this.rivalStarter = data.rivalStarter;
             this.lastRivalBadge = data.lastRivalBadge || 0;
             this.activePokemonIndex = data.activePokemonIndex || 0;
+            // Ensure active Pokemon is alive
+            if (!this.team[this.activePokemonIndex] || !this.team[this.activePokemonIndex].isAlive) {
+                const alive = this.team.findIndex(p => p.isAlive);
+                this.activePokemonIndex = alive >= 0 ? alive : 0;
+            }
             this.postGame = data.postGame || false;
             this.towerWins = data.towerWins || 0;
             this.state = 'playing';
@@ -620,10 +625,25 @@ class Game {
         let speed = 3;
         let animFrame = null;
         let gameActive = false;
+        let cleaned = false;
 
         const needle = body.querySelector('.fishing-needle');
         const zone = body.querySelector('.fishing-zone');
         const castBtn = body.querySelector('.fishing-cast-btn');
+
+        const cleanup = () => {
+            if (cleaned) return;
+            cleaned = true;
+            if (animFrame) cancelAnimationFrame(animFrame);
+        };
+
+        // Clean up if modal is closed via X button
+        const closeHandler = () => {
+            cleanup();
+            modal.classList.add('hidden');
+            this.generateChoices();
+        };
+        body.closest('.modal-content').querySelector('.close-btn').onclick = closeHandler;
 
         // Random zone position (30% width, random start)
         const zoneStart = 10 + Math.random() * 50;
@@ -644,7 +664,7 @@ class Game {
                 castBtn.textContent = 'Reel In!';
                 animate();
             } else {
-                cancelAnimationFrame(animFrame);
+                cleanup();
                 modal.classList.add('hidden');
 
                 // Check if in zone
@@ -826,6 +846,8 @@ class Game {
                 const xp = Math.floor(active.level * 15 + 30);
                 this.giveExp(xp, active);
                 this.addMessage(`${active.displayName} trained and gained ${xp} XP!`, 'success');
+            } else {
+                this.addMessage('All your Pokemon are too tired to train...', 'warning');
             }
         });
 
@@ -1039,6 +1061,19 @@ class Game {
     startBattle() {
         this.state = 'battle';
         this.activePokemonIndex = this.team.findIndex(p => p.isAlive);
+        if (this.activePokemonIndex === -1) {
+            // All fainted, shouldn't happen but handle gracefully
+            this.strikes--;
+            if (this.strikes <= 0) { this.gameOver(); } else {
+                this.team.forEach(p => p.hp = p.maxHp);
+                this.activePokemonIndex = 0;
+                this.state = 'playing';
+                this.showScreen('game-screen');
+                this.updateUI();
+                this.generateChoices();
+            }
+            return;
+        }
         this.battleTurnInProgress = false;
         this.awaitingFaintSwitch = false;
 
