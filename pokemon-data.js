@@ -196,11 +196,11 @@ const TYPE_EFFECTIVENESS = {
 };
 
 function getSpriteUrl(pokemonId) {
-    const name = pokemonId.replace('_m', '-m').replace('_f', '-f');
+    const name = pokemonId.replace('nidoran_m', 'nidoranm').replace('nidoran_f', 'nidoranf').replace('_', '-');
     return `https://play.pokemonshowdown.com/sprites/gen5/${name}.png`;
 }
 
 function getBackSpriteUrl(pokemonId) {
-    const name = pokemonId.replace('_m', '-m').replace('_f', '-f');
+    const name = pokemonId.replace('nidoran_m', 'nidoranm').replace('nidoran_f', 'nidoranf').replace('_', '-');
     return `https://play.pokemonshowdown.com/sprites/gen5-back/${name}.png`;
 }
