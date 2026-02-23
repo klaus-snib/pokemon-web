@@ -21,7 +21,7 @@ class Pokemon {
     }
 
     calcXpToNext() {
-        return Math.floor(this.level * 25 + 50);
+        return Math.floor(this.level * 15 + 40);
     }
 
     get displayName() {
@@ -213,6 +213,7 @@ class Game {
             difficulty: this.difficulty,
             currentGym: this.currentGym,
             badgesNeeded: this.badgesNeeded,
+            maxEvents: this.maxEvents,
             catches: this.catches,
             fishCatches: this.fishCatches,
             battlesWon: this.battlesWon,
@@ -244,6 +245,7 @@ class Game {
             this.difficulty = data.difficulty;
             this.currentGym = data.currentGym;
             this.badgesNeeded = data.badgesNeeded;
+            this.maxEvents = data.maxEvents || 35;
             this.catches = data.catches || 0;
             this.fishCatches = data.fishCatches || 0;
             this.battlesWon = data.battlesWon || 0;
@@ -405,6 +407,7 @@ class Game {
         this.strikes = settings.strikes;
         this.maxStrikes = settings.strikes;
         this.badgesNeeded = settings.badgesNeeded;
+        this.maxEvents = settings.maxEvents || 35;
 
         // Initialize bag
         this.bag = {};
@@ -446,7 +449,8 @@ class Game {
         document.getElementById('badges').textContent = `Badges: ${this.badges}/${this.badgesNeeded}`;
         document.getElementById('money').textContent = `$${this.money}`;
         document.getElementById('strikes').textContent = '❤️'.repeat(this.strikes) + '🖤'.repeat(this.maxStrikes - this.strikes);
-        document.getElementById('events-count').textContent = `Events: ${this.eventsExplored}`;
+        const eventsLeft = this.maxEvents ? this.maxEvents - this.eventsExplored : '∞';
+        document.getElementById('events-count').textContent = `Events: ${eventsLeft} left`;
 
         const teamDiv = document.getElementById('team-pokemon');
         teamDiv.innerHTML = '';
@@ -490,14 +494,21 @@ class Game {
     // ===== EVENT GENERATION =====
     generateChoices() {
         const choices = [];
+        const outOfEvents = this.maxEvents && this.eventsExplored >= this.maxEvents;
 
-        // Always offer wild battle
-        choices.push({
-            icon: '🌿',
-            text: 'Explore Tall Grass',
-            desc: 'Encounter wild Pokemon',
-            action: () => this.wildBattle()
-        });
+        if (outOfEvents) {
+            this.addMessage('No more time to explore — gym battles only!', 'warning');
+        }
+
+        // Wild battle (not available if out of events)
+        if (!outOfEvents) {
+            choices.push({
+                icon: '🌿',
+                text: 'Explore Tall Grass',
+                desc: 'Encounter wild Pokemon',
+                action: () => this.wildBattle()
+            });
+        }
 
         // Gym challenge if ready
         if (this.currentGym < GYM_LEADERS.length && !this.postGame) {
@@ -550,11 +561,16 @@ class Game {
             });
         }
 
-        // Pick 1-2 random events
-        const shuffled = eventPool.sort(() => Math.random() - 0.5);
-        const numEvents = Math.random() < 0.4 ? 2 : 1;
-        for (let i = 0; i < numEvents && i < shuffled.length; i++) {
-            choices.push(shuffled[i]);
+        // Pick 1-2 random events (always allow healing even when out of events)
+        if (outOfEvents) {
+            // Only Pokemon Center when out of events
+            choices.push({ icon: '🏥', text: 'Pokemon Center', desc: 'Heal your team', action: () => this.healTeam() });
+        } else {
+            const shuffled = eventPool.sort(() => Math.random() - 0.5);
+            const numEvents = Math.random() < 0.4 ? 2 : 1;
+            for (let i = 0; i < numEvents && i < shuffled.length; i++) {
+                choices.push(shuffled[i]);
+            }
         }
 
         this.renderChoices(choices);
@@ -1135,8 +1151,10 @@ class Game {
         const runBtn = document.querySelector('[data-action="run"]');
 
         if (catchBtn) {
-            catchBtn.disabled = this.battleType !== 'wild';
-            catchBtn.style.opacity = this.battleType !== 'wild' ? '0.5' : '1';
+            const balls = (this.bag['pokeball'] || 0) + (this.bag['great_ball'] || 0);
+            catchBtn.disabled = this.battleType !== 'wild' || balls === 0;
+            catchBtn.style.opacity = (this.battleType !== 'wild' || balls === 0) ? '0.5' : '1';
+            catchBtn.textContent = `🔴 Catch (${balls})`;
         }
         if (runBtn) {
             const canRun = this.battleType === 'wild';
