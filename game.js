@@ -1358,6 +1358,7 @@ class Game {
         // All fainted
         this.strikes--;
         this.addMessage('All your Pokemon fainted!', 'danger');
+        this.addMessage(`You lost a life! ${this.strikes} remaining. Your team has been healed.`, 'warning');
 
         if (this.strikes <= 0) {
             setTimeout(() => this.gameOver(), 1000);
@@ -1509,6 +1510,11 @@ class Game {
         // Legendaries are much harder to catch
         const legendaryMod = (this.battleReward && this.battleReward.legendary) ? 0.3 : 1;
         const catchRate = 0.4 * hpFactor * levelFactor * catchMod * legendaryMod;
+
+        // Catch rate hint
+        const pct = Math.min(99, Math.floor(catchRate * 100));
+        const hint = pct >= 70 ? 'Looking good!' : pct >= 40 ? 'Decent chance...' : pct >= 20 ? 'This might be tough.' : 'Very hard to catch!';
+        this.addBattleLog(`${hint} (~${pct}% chance)`);
 
         if (Math.random() < catchRate) {
             if (this.team.length < 6) {
