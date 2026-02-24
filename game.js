@@ -467,6 +467,8 @@ class Game {
                     <div class="team-slot-hp">${poke.hp}/${poke.maxHp}</div>
                 </div>
             `;
+            div.style.cursor = 'pointer';
+            div.addEventListener('click', () => this.showTeamManagement());
             teamDiv.appendChild(div);
         });
 
@@ -489,6 +491,24 @@ class Game {
         while (log.children.length > 15) {
             log.removeChild(log.lastChild);
         }
+    }
+
+    // Show a prominent event result banner (auto-dismisses after 3s)
+    showEventResult(text, type = 'info') {
+        let banner = document.getElementById('event-result-banner');
+        if (!banner) {
+            banner = document.createElement('div');
+            banner.id = 'event-result-banner';
+            const gameArea = document.getElementById('game-area');
+            gameArea.insertBefore(banner, gameArea.firstChild);
+        }
+        banner.textContent = text;
+        banner.className = `event-banner event-banner-${type} fade-in`;
+        banner.style.display = 'block';
+        clearTimeout(this._bannerTimeout);
+        this._bannerTimeout = setTimeout(() => {
+            banner.style.display = 'none';
+        }, 4000);
     }
 
     // ===== EVENT GENERATION =====
@@ -895,6 +915,9 @@ class Game {
     mysteryCave() {
         const avgLevel = this.team.reduce((s, p) => s + p.level, 0) / this.team.length;
         const roll = Math.random();
+
+        // Show cave entry
+        this.showEventResult(roll < 0.50 ? '🗻 You explore the cave and find...' : roll < 0.70 ? '🗻 Something stirs in the cave...' : '🗻 Danger in the cave!', roll < 0.50 ? 'success' : roll < 0.70 ? 'info' : 'danger');
 
         // Good outcomes (50%)
         if (roll < 0.50) {

@@ -1256,3 +1256,27 @@ footer button:active {
     margin: 0 auto 1rem;
     line-height: 1.5;
 }
+
+/* Event Result Banner */
+.event-banner {
+    text-align: center;
+    padding: 0.8rem 1rem;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    animation: bannerSlide 0.3s ease-out;
+}
+.event-banner-success { background: rgba(76, 175, 80, 0.2); border: 1px solid var(--success); color: var(--success); }
+.event-banner-danger { background: rgba(244, 67, 54, 0.2); border: 1px solid var(--danger); color: var(--danger); }
+.event-banner-info { background: rgba(33, 150, 243, 0.2); border: 1px solid #2196f3; color: #2196f3; }
+@keyframes bannerSlide {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Team slots clickable */
+.team-slot:hover {
+    outline: 2px solid var(--primary);
+    border-radius: 8px;
+}
