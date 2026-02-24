@@ -627,9 +627,10 @@ class Game {
                 <div class="choice-desc">${choice.desc}</div>
             `;
             btn.addEventListener('click', () => {
-                this.eventsExplored++;
+                const outOfEvts = this.maxEvents && this.eventsExplored >= this.maxEvents;
+                if (!outOfEvts) this.eventsExplored++;
                 // Warn when events running low
-                if (this.maxEvents) {
+                if (this.maxEvents && !outOfEvts) {
                     const left = this.maxEvents - this.eventsExplored;
                     if (left === 10) this.showEventResult('⚠️ 10 events remaining — choose wisely!', 'info');
                     else if (left === 5) this.showEventResult('⚠️ Only 5 events left!', 'danger');
@@ -2207,7 +2208,7 @@ class Game {
 
     // ===== VICTORY / GAME OVER =====
     victory() {
-        this.state = 'gameover';
+        this.state = 'victory';
         this.updateUI();
         this.unlockAchievement('champion');
         gameAudio.victory();
