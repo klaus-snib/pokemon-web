@@ -651,7 +651,7 @@ class Game {
         const avgLevel = this.team.reduce((sum, p) => sum + p.level, 0) / this.team.length;
         // Tighter level range early game (0-1 badges), wider later
         const spread = this.badges <= 1 ? 4 : 6;
-        const offset = this.badges <= 1 ? -1 : -3;
+        const offset = this.badges <= 1 ? -2 : -3;
         const level = Math.max(2, Math.floor(avgLevel + (Math.random() * spread) + offset));
 
         this.battleEnemy = new Pokemon(speciesId, level);

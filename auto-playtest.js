@@ -10,7 +10,7 @@ const STARTER = process.argv[3] || 'squirtle';
 const RUNS = parseInt(process.argv[4] || '5');
 
 async function playGame(page, difficulty, starter) {
-  await page.goto('https://klaus-snib.github.io/pokemon-web/?v=9&t=' + Date.now());
+  await page.goto('https://klaus-snib.github.io/pokemon-web/?v=10&t=' + Date.now());
   await page.waitForSelector('.starter-option', { timeout: 10000 });
   await page.waitForTimeout(500);
 
