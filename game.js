@@ -1395,10 +1395,16 @@ class Game {
             return;
         }
 
-        // Give EXP
-        const expGain = Math.floor(enemy.level * 12 + 20);
+        // Give EXP — active Pokemon gets full, team gets 40%
+        const expGain = Math.floor(enemy.level * 25 + 40);
         const active = this.team[this.activePokemonIndex];
         this.giveExp(expGain, active);
+        // Team-wide XP share (roguelike pacing — keeps backline viable)
+        this.team.forEach((p, i) => {
+            if (i !== this.activePokemonIndex && p.isAlive) {
+                this.giveExp(Math.floor(expGain * 0.4), p);
+            }
+        });
 
         // Battle rewards
         this.battlesWon++;
@@ -1411,6 +1417,9 @@ class Game {
             this.currentGym++;
             this.addMessage(`You defeated the Gym Leader and earned a badge!`, 'success');
             this.addBattleLog('Badge earned!', 'success');
+            // Big XP reward for gym victory — whole team benefits
+            const gymXp = Math.floor(enemy.level * 30 + 50);
+            this.team.forEach(p => { if (p.isAlive) this.giveExp(gymXp, p); });
 
             // Check underdog achievement
             if (active.level < enemy.level) {
