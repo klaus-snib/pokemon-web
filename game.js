@@ -1423,6 +1423,12 @@ class Game {
             const gymXp = Math.floor(enemy.level * 30 + 50);
             this.team.forEach(p => { if (p.isAlive) this.giveExp(gymXp, p); });
 
+            // Replenish event budget — each badge unlocks a new exploration phase
+            const eventsPerPhase = Math.floor(this.maxEvents / this.badgesNeeded);
+            this.eventsExplored = Math.max(0, this.eventsExplored - eventsPerPhase);
+            this.addMessage(`New area unlocked! +${eventsPerPhase} exploration events!`, 'success');
+            this.showEventResult(`🏅 Badge earned! +${eventsPerPhase} events to explore!`, 'success');
+
             // Check underdog achievement
             if (active.level < enemy.level) {
                 this.unlockAchievement('underdog');
