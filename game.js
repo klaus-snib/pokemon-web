@@ -1590,8 +1590,8 @@ class Game {
             }, 1200);
         } else {
             this.addBattleLog(`Oh no! ${enemy.name} broke free!`);
+            this.addBattleLog(`${enemy.name} retaliates while you recover the ball!`, 'warning');
             const player = this.team[this.activePokemonIndex];
-            const result = this.calculateDamage(enemy, player);
             this.addBattleLog(`${enemy.name} attacked for ${result.damage}!`);
             if (player.takeDamage(result.damage)) {
                 this.playerPokemonFainted();
