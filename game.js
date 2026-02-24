@@ -1108,8 +1108,11 @@ class Game {
         this.state = 'battle';
         this.activePokemonIndex = this.team.findIndex(p => p.isAlive);
         if (this.activePokemonIndex === -1) {
-            // All fainted, shouldn't happen but handle gracefully
+            // All fainted before battle could start (e.g. cave curse)
             this.strikes--;
+            this.addMessage('All your Pokemon fainted!', 'danger');
+            this.addMessage(`You lost a life! ${this.strikes} remaining. Your team has been healed.`, 'warning');
+            this.showEventResult(`💔 Life lost! ${this.strikes}/${this.maxStrikes} remaining`, 'danger');
             if (this.strikes <= 0) { this.gameOver(); } else {
                 this.team.forEach(p => p.hp = p.maxHp);
                 this.activePokemonIndex = 0;
@@ -1117,6 +1120,7 @@ class Game {
                 this.showScreen('game-screen');
                 this.updateUI();
                 this.generateChoices();
+                this.saveGame();
             }
             return;
         }
@@ -1403,10 +1407,11 @@ class Game {
             return;
         }
 
-        // All fainted
+        // All fainted — team wipe
         this.strikes--;
         this.addMessage('All your Pokemon fainted!', 'danger');
         this.addMessage(`You lost a life! ${this.strikes} remaining. Your team has been healed.`, 'warning');
+        this.showEventResult(`💔 Life lost! ${this.strikes}/${this.maxStrikes} remaining`, 'danger');
 
         if (this.strikes <= 0) {
             setTimeout(() => this.gameOver(), 1000);
