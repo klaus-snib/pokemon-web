@@ -2144,7 +2144,7 @@ class Game {
             <div class="victory-team">${teamHtml}</div>
             <div class="stats-grid">
                 <div class="stat-item"><span class="stat-label">Time</span><span class="stat-value">${minutes}m ${seconds}s</span></div>
-                <div class="stat-item"><span class="stat-label">Events</span><span class="stat-value">${this.eventsExplored}</span></div>
+                <div class="stat-item"><span class="stat-label">Events Used</span><span class="stat-value">${this.eventsExplored}/${this.maxEvents || '∞'}</span></div>
                 <div class="stat-item"><span class="stat-label">Caught</span><span class="stat-value">${this.catches}</span></div>
                 <div class="stat-item"><span class="stat-label">Evolutions</span><span class="stat-value">${this.evolutionCount}</span></div>
                 <div class="stat-item"><span class="stat-label">Battles Won</span><span class="stat-value">${this.battlesWon}</span></div>
@@ -2227,7 +2227,7 @@ class Game {
             <div class="stats-grid">
                 <div class="stat-item"><span class="stat-label">Badges</span><span class="stat-value">${this.badges}/${this.badgesNeeded}</span></div>
                 <div class="stat-item"><span class="stat-label">Time</span><span class="stat-value">${minutes}m ${seconds}s</span></div>
-                <div class="stat-item"><span class="stat-label">Events</span><span class="stat-value">${this.eventsExplored}</span></div>
+                <div class="stat-item"><span class="stat-label">Events Used</span><span class="stat-value">${this.eventsExplored}/${this.maxEvents || '∞'}</span></div>
                 <div class="stat-item"><span class="stat-label">Battles Won</span><span class="stat-value">${this.battlesWon}</span></div>
                 <div class="stat-item"><span class="stat-label">Caught</span><span class="stat-value">${this.catches}</span></div>
                 <div class="stat-item"><span class="stat-label">Difficulty</span><span class="stat-value">${this.difficulty}</span></div>
