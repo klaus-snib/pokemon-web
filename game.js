@@ -148,8 +148,8 @@ const NPC_TRAINERS = [
     { name: "Swimmer Lisa", team: ['staryu', 'psyduck'], levelMod: 0, reward: 400 },
     { name: "Psychic Frank", team: ['abra', 'gastly'], levelMod: 1, reward: 500 },
     { name: "Ace Trainer Zoe", team: ['pidgeotto', 'machoke', 'kadabra'], levelMod: 2, reward: 800 },
-    { name: "Cooltrainer Rex", team: ['graveler', 'haunter', 'charmeleon'], levelMod: 3, reward: 1000 },
-    { name: "Veteran Hana", team: ['gyarados', 'pidgeot', 'machoke'], levelMod: 4, reward: 1200 }
+    { name: "Cooltrainer Rex", team: ['graveler', 'haunter', 'charmeleon'], levelMod: 3, reward: 1000, minBadges: 2 },
+    { name: "Veteran Hana", team: ['gyarados', 'pidgeot', 'machoke'], levelMod: 4, reward: 1200, minBadges: 3 }
 ];
 
 const RIVAL_NAMES = ["Blue", "Silver", "Gary", "Damian"];
@@ -789,7 +789,8 @@ class Game {
         // Filter trainers appropriate for current level
         const suitable = NPC_TRAINERS.filter(t => {
             const trainerLvl = avgLevel + t.levelMod;
-            return trainerLvl >= 3 && trainerLvl <= avgLevel + 5;
+            if (t.minBadges && this.badges < t.minBadges) return false;
+            return trainerLvl >= 3 && trainerLvl <= avgLevel + 3;
         });
         const trainer = suitable.length > 0 ? suitable[Math.floor(Math.random() * suitable.length)] : NPC_TRAINERS[0];
 
@@ -1596,6 +1597,7 @@ class Game {
             setTimeout(() => {
                 this.state = 'playing';
                 this.showScreen('game-screen');
+                this.updateUI();
                 this.generateChoices();
                 this.saveGame();
             }, 500);
