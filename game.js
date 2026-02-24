@@ -452,6 +452,9 @@ class Game {
         const eventsLeft = this.maxEvents ? this.maxEvents - this.eventsExplored : '∞';
         document.getElementById('events-count').textContent = `Events: ${eventsLeft} left`;
 
+        const totalBalls = (this.bag['pokeball'] || 0) + (this.bag['great_ball'] || 0) + (this.bag['ultra_ball'] || 0);
+        document.getElementById('balls-count').textContent = `🔴 ${totalBalls}`;
+
         const teamDiv = document.getElementById('team-pokemon');
         teamDiv.innerHTML = '';
         this.team.forEach((poke, i) => {
