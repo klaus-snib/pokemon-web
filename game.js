@@ -506,8 +506,8 @@ class Game {
         if (!banner) {
             banner = document.createElement('div');
             banner.id = 'event-result-banner';
-            const gameArea = document.getElementById('game-area');
-            gameArea.insertBefore(banner, gameArea.firstChild);
+            const target = document.getElementById('game-screen') || document.querySelector('.screen:not(.hidden)') || document.body;
+            target.insertBefore(banner, target.firstChild);
         }
         banner.textContent = text;
         banner.className = `event-banner event-banner-${type} fade-in`;
