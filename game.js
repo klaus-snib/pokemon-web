@@ -53,7 +53,11 @@ class Pokemon {
             this.xp -= this.xpToNext;
             const evo = this.levelUp();
             this.xpToNext = this.calcXpToNext();
-            if (evo) evolutions.push(evo);
+            if (evo) {
+                const oldName = this.name;
+                this.evolve(evo);
+                evolutions.push({ from: oldName, to: this.name, speciesId: this.speciesId });
+            }
         }
         return evolutions;
     }
@@ -1554,13 +1558,11 @@ class Game {
         const oldLevel = pokemon.level;
         const evolutions = pokemon.addXp(amount);
 
-        for (const evoTarget of evolutions) {
-            const oldName = pokemon.name;
-            pokemon.evolve(evoTarget);
+        for (const evo of evolutions) {
             this.evolutionCount++;
             this.unlockAchievement('evolution');
-            this.addMessage(`${oldName} evolved into ${pokemon.name}!`, 'success');
-            this.showEvolutionAnimation(oldName, pokemon.name, pokemon.speciesId);
+            this.addMessage(`${evo.from} evolved into ${evo.to}!`, 'success');
+            this.showEvolutionAnimation(evo.from, evo.to, evo.speciesId);
         }
 
         if (pokemon.level > oldLevel) {
@@ -2203,6 +2205,7 @@ class Game {
     // ===== VICTORY / GAME OVER =====
     victory() {
         this.state = 'gameover';
+        this.updateUI();
         this.unlockAchievement('champion');
         gameAudio.victory();
 
