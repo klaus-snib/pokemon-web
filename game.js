@@ -590,8 +590,10 @@ class Game {
 
         // Pick 1-2 random events (always allow healing even when out of events)
         if (outOfEvents) {
-            // Only Pokemon Center when out of events
+            // Heal + train when out of exploration events (free — don't block gym progression)
             choices.push({ icon: '🏥', text: 'Pokemon Center', desc: 'Heal your team', action: () => this.healTeam() });
+            choices.push({ icon: '🏕️', text: 'Campsite', desc: 'Rest, train, or forage', action: () => this.campsite() });
+            choices.push({ icon: '🌿', text: 'Grind Wild Pokemon', desc: 'Train for the next gym', action: () => this.wildBattle() });
         } else {
             const shuffled = eventPool.sort(() => Math.random() - 0.5);
             const numEvents = Math.random() < 0.4 ? 2 : 1;
@@ -1669,11 +1671,13 @@ class Game {
             this.addBattleLog(`Oh no! ${enemy.name} broke free!`);
             this.addBattleLog(`${enemy.name} retaliates while you recover the ball!`, 'warning');
             const player = this.team[this.activePokemonIndex];
+            const result = this.calculateDamage(enemy, player);
             this.addBattleLog(`${enemy.name} attacked for ${result.damage}!`);
             if (player.takeDamage(result.damage)) {
                 this.playerPokemonFainted();
             } else {
                 this.updateBattleUI();
+                this.restoreBattleActions();
                 this.battleTurnInProgress = false;
             }
         }
