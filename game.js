@@ -610,6 +610,13 @@ class Game {
             `;
             btn.addEventListener('click', () => {
                 this.eventsExplored++;
+                // Warn when events running low
+                if (this.maxEvents) {
+                    const left = this.maxEvents - this.eventsExplored;
+                    if (left === 10) this.showEventResult('⚠️ 10 events remaining — choose wisely!', 'info');
+                    else if (left === 5) this.showEventResult('⚠️ Only 5 events left!', 'danger');
+                    else if (left === 0) this.showEventResult('🏁 No more exploration — gym battles only!', 'danger');
+                }
                 choice.action();
             });
             container.appendChild(btn);
