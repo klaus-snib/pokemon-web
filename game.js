@@ -569,13 +569,14 @@ class Game {
         }
 
         // Random events (pick 1-2)
+        const earlyGame = this.eventsExplored < 5;
         const eventPool = [
             { icon: '🏪', text: 'PokeMart', desc: 'Buy items', action: () => this.visitShop(), weight: 15 },
-            { icon: '🏥', text: 'Pokemon Center', desc: 'Heal your team', action: () => this.healTeam(), weight: 15 },
+            { icon: '🏥', text: 'Pokemon Center', desc: 'Heal your team', action: () => this.healTeam(), weight: earlyGame ? 20 : 15 },
             { icon: '🎣', text: 'Go Fishing', desc: 'Find water Pokemon', action: () => this.goFishing(), weight: 12 },
-            { icon: '🗻', text: 'Mystery Cave', desc: 'Something interesting...', action: () => this.mysteryCave(), weight: 12 },
-            { icon: '⚔️', text: 'Trainer Battle', desc: 'An NPC trainer challenges you!', action: () => this.trainerBattle(), weight: 14 },
-            { icon: '🏕️', text: 'Campsite', desc: 'Rest, train, or forage', action: () => this.campsite(), weight: 12 },
+            ...(!earlyGame ? [{ icon: '🗻', text: 'Mystery Cave', desc: 'Something interesting...', action: () => this.mysteryCave(), weight: 12 }] : []),
+            { icon: '⚔️', text: 'Trainer Battle', desc: 'An NPC trainer challenges you!', action: () => this.trainerBattle(), weight: earlyGame ? 8 : 14 },
+            { icon: '🏕️', text: 'Campsite', desc: 'Rest, train, or forage', action: () => this.campsite(), weight: earlyGame ? 18 : 12 },
         ];
 
         // Battle Tower in post-game
