@@ -18,6 +18,7 @@ class Pokemon {
         this.attack = Math.floor((base.atk * 2 * level) / 100) + 5;
         this.defense = Math.floor((base.def * 2 * level) / 100) + 5;
         this.speed = Math.floor((base.spd * 2 * level) / 100) + 5;
+        this.moves = getMovesForPokemon(this.type);
     }
 
     calcXpToNext() {
@@ -101,7 +102,8 @@ class Pokemon {
             maxHp: this.maxHp,
             attack: this.attack,
             defense: this.defense,
-            speed: this.speed
+            speed: this.speed,
+            moves: this.moves
         };
     }
 
@@ -114,6 +116,8 @@ class Pokemon {
         p.attack = data.attack;
         p.defense = data.defense;
         p.speed = data.speed;
+        // Restore moves or generate fresh (backward compat)
+        p.moves = data.moves || getMovesForPokemon(p.type);
         return p;
     }
 }
@@ -1214,7 +1218,9 @@ class Game {
         if (this.awaitingFaintSwitch && action !== 'switch') return;
 
         switch(action) {
-            case 'fight': this.doBattleRound(); break;
+            case 'fight': this.showMoveSelection(); break;
+            case 'fight0': this.doBattleRound(0); break;
+            case 'fight1': this.doBattleRound(1); break;
             case 'catch': this.tryCatch(); break;
             case 'switch': this.showSwitchMenu(); break;
             case 'item': this.showBattleItems(); break;
@@ -1222,17 +1228,22 @@ class Game {
         }
     }
 
-    calculateDamage(attacker, defender) {
-        const base = Math.floor(((2 * attacker.level / 5 + 2) * 50 * attacker.attack / defender.defense) / 50) + 2;
+    calculateDamage(attacker, defender, move = null) {
+        // Move power scales damage (default 60 for enemies without moves)
+        const movePower = move ? move.power : 60;
+        const base = Math.floor(((2 * attacker.level / 5 + 2) * movePower * attacker.attack / defender.defense) / 50) + 2;
         const variance = 0.85 + Math.random() * 0.15;
 
-        // Type effectiveness
-        const attackType = attacker.type.toLowerCase();
+        // Type effectiveness — use move type if provided, else attacker type
+        const attackType = move ? move.type : attacker.type.toLowerCase();
         const defenseType = defender.type.toLowerCase();
         let effectiveness = 1;
         if (TYPE_EFFECTIVENESS[attackType] && TYPE_EFFECTIVENESS[attackType][defenseType] !== undefined) {
             effectiveness = TYPE_EFFECTIVENESS[attackType][defenseType];
         }
+
+        // STAB bonus (1.5x if move type matches attacker type)
+        const stab = (move && move.type === attacker.type.toLowerCase()) ? 1.5 : 1;
 
         // Critical hit (6.25% chance)
         let crit = 1;
@@ -1241,24 +1252,73 @@ class Game {
         }
 
         return {
-            damage: Math.max(1, Math.floor(base * variance * effectiveness * crit)),
+            damage: Math.max(1, Math.floor(base * variance * effectiveness * stab * crit)),
             effectiveness,
-            crit: crit > 1
+            crit: crit > 1,
+            moveName: move ? move.name : 'Attack'
         };
     }
 
-    doBattleRound() {
+    showMoveSelection() {
+        if (this.battleTurnInProgress) return;
+        const player = this.team[this.activePokemonIndex];
+        const actions = document.getElementById('battle-actions');
+        actions.innerHTML = '';
+
+        player.moves.forEach((move, i) => {
+            const btn = document.createElement('button');
+            const moveType = move.type;
+            btn.className = `action-btn move-btn type-bg-${moveType}`;
+            btn.innerHTML = `${move.name}<br><small>${move.type.toUpperCase()} · ${move.power}${move.isStab ? ' · STAB' : ''}</small>`;
+            btn.addEventListener('click', () => {
+                this.selectedMove = move;
+                this.doBattleRound(i);
+            });
+            actions.appendChild(btn);
+        });
+
+        // Back button
+        const backBtn = document.createElement('button');
+        backBtn.className = 'action-btn';
+        backBtn.textContent = '← Back';
+        backBtn.addEventListener('click', () => this.restoreBattleActions());
+        actions.appendChild(backBtn);
+    }
+
+    restoreBattleActions() {
+        const actions = document.getElementById('battle-actions');
+        actions.innerHTML = `
+            <button class="action-btn" data-action="fight">⚔️ Fight</button>
+            <button class="action-btn" data-action="catch">🔴 Catch</button>
+            <button class="action-btn" data-action="switch">🔄 Switch</button>
+            <button class="action-btn" data-action="item">💊 Item</button>
+            <button class="action-btn" data-action="run">🏃 Run</button>
+        `;
+        actions.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', () => this.handleBattleAction(btn.dataset.action));
+        });
+        this.updateBattleButtons();
+    }
+
+    doBattleRound(moveIndex = 0) {
         this.battleTurnInProgress = true;
         const player = this.team[this.activePokemonIndex];
         const enemy = this.battleEnemy;
+        const playerMove = player.moves[moveIndex] || player.moves[0];
+        // Enemy picks random move (or uses default attack)
+        const enemyMove = enemy.moves ? enemy.moves[Math.floor(Math.random() * enemy.moves.length)] : null;
+
+        // Restore battle action buttons
+        this.restoreBattleActions();
 
         const playerFirst = player.speed >= enemy.speed;
 
         const doAttack = (attacker, defender, isPlayer) => {
-            const result = this.calculateDamage(attacker, defender);
+            const move = isPlayer ? playerMove : enemyMove;
+            const result = this.calculateDamage(attacker, defender, move);
             const fainted = defender.takeDamage(result.damage);
 
-            this.addBattleLog(`${attacker.displayName} dealt ${result.damage} damage!`);
+            this.addBattleLog(`${attacker.displayName} used ${result.moveName}! ${result.damage} damage!`);
 
             if (result.crit) {
                 this.addBattleLog('Critical hit!', 'warning');
@@ -1958,6 +2018,9 @@ class Game {
                     <span>ATK: ${poke.attack}</span>
                     <span>DEF: ${poke.defense}</span>
                     <span>SPD: ${poke.speed}</span>
+                </div>
+                <div class="team-card-moves">
+                    ${poke.moves.map(m => `<span class="move-tag type-bg-${m.type}">${m.name} (${m.power})</span>`).join(' ')}
                 </div>
                 <div class="team-card-actions">
                     ${i > 0 ? '<button class="team-action-btn move-up-btn" title="Move up">▲</button>' : ''}

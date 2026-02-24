@@ -195,6 +195,64 @@ const TYPE_EFFECTIVENESS = {
     fairy: { fire: 0.5, fighting: 2, poison: 0.5, dragon: 2, dark: 2, steel: 0.5 }
 };
 
+// Move pool — each type has signature moves + coverage options
+const MOVES = {
+    // STAB moves (one per type, power ~60-80)
+    normal:   { name: "Tackle",       type: "normal",   power: 60 },
+    fire:     { name: "Flamethrower", type: "fire",     power: 75 },
+    water:    { name: "Surf",         type: "water",    power: 75 },
+    grass:    { name: "Razor Leaf",   type: "grass",    power: 70 },
+    electric: { name: "Thunderbolt",  type: "electric", power: 75 },
+    ice:      { name: "Ice Beam",     type: "ice",      power: 75 },
+    fighting: { name: "Karate Chop",  type: "fighting", power: 65 },
+    poison:   { name: "Sludge Bomb",  type: "poison",   power: 70 },
+    ground:   { name: "Earthquake",   type: "ground",   power: 80 },
+    flying:   { name: "Air Slash",    type: "flying",   power: 70 },
+    psychic:  { name: "Psychic",      type: "psychic",  power: 75 },
+    bug:      { name: "X-Scissor",    type: "bug",      power: 70 },
+    rock:     { name: "Rock Slide",   type: "rock",     power: 70 },
+    ghost:    { name: "Shadow Ball",  type: "ghost",    power: 70 },
+    dragon:   { name: "Dragon Pulse", type: "dragon",   power: 75 },
+    dark:     { name: "Dark Pulse",   type: "dark",     power: 70 },
+    steel:    { name: "Iron Tail",    type: "steel",    power: 70 },
+    fairy:    { name: "Moonblast",    type: "fairy",    power: 75 },
+};
+
+// Coverage move pools — types that make good secondary coverage
+const COVERAGE_POOLS = {
+    fire:     ['ground', 'rock', 'fighting', 'dragon'],
+    water:    ['ice', 'ground', 'psychic', 'fairy'],
+    grass:    ['poison', 'ground', 'psychic', 'fairy'],
+    electric: ['ice', 'grass', 'psychic', 'fighting'],
+    normal:   ['fighting', 'ground', 'rock', 'ghost'],
+    ice:      ['water', 'ground', 'psychic', 'fighting'],
+    fighting: ['rock', 'ground', 'dark', 'steel'],
+    poison:   ['ground', 'psychic', 'dark', 'fighting'],
+    ground:   ['rock', 'fighting', 'ice', 'fire'],
+    flying:   ['fighting', 'rock', 'steel', 'fire'],
+    psychic:  ['fairy', 'fighting', 'ice', 'electric'],
+    bug:      ['flying', 'rock', 'poison', 'fighting'],
+    rock:     ['ground', 'fighting', 'water', 'steel'],
+    ghost:    ['dark', 'psychic', 'fighting', 'poison'],
+    dragon:   ['fire', 'ice', 'ground', 'steel'],
+    dark:     ['fighting', 'ghost', 'poison', 'psychic'],
+    steel:    ['rock', 'ground', 'fighting', 'fire'],
+    fairy:    ['psychic', 'fire', 'steel', 'ice'],
+};
+
+// Get two moves for a Pokemon: STAB + coverage
+function getMovesForPokemon(type) {
+    const typeKey = type.toLowerCase();
+    const stab = MOVES[typeKey] || MOVES.normal;
+    const pool = COVERAGE_POOLS[typeKey] || ['normal', 'fighting', 'ground'];
+    const coverageType = pool[Math.floor(Math.random() * pool.length)];
+    const coverage = MOVES[coverageType] || MOVES.normal;
+    return [
+        { ...stab, isStab: true },
+        { ...coverage, isStab: false }
+    ];
+}
+
 function getSpriteUrl(pokemonId) {
     const name = pokemonId.replace('nidoran_m', 'nidoranm').replace('nidoran_f', 'nidoranf').replace('_', '-');
     return `https://play.pokemonshowdown.com/sprites/gen5/${name}.png`;
