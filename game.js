@@ -321,6 +321,10 @@ class Game {
         document.getElementById('achievements-btn').addEventListener('click', () => this.showAchievements());
 
         document.getElementById('restart-btn').addEventListener('click', () => this.restart());
+        document.getElementById('sound-btn').addEventListener('click', () => {
+            const on = gameAudio.toggle();
+            document.getElementById('sound-btn').textContent = on ? '🔊' : '🔇';
+        });
 
         document.querySelectorAll('.action-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -1146,6 +1150,7 @@ class Game {
 
         const enemy = this.battleEnemy;
         this.addBattleLog(`${enemy.name} (Lv.${enemy.level}) appeared!`);
+        gameAudio.wildEncounter();
         if (this.battleEnemyTeam.length > 0) {
             this.addBattleLog(`Opponent has ${this.battleEnemyTeam.length + 1} Pokemon!`, 'warning');
         }
@@ -1322,9 +1327,11 @@ class Game {
             const fainted = defender.takeDamage(result.damage);
 
             this.addBattleLog(`${attacker.displayName} used ${result.moveName}! ${result.damage} damage!`);
+            gameAudio.attack();
 
             if (result.crit) {
                 this.addBattleLog('Critical hit!', 'warning');
+                gameAudio.crit();
                 // Screen shake on crit
                 const field = document.getElementById('battle-field');
                 field.classList.add('screen-shake');
@@ -1333,6 +1340,7 @@ class Game {
 
             if (result.effectiveness > 1) {
                 this.addBattleLog("It's super effective!", 'success');
+                gameAudio.superEffective();
                 // Flash effect
                 const target = isPlayer ? 'enemy-pokemon' : 'player-pokemon';
                 document.getElementById(target).classList.add('super-effective-flash');
@@ -1420,6 +1428,7 @@ class Game {
             this.currentGym++;
             this.addMessage(`You defeated the Gym Leader and earned a badge!`, 'success');
             this.addBattleLog('Badge earned!', 'success');
+            gameAudio.badgeEarned();
             // Big XP reward for gym victory — whole team benefits
             const gymXp = Math.floor(enemy.level * 30 + 50);
             this.team.forEach(p => { if (p.isAlive) this.giveExp(gymXp, p); });
@@ -1555,6 +1564,7 @@ class Game {
 
         if (pokemon.level > oldLevel) {
             this.addMessage(`${pokemon.displayName} grew to level ${pokemon.level}!`, 'success');
+            gameAudio.levelUp();
         }
     }
 
@@ -1656,6 +1666,7 @@ class Game {
                 this.catches++;
                 if (this.battleReward && this.battleReward.fishing) this.fishCatches++;
                 this.addBattleLog(`Gotcha! ${enemy.name} was caught!`, 'success');
+                gameAudio.catch();
                 this.addMessage(`${enemy.name} joined your team!`, 'success');
 
                 if (this.catches === 1) this.unlockAchievement('first_catch');
@@ -1676,6 +1687,7 @@ class Game {
             }, 1200);
         } else {
             this.addBattleLog(`Oh no! ${enemy.name} broke free!`);
+            gameAudio.catchFail();
             this.addBattleLog(`${enemy.name} retaliates while you recover the ball!`, 'warning');
             const player = this.team[this.activePokemonIndex];
             const result = this.calculateDamage(enemy, player);
@@ -1902,6 +1914,7 @@ class Game {
     healTeam() {
         this.team.forEach(p => p.hp = p.maxHp);
         this.addMessage('Your Pokemon are fully healed!', 'success');
+        gameAudio.heal();
         this.updateUI();
         this.generateChoices();
         this.saveGame();
@@ -2189,6 +2202,7 @@ class Game {
     victory() {
         this.state = 'gameover';
         this.unlockAchievement('champion');
+        gameAudio.victory();
 
         if (this.strikes === this.maxStrikes) this.unlockAchievement('flawless');
         if (this.strikes === 1) this.unlockAchievement('survivor');
@@ -2305,6 +2319,7 @@ class Game {
     gameOver() {
         this.state = 'gameover';
         this.deleteSave();
+        gameAudio.gameOver();
 
         const elapsed = Date.now() - this.startTime;
         const minutes = Math.floor(elapsed / 60000);
