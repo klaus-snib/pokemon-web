@@ -115,14 +115,14 @@ const WILD_POKEMON = {
 };
 
 const GYM_LEADERS = [
-    { name: "Brock", type: "Rock", badge: "Boulder Badge", level: 14 },
-    { name: "Misty", type: "Water", badge: "Cascade Badge", level: 21 },
-    { name: "Lt. Surge", type: "Electric", badge: "Thunder Badge", level: 28 },
-    { name: "Erika", type: "Grass", badge: "Rainbow Badge", level: 35 },
-    { name: "Koga", type: "Poison", badge: "Soul Badge", level: 43 },
-    { name: "Sabrina", type: "Psychic", badge: "Marsh Badge", level: 50 },
-    { name: "Blaine", type: "Fire", badge: "Volcano Badge", level: 54 },
-    { name: "Giovanni", type: "Ground", badge: "Earth Badge", level: 58 }
+    { name: "Brock", type: "Rock", badge: "Boulder Badge", level: 10 },
+    { name: "Misty", type: "Water", badge: "Cascade Badge", level: 14 },
+    { name: "Lt. Surge", type: "Electric", badge: "Thunder Badge", level: 18 },
+    { name: "Erika", type: "Grass", badge: "Rainbow Badge", level: 22 },
+    { name: "Koga", type: "Poison", badge: "Soul Badge", level: 26 },
+    { name: "Sabrina", type: "Psychic", badge: "Marsh Badge", level: 30 },
+    { name: "Blaine", type: "Fire", badge: "Volcano Badge", level: 34 },
+    { name: "Giovanni", type: "Ground", badge: "Earth Badge", level: 38 }
 ];
 
 const ITEMS = {
