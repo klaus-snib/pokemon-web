@@ -2592,6 +2592,16 @@ class Game {
             </div>
         `).join('');
 
+        // Build gym leader lineup display
+        const gymHtml = GYM_LEADERS.map((g, i) => {
+            const defeated = i < this.currentGym;
+            return `<span class="gym-tag ${defeated ? 'gym-defeated' : 'gym-undefeated'}" title="${g.badge} — ${g.region}">${g.name} (${g.type})</span>`;
+        }).join(' ');
+
+        // E4 lineup
+        const e4Html = this.eliteFour.map(e => `<span class="gym-tag gym-defeated" title="${e.region}">${e.name}</span>`).join(' ');
+        const champHtml = this.champion ? `<span class="gym-tag gym-defeated" title="${this.champion.region}">👑 ${this.champion.name}</span>` : '';
+
         document.getElementById('run-stats').innerHTML = `
             <h3>Run Summary</h3>
             <div class="victory-team">${teamHtml}</div>
@@ -2605,6 +2615,9 @@ class Game {
                 <div class="stat-item"><span class="stat-label">Difficulty</span><span class="stat-value">${this.difficulty}</span></div>
                 <div class="stat-item"><span class="stat-label">Money</span><span class="stat-value">$${this.money}</span></div>
             </div>
+            <h4 style="margin-top:1rem">Gym Leaders Faced</h4>
+            <div class="gym-lineup">${gymHtml}</div>
+            ${e4Html ? `<h4 style="margin-top:0.5rem">Elite Four</h4><div class="gym-lineup">${e4Html} ${champHtml}</div>` : ''}
         `;
 
         // Add continue exploring button
@@ -2677,6 +2690,11 @@ class Game {
         document.getElementById('gameover-title').textContent = '💀 Game Over';
         document.getElementById('gameover-title').className = 'defeat';
         document.getElementById('gameover-message').textContent = 'You ran out of strikes!';
+        const goGymHtml = GYM_LEADERS.map((g, i) => {
+            const defeated = i < this.currentGym;
+            return `<span class="gym-tag ${defeated ? 'gym-defeated' : 'gym-undefeated'}" title="${g.badge} — ${g.region}">${g.name} (${g.type})</span>`;
+        }).join(' ');
+
         document.getElementById('run-stats').innerHTML = `
             <div class="stats-grid">
                 <div class="stat-item"><span class="stat-label">Badges</span><span class="stat-value">${this.badges}/${this.badgesNeeded}</span></div>
@@ -2686,6 +2704,8 @@ class Game {
                 <div class="stat-item"><span class="stat-label">Caught</span><span class="stat-value">${this.catches}</span></div>
                 <div class="stat-item"><span class="stat-label">Difficulty</span><span class="stat-value">${this.difficulty}</span></div>
             </div>
+            <h4 style="margin-top:1rem">Gym Leaders</h4>
+            <div class="gym-lineup">${goGymHtml}</div>
         `;
     }
 
