@@ -123,6 +123,36 @@ const POKEMON_DATA = {
     larvitar: { name: "Larvitar", type: "Rock", baseStats: { hp: 50, atk: 64, def: 50, spd: 41 }, evolves: { level: 30, into: "pupitar" } },
     pupitar: { name: "Pupitar", type: "Rock", baseStats: { hp: 70, atk: 84, def: 70, spd: 51 }, evolves: null },
 
+    // Gen 3 Wild Pokemon
+    zigzagoon: { name: "Zigzagoon", type: "Normal", baseStats: { hp: 38, atk: 30, def: 41, spd: 60 }, evolves: { level: 20, into: "linoone" } },
+    linoone: { name: "Linoone", type: "Normal", baseStats: { hp: 78, atk: 70, def: 61, spd: 100 }, evolves: null },
+    lotad: { name: "Lotad", type: "Water", baseStats: { hp: 40, atk: 30, def: 30, spd: 30 }, evolves: { level: 14, into: "lombre" } },
+    lombre: { name: "Lombre", type: "Water", baseStats: { hp: 60, atk: 50, def: 50, spd: 50 }, evolves: null },
+    seedot: { name: "Seedot", type: "Grass", baseStats: { hp: 40, atk: 40, def: 50, spd: 30 }, evolves: { level: 14, into: "nuzleaf" } },
+    nuzleaf: { name: "Nuzleaf", type: "Grass", baseStats: { hp: 70, atk: 70, def: 40, spd: 60 }, evolves: null },
+    ralts: { name: "Ralts", type: "Psychic", baseStats: { hp: 28, atk: 25, def: 25, spd: 40 }, evolves: { level: 20, into: "kirlia" } },
+    kirlia: { name: "Kirlia", type: "Psychic", baseStats: { hp: 38, atk: 35, def: 35, spd: 50 }, evolves: { level: 30, into: "gardevoir" } },
+    gardevoir: { name: "Gardevoir", type: "Psychic", baseStats: { hp: 68, atk: 65, def: 65, spd: 80 }, evolves: null },
+    shroomish: { name: "Shroomish", type: "Grass", baseStats: { hp: 60, atk: 40, def: 60, spd: 35 }, evolves: { level: 23, into: "breloom" } },
+    breloom: { name: "Breloom", type: "Fighting", baseStats: { hp: 60, atk: 130, def: 80, spd: 70 }, evolves: null },
+    aron: { name: "Aron", type: "Rock", baseStats: { hp: 50, atk: 70, def: 100, spd: 30 }, evolves: { level: 32, into: "lairon" } },
+    lairon: { name: "Lairon", type: "Rock", baseStats: { hp: 60, atk: 90, def: 140, spd: 40 }, evolves: null },
+    electrike: { name: "Electrike", type: "Electric", baseStats: { hp: 40, atk: 45, def: 40, spd: 65 }, evolves: { level: 26, into: "manectric" } },
+    manectric: { name: "Manectric", type: "Electric", baseStats: { hp: 70, atk: 75, def: 60, spd: 105 }, evolves: null },
+    carvanha: { name: "Carvanha", type: "Water", baseStats: { hp: 45, atk: 90, def: 20, spd: 65 }, evolves: { level: 30, into: "sharpedo" } },
+    sharpedo: { name: "Sharpedo", type: "Water", baseStats: { hp: 70, atk: 120, def: 40, spd: 95 }, evolves: null },
+    trapinch: { name: "Trapinch", type: "Ground", baseStats: { hp: 45, atk: 100, def: 45, spd: 10 }, evolves: { level: 35, into: "vibrava" } },
+    vibrava: { name: "Vibrava", type: "Ground", baseStats: { hp: 50, atk: 70, def: 50, spd: 70 }, evolves: null },
+    swablu: { name: "Swablu", type: "Flying", baseStats: { hp: 45, atk: 40, def: 60, spd: 50 }, evolves: { level: 35, into: "altaria" } },
+    altaria: { name: "Altaria", type: "Flying", baseStats: { hp: 75, atk: 70, def: 105, spd: 80 }, evolves: null },
+    absol: { name: "Absol", type: "Dark", baseStats: { hp: 65, atk: 130, def: 60, spd: 75 }, evolves: null },
+    snorunt: { name: "Snorunt", type: "Ice", baseStats: { hp: 50, atk: 50, def: 50, spd: 50 }, evolves: { level: 42, into: "glalie" } },
+    glalie: { name: "Glalie", type: "Ice", baseStats: { hp: 80, atk: 80, def: 80, spd: 80 }, evolves: null },
+    bagon: { name: "Bagon", type: "Dragon", baseStats: { hp: 45, atk: 75, def: 60, spd: 50 }, evolves: { level: 30, into: "shelgon" } },
+    shelgon: { name: "Shelgon", type: "Dragon", baseStats: { hp: 65, atk: 95, def: 100, spd: 50 }, evolves: null },
+    beldum: { name: "Beldum", type: "Psychic", baseStats: { hp: 40, atk: 55, def: 80, spd: 30 }, evolves: { level: 20, into: "metang" } },
+    metang: { name: "Metang", type: "Psychic", baseStats: { hp: 60, atk: 75, def: 100, spd: 50 }, evolves: null },
+
     // Legendaries
     articuno: { name: "Articuno", type: "Ice", baseStats: { hp: 90, atk: 85, def: 100, spd: 85 }, evolves: null },
     zapdos: { name: "Zapdos", type: "Electric", baseStats: { hp: 90, atk: 90, def: 85, spd: 100 }, evolves: null },
@@ -135,10 +165,10 @@ const STARTERS = ['bulbasaur', 'charmander', 'squirtle', 'chikorita', 'cyndaquil
 const LEGENDARY_POKEMON = ['articuno', 'zapdos', 'moltres', 'mewtwo'];
 
 const WILD_POKEMON = {
-    common: ['rattata', 'pidgey', 'caterpie', 'weedle', 'oddish', 'sentret', 'hoothoot', 'spinarak', 'hoppip', 'mareep'],
-    uncommon: ['nidoran_m', 'geodude', 'machop', 'abra', 'gastly', 'growlithe', 'vulpix', 'clefairy', 'wooper', 'snubbull', 'teddiursa', 'swinub', 'houndour', 'murkrow', 'misdreavus'],
-    rare: ['pikachu', 'eevee', 'larvitar'],
-    fishing: ['magikarp', 'goldeen', 'psyduck', 'tentacool', 'staryu', 'poliwag', 'wooper']
+    common: ['rattata', 'pidgey', 'caterpie', 'weedle', 'oddish', 'sentret', 'hoothoot', 'spinarak', 'hoppip', 'mareep', 'zigzagoon', 'lotad', 'seedot', 'shroomish'],
+    uncommon: ['nidoran_m', 'geodude', 'machop', 'abra', 'gastly', 'growlithe', 'vulpix', 'clefairy', 'wooper', 'snubbull', 'teddiursa', 'swinub', 'houndour', 'murkrow', 'misdreavus', 'electrike', 'aron', 'swablu', 'trapinch'],
+    rare: ['pikachu', 'eevee', 'larvitar', 'ralts', 'bagon', 'beldum', 'absol'],
+    fishing: ['magikarp', 'goldeen', 'psyduck', 'tentacool', 'staryu', 'poliwag', 'wooper', 'lotad', 'carvanha']
 };
 
 // Route environments — shuffled per run, rotate every 2 badges
@@ -146,71 +176,71 @@ const WILD_POKEMON = {
 const ROUTE_ENVIRONMENTS = [
     {
         name: "Viridian Forest", icon: "🌲", desc: "Dense woodland buzzing with life",
-        common: ['caterpie', 'weedle', 'oddish', 'hoppip', 'spinarak'],
-        uncommon: ['pikachu', 'clefairy', 'abra'],
+        common: ['caterpie', 'weedle', 'oddish', 'hoppip', 'spinarak', 'shroomish'],
+        uncommon: ['pikachu', 'clefairy', 'abra', 'ralts'],
         rare: ['eevee'],
         fishing: ['poliwag', 'goldeen', 'magikarp']
     },
     {
         name: "Mt. Moon", icon: "⛰️", desc: "Dark tunnels echo with strange cries",
-        common: ['geodude', 'rattata', 'machop', 'swinub'],
-        uncommon: ['clefairy', 'gastly', 'misdreavus'],
+        common: ['geodude', 'rattata', 'machop', 'swinub', 'aron'],
+        uncommon: ['clefairy', 'gastly', 'misdreavus', 'beldum'],
         rare: ['larvitar'],
         fishing: ['wooper', 'magikarp', 'psyduck']
     },
     {
         name: "Cerulean Coast", icon: "🏖️", desc: "Waves crash against sandy shores",
-        common: ['tentacool', 'staryu', 'psyduck', 'wooper', 'poliwag'],
-        uncommon: ['growlithe', 'vulpix', 'mareep'],
+        common: ['tentacool', 'staryu', 'psyduck', 'wooper', 'poliwag', 'lotad'],
+        uncommon: ['growlithe', 'vulpix', 'mareep', 'swablu'],
         rare: ['pikachu'],
-        fishing: ['magikarp', 'goldeen', 'tentacool', 'staryu', 'psyduck', 'poliwag']
+        fishing: ['magikarp', 'goldeen', 'tentacool', 'staryu', 'carvanha', 'lotad']
     },
     {
         name: "Lavender Ruins", icon: "👻", desc: "A chill runs down your spine...",
         common: ['gastly', 'murkrow', 'hoothoot', 'rattata', 'spinarak'],
-        uncommon: ['misdreavus', 'houndour', 'abra'],
-        rare: ['eevee'],
+        uncommon: ['misdreavus', 'houndour', 'abra', 'absol'],
+        rare: ['ralts'],
         fishing: ['magikarp', 'goldeen', 'psyduck']
     },
     {
         name: "Safari Grasslands", icon: "🦒", desc: "Wide open plains teeming with Pokemon",
-        common: ['sentret', 'pidgey', 'oddish', 'mareep', 'hoppip'],
-        uncommon: ['nidoran_m', 'teddiursa', 'snubbull', 'wooper'],
+        common: ['sentret', 'pidgey', 'oddish', 'mareep', 'hoppip', 'zigzagoon'],
+        uncommon: ['nidoran_m', 'teddiursa', 'snubbull', 'wooper', 'swablu'],
         rare: ['pikachu', 'eevee'],
         fishing: ['poliwag', 'magikarp', 'wooper', 'psyduck']
     },
     {
         name: "Volcanic Path", icon: "🌋", desc: "The ground radiates intense heat",
-        common: ['growlithe', 'geodude', 'machop', 'houndour'],
-        uncommon: ['vulpix', 'nidoran_m', 'gastly'],
-        rare: ['larvitar'],
+        common: ['growlithe', 'geodude', 'machop', 'houndour', 'trapinch'],
+        uncommon: ['vulpix', 'nidoran_m', 'gastly', 'aron'],
+        rare: ['larvitar', 'bagon'],
         fishing: ['magikarp', 'goldeen', 'tentacool']
     },
     {
         name: "Frosty Cavern", icon: "❄️", desc: "Icicles glitter in the dim light",
-        common: ['swinub', 'geodude', 'rattata', 'hoothoot'],
-        uncommon: ['clefairy', 'misdreavus', 'snubbull'],
-        rare: ['pikachu'],
+        common: ['swinub', 'geodude', 'rattata', 'hoothoot', 'snorunt'],
+        uncommon: ['clefairy', 'misdreavus', 'snubbull', 'aron'],
+        rare: ['absol'],
         fishing: ['magikarp', 'psyduck', 'poliwag']
     },
     {
         name: "Power Plant", icon: "⚡", desc: "Sparks fly from rusted machinery",
-        common: ['mareep', 'rattata', 'geodude', 'machop'],
-        uncommon: ['pikachu', 'abra', 'gastly'],
+        common: ['mareep', 'rattata', 'geodude', 'machop', 'electrike'],
+        uncommon: ['pikachu', 'abra', 'gastly', 'beldum'],
         rare: ['eevee'],
         fishing: ['magikarp', 'goldeen', 'tentacool']
     },
     {
         name: "Dark Forest", icon: "🌑", desc: "Shadows move between ancient trees",
-        common: ['murkrow', 'spinarak', 'hoothoot', 'oddish', 'hoppip'],
-        uncommon: ['misdreavus', 'houndour', 'gastly', 'teddiursa'],
+        common: ['murkrow', 'spinarak', 'hoothoot', 'oddish', 'seedot'],
+        uncommon: ['misdreavus', 'houndour', 'gastly', 'teddiursa', 'absol'],
         rare: ['larvitar'],
         fishing: ['poliwag', 'wooper', 'magikarp']
     },
     {
         name: "Meadow Fields", icon: "🌻", desc: "Flowers sway in a gentle breeze",
-        common: ['oddish', 'hoppip', 'sentret', 'pidgey', 'caterpie'],
-        uncommon: ['clefairy', 'vulpix', 'mareep', 'snubbull'],
+        common: ['oddish', 'hoppip', 'sentret', 'pidgey', 'zigzagoon', 'shroomish'],
+        uncommon: ['clefairy', 'vulpix', 'mareep', 'snubbull', 'ralts'],
         rare: ['pikachu', 'eevee'],
         fishing: ['goldeen', 'poliwag', 'magikarp']
     }
@@ -231,7 +261,7 @@ const GYM_LEADER_POOL = [
     { name: "Lt. Surge", type: "Electric", badge: "Thunder Badge", earlyTeam: ['pikachu'], lateTeam: ['raichu', 'pikachu'], region: "Kanto" },
     { name: "Erika", type: "Grass", badge: "Rainbow Badge", earlyTeam: ['oddish', 'oddish'], lateTeam: ['vileplume', 'gloom'], region: "Kanto" },
     { name: "Koga", type: "Poison", badge: "Soul Badge", earlyTeam: ['nidoran_m'], lateTeam: ['nidoking', 'nidorino'], region: "Kanto" },
-    { name: "Sabrina", type: "Psychic", badge: "Marsh Badge", earlyTeam: ['abra'], lateTeam: ['kadabra', 'abra'], region: "Kanto" },
+    { name: "Sabrina", type: "Psychic", badge: "Marsh Badge", earlyTeam: ['abra', 'ralts'], lateTeam: ['kadabra', 'gardevoir'], region: "Kanto" },
     { name: "Blaine", type: "Fire", badge: "Volcano Badge", earlyTeam: ['growlithe', 'vulpix'], lateTeam: ['arcanine', 'ninetales'], region: "Kanto" },
     { name: "Giovanni", type: "Ground", badge: "Earth Badge", earlyTeam: ['geodude', 'nidoran_m'], lateTeam: ['nidoking', 'graveler', 'graveler'], region: "Kanto" },
     // Johto
@@ -244,12 +274,12 @@ const GYM_LEADER_POOL = [
     { name: "Pryce", type: "Ice", badge: "Glacier Badge", earlyTeam: ['swinub'], lateTeam: ['piloswine', 'swinub'], region: "Johto" },
     { name: "Clair", type: "Dragon", badge: "Rising Badge", earlyTeam: ['gyarados'], lateTeam: ['gyarados', 'gyarados'], region: "Johto" },
     // Hoenn
-    { name: "Roxanne", type: "Rock", badge: "Stone Badge", earlyTeam: ['geodude'], lateTeam: ['graveler', 'geodude'], region: "Hoenn" },
-    { name: "Brawly", type: "Fighting", badge: "Knuckle Badge", earlyTeam: ['machop'], lateTeam: ['machoke', 'machop'], region: "Hoenn" },
-    { name: "Wattson", type: "Electric", badge: "Dynamo Badge", earlyTeam: ['mareep'], lateTeam: ['ampharos', 'flaaffy'], region: "Hoenn" },
+    { name: "Roxanne", type: "Rock", badge: "Stone Badge", earlyTeam: ['geodude', 'aron'], lateTeam: ['graveler', 'lairon'], region: "Hoenn" },
+    { name: "Brawly", type: "Fighting", badge: "Knuckle Badge", earlyTeam: ['machop', 'shroomish'], lateTeam: ['machoke', 'breloom'], region: "Hoenn" },
+    { name: "Wattson", type: "Electric", badge: "Dynamo Badge", earlyTeam: ['electrike'], lateTeam: ['manectric', 'ampharos'], region: "Hoenn" },
     { name: "Flannery", type: "Fire", badge: "Heat Badge", earlyTeam: ['vulpix'], lateTeam: ['ninetales', 'growlithe'], region: "Hoenn" },
     { name: "Norman", type: "Normal", badge: "Balance Badge", earlyTeam: ['rattata', 'clefairy'], lateTeam: ['raticate', 'clefable'], region: "Hoenn" },
-    { name: "Winona", type: "Flying", badge: "Feather Badge", earlyTeam: ['pidgey', 'pidgeotto'], lateTeam: ['pidgeot', 'pidgeotto'], region: "Hoenn" },
+    { name: "Winona", type: "Flying", badge: "Feather Badge", earlyTeam: ['swablu', 'pidgey'], lateTeam: ['altaria', 'pidgeot'], region: "Hoenn" },
     { name: "Wallace", type: "Water", badge: "Rain Badge", earlyTeam: ['staryu', 'poliwag'], lateTeam: ['starmie', 'gyarados'], region: "Hoenn" },
     // Sinnoh
     { name: "Roark", type: "Rock", badge: "Coal Badge", earlyTeam: ['geodude'], lateTeam: ['graveler', 'geodude'], region: "Sinnoh" },
@@ -259,7 +289,7 @@ const GYM_LEADER_POOL = [
     { name: "Fantina", type: "Ghost", badge: "Relic Badge", earlyTeam: ['gastly'], lateTeam: ['haunter', 'gastly'], region: "Sinnoh" },
     { name: "Volkner", type: "Electric", badge: "Beacon Badge", earlyTeam: ['mareep'], lateTeam: ['ampharos', 'jolteon'], region: "Sinnoh" },
     // Extra leaders for type variety
-    { name: "Candice", type: "Ice", badge: "Icicle Badge", earlyTeam: ['swinub'], lateTeam: ['piloswine', 'swinub'], region: "Sinnoh" },
+    { name: "Candice", type: "Ice", badge: "Icicle Badge", earlyTeam: ['swinub', 'snorunt'], lateTeam: ['piloswine', 'glalie'], region: "Sinnoh" },
     { name: "Byron", type: "Rock", badge: "Mine Badge", earlyTeam: ['geodude', 'omanyte'], lateTeam: ['graveler', 'omastar'], region: "Sinnoh" },
 ];
 
@@ -276,7 +306,7 @@ const ELITE_FOUR_POOL = [
     { name: "Karen", type: "Dark", pokemon: ['houndoom', 'murkrow', 'nidoking'], region: "Johto" },
     { name: "Sidney", type: "Dark", pokemon: ['houndoom', 'murkrow', 'ursaring'], region: "Hoenn" },
     { name: "Phoebe", type: "Ghost", pokemon: ['haunter', 'haunter', 'kadabra'], region: "Hoenn" },
-    { name: "Drake", type: "Dragon", pokemon: ['gyarados', 'aerodactyl', 'arcanine'], region: "Hoenn" },
+    { name: "Drake", type: "Dragon", pokemon: ['shelgon', 'altaria', 'gyarados'], region: "Hoenn" },
     { name: "Flint", type: "Fire", pokemon: ['arcanine', 'ninetales', 'charizard'], region: "Sinnoh" },
     { name: "Lucian", type: "Psychic", pokemon: ['kadabra', 'starmie', 'kadabra'], region: "Sinnoh" },
 ];
@@ -285,7 +315,7 @@ const ELITE_FOUR_POOL = [
 const CHAMPION_POOL = [
     { name: "Blue", pokemon: ['blastoise', 'arcanine', 'pidgeot', 'machoke', 'kadabra', 'raichu'], region: "Kanto" },
     { name: "Lance", pokemon: ['gyarados', 'aerodactyl', 'charizard', 'nidoking', 'machoke'], region: "Johto" },
-    { name: "Steven", pokemon: ['graveler', 'starmie', 'aerodactyl', 'kadabra', 'machoke'], region: "Hoenn" },
+    { name: "Steven", pokemon: ['lairon', 'metang', 'aerodactyl', 'gardevoir', 'sharpedo'], region: "Hoenn" },
     { name: "Cynthia", pokemon: ['gyarados', 'arcanine', 'starmie', 'machoke', 'haunter', 'vileplume'], region: "Sinnoh" },
     { name: "Red", pokemon: ['pikachu', 'venusaur', 'charizard', 'blastoise', 'kadabra'], region: "Kanto" },
 ];
