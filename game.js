@@ -713,10 +713,19 @@ class Game {
             choices.push({ icon: '🏕️', text: 'Campsite', desc: 'Rest, train, or forage', action: () => this.campsite() });
             choices.push({ icon: '🌿', text: 'Grind Wild Pokemon', desc: 'Train for the next gym', action: () => this.wildBattle() });
         } else {
-            const shuffled = eventPool.sort(() => Math.random() - 0.5);
+            // Weighted random selection — rarer events actually appear less often
             const numEvents = Math.random() < 0.4 ? 2 : 1;
-            for (let i = 0; i < numEvents && i < shuffled.length; i++) {
-                choices.push(shuffled[i]);
+            const pool = [...eventPool];
+            for (let i = 0; i < numEvents && pool.length > 0; i++) {
+                const totalWeight = pool.reduce((sum, e) => sum + (e.weight || 10), 0);
+                let roll = Math.random() * totalWeight;
+                let picked = pool.length - 1;
+                for (let j = 0; j < pool.length; j++) {
+                    roll -= (pool[j].weight || 10);
+                    if (roll <= 0) { picked = j; break; }
+                }
+                choices.push(pool[picked]);
+                pool.splice(picked, 1); // Don't pick same event twice
             }
         }
 
