@@ -96,6 +96,33 @@ const POKEMON_DATA = {
     kabutops: { name: "Kabutops", type: "Rock", baseStats: { hp: 60, atk: 115, def: 105, spd: 80 }, evolves: null },
     aerodactyl: { name: "Aerodactyl", type: "Rock", baseStats: { hp: 80, atk: 105, def: 65, spd: 130 }, evolves: null },
 
+    // Gen 2 Wild Pokemon
+    sentret: { name: "Sentret", type: "Normal", baseStats: { hp: 35, atk: 46, def: 34, spd: 20 }, evolves: { level: 15, into: "furret" } },
+    furret: { name: "Furret", type: "Normal", baseStats: { hp: 85, atk: 76, def: 64, spd: 90 }, evolves: null },
+    hoothoot: { name: "Hoothoot", type: "Flying", baseStats: { hp: 60, atk: 30, def: 30, spd: 50 }, evolves: { level: 20, into: "noctowl" } },
+    noctowl: { name: "Noctowl", type: "Flying", baseStats: { hp: 100, atk: 50, def: 50, spd: 70 }, evolves: null },
+    spinarak: { name: "Spinarak", type: "Bug", baseStats: { hp: 40, atk: 60, def: 40, spd: 30 }, evolves: { level: 22, into: "ariados" } },
+    ariados: { name: "Ariados", type: "Bug", baseStats: { hp: 70, atk: 90, def: 70, spd: 40 }, evolves: null },
+    mareep: { name: "Mareep", type: "Electric", baseStats: { hp: 55, atk: 40, def: 40, spd: 35 }, evolves: { level: 15, into: "flaaffy" } },
+    flaaffy: { name: "Flaaffy", type: "Electric", baseStats: { hp: 70, atk: 55, def: 55, spd: 45 }, evolves: { level: 30, into: "ampharos" } },
+    ampharos: { name: "Ampharos", type: "Electric", baseStats: { hp: 90, atk: 75, def: 85, spd: 55 }, evolves: null },
+    hoppip: { name: "Hoppip", type: "Grass", baseStats: { hp: 35, atk: 35, def: 40, spd: 50 }, evolves: { level: 18, into: "skiploom" } },
+    skiploom: { name: "Skiploom", type: "Grass", baseStats: { hp: 55, atk: 45, def: 50, spd: 80 }, evolves: null },
+    wooper: { name: "Wooper", type: "Water", baseStats: { hp: 55, atk: 45, def: 45, spd: 15 }, evolves: { level: 20, into: "quagsire" } },
+    quagsire: { name: "Quagsire", type: "Water", baseStats: { hp: 95, atk: 85, def: 85, spd: 35 }, evolves: null },
+    murkrow: { name: "Murkrow", type: "Dark", baseStats: { hp: 60, atk: 85, def: 42, spd: 91 }, evolves: null },
+    misdreavus: { name: "Misdreavus", type: "Ghost", baseStats: { hp: 60, atk: 60, def: 60, spd: 85 }, evolves: null },
+    snubbull: { name: "Snubbull", type: "Fairy", baseStats: { hp: 60, atk: 80, def: 50, spd: 30 }, evolves: { level: 23, into: "granbull" } },
+    granbull: { name: "Granbull", type: "Fairy", baseStats: { hp: 90, atk: 120, def: 75, spd: 45 }, evolves: null },
+    teddiursa: { name: "Teddiursa", type: "Normal", baseStats: { hp: 60, atk: 80, def: 50, spd: 40 }, evolves: { level: 30, into: "ursaring" } },
+    ursaring: { name: "Ursaring", type: "Normal", baseStats: { hp: 90, atk: 130, def: 75, spd: 55 }, evolves: null },
+    swinub: { name: "Swinub", type: "Ice", baseStats: { hp: 50, atk: 50, def: 40, spd: 50 }, evolves: { level: 33, into: "piloswine" } },
+    piloswine: { name: "Piloswine", type: "Ice", baseStats: { hp: 100, atk: 100, def: 80, spd: 50 }, evolves: null },
+    houndour: { name: "Houndour", type: "Dark", baseStats: { hp: 45, atk: 60, def: 30, spd: 65 }, evolves: { level: 24, into: "houndoom" } },
+    houndoom: { name: "Houndoom", type: "Dark", baseStats: { hp: 75, atk: 90, def: 50, spd: 95 }, evolves: null },
+    larvitar: { name: "Larvitar", type: "Rock", baseStats: { hp: 50, atk: 64, def: 50, spd: 41 }, evolves: { level: 30, into: "pupitar" } },
+    pupitar: { name: "Pupitar", type: "Rock", baseStats: { hp: 70, atk: 84, def: 70, spd: 51 }, evolves: null },
+
     // Legendaries
     articuno: { name: "Articuno", type: "Ice", baseStats: { hp: 90, atk: 85, def: 100, spd: 85 }, evolves: null },
     zapdos: { name: "Zapdos", type: "Electric", baseStats: { hp: 90, atk: 90, def: 85, spd: 100 }, evolves: null },
@@ -108,10 +135,10 @@ const STARTERS = ['bulbasaur', 'charmander', 'squirtle', 'chikorita', 'cyndaquil
 const LEGENDARY_POKEMON = ['articuno', 'zapdos', 'moltres', 'mewtwo'];
 
 const WILD_POKEMON = {
-    common: ['rattata', 'pidgey', 'caterpie', 'weedle', 'oddish'],
-    uncommon: ['nidoran_m', 'geodude', 'machop', 'abra', 'gastly', 'growlithe', 'vulpix', 'clefairy'],
-    rare: ['pikachu', 'eevee'],
-    fishing: ['magikarp', 'goldeen', 'psyduck', 'tentacool', 'staryu', 'poliwag']
+    common: ['rattata', 'pidgey', 'caterpie', 'weedle', 'oddish', 'sentret', 'hoothoot', 'spinarak', 'hoppip', 'mareep'],
+    uncommon: ['nidoran_m', 'geodude', 'machop', 'abra', 'gastly', 'growlithe', 'vulpix', 'clefairy', 'wooper', 'snubbull', 'teddiursa', 'swinub', 'houndour', 'murkrow', 'misdreavus'],
+    rare: ['pikachu', 'eevee', 'larvitar'],
+    fishing: ['magikarp', 'goldeen', 'psyduck', 'tentacool', 'staryu', 'poliwag', 'wooper']
 };
 
 // Master gym leader pool — 8 picked per run, scaled to tier levels
@@ -133,12 +160,12 @@ const GYM_LEADER_POOL = [
     { name: "Morty", type: "Ghost", badge: "Fog Badge", earlyTeam: ['gastly'], lateTeam: ['haunter', 'haunter'], region: "Johto" },
     { name: "Chuck", type: "Fighting", badge: "Storm Badge", earlyTeam: ['machop'], lateTeam: ['machoke', 'poliwrath'], region: "Johto" },
     { name: "Jasmine", type: "Steel", badge: "Mineral Badge", earlyTeam: ['geodude'], lateTeam: ['graveler', 'graveler'], region: "Johto" },
-    { name: "Pryce", type: "Ice", badge: "Glacier Badge", earlyTeam: ['tentacool'], lateTeam: ['tentacruel', 'tentacool'], region: "Johto" },
+    { name: "Pryce", type: "Ice", badge: "Glacier Badge", earlyTeam: ['swinub'], lateTeam: ['piloswine', 'swinub'], region: "Johto" },
     { name: "Clair", type: "Dragon", badge: "Rising Badge", earlyTeam: ['gyarados'], lateTeam: ['gyarados', 'gyarados'], region: "Johto" },
     // Hoenn
     { name: "Roxanne", type: "Rock", badge: "Stone Badge", earlyTeam: ['geodude'], lateTeam: ['graveler', 'geodude'], region: "Hoenn" },
     { name: "Brawly", type: "Fighting", badge: "Knuckle Badge", earlyTeam: ['machop'], lateTeam: ['machoke', 'machop'], region: "Hoenn" },
-    { name: "Wattson", type: "Electric", badge: "Dynamo Badge", earlyTeam: ['pikachu'], lateTeam: ['raichu', 'jolteon'], region: "Hoenn" },
+    { name: "Wattson", type: "Electric", badge: "Dynamo Badge", earlyTeam: ['mareep'], lateTeam: ['ampharos', 'flaaffy'], region: "Hoenn" },
     { name: "Flannery", type: "Fire", badge: "Heat Badge", earlyTeam: ['vulpix'], lateTeam: ['ninetales', 'growlithe'], region: "Hoenn" },
     { name: "Norman", type: "Normal", badge: "Balance Badge", earlyTeam: ['rattata', 'clefairy'], lateTeam: ['raticate', 'clefable'], region: "Hoenn" },
     { name: "Winona", type: "Flying", badge: "Feather Badge", earlyTeam: ['pidgey', 'pidgeotto'], lateTeam: ['pidgeot', 'pidgeotto'], region: "Hoenn" },
@@ -149,7 +176,10 @@ const GYM_LEADER_POOL = [
     { name: "Maylene", type: "Fighting", badge: "Cobble Badge", earlyTeam: ['machop'], lateTeam: ['machoke', 'machop'], region: "Sinnoh" },
     { name: "Crasher Wake", type: "Water", badge: "Fen Badge", earlyTeam: ['poliwag'], lateTeam: ['poliwrath', 'poliwhirl'], region: "Sinnoh" },
     { name: "Fantina", type: "Ghost", badge: "Relic Badge", earlyTeam: ['gastly'], lateTeam: ['haunter', 'gastly'], region: "Sinnoh" },
-    { name: "Volkner", type: "Electric", badge: "Beacon Badge", earlyTeam: ['pikachu'], lateTeam: ['raichu', 'jolteon'], region: "Sinnoh" },
+    { name: "Volkner", type: "Electric", badge: "Beacon Badge", earlyTeam: ['mareep'], lateTeam: ['ampharos', 'jolteon'], region: "Sinnoh" },
+    // Extra leaders for type variety
+    { name: "Candice", type: "Ice", badge: "Icicle Badge", earlyTeam: ['swinub'], lateTeam: ['piloswine', 'swinub'], region: "Sinnoh" },
+    { name: "Byron", type: "Rock", badge: "Mine Badge", earlyTeam: ['geodude', 'omanyte'], lateTeam: ['graveler', 'omastar'], region: "Sinnoh" },
 ];
 
 // Tier levels — gym leaders are scaled to these regardless of who they are
@@ -162,8 +192,8 @@ const ELITE_FOUR_POOL = [
     { name: "Agatha", type: "Ghost", pokemon: ['haunter', 'haunter', 'nidoking'], region: "Kanto" },
     { name: "Lance", type: "Dragon", pokemon: ['gyarados', 'aerodactyl', 'charizard'], region: "Kanto" },
     { name: "Will", type: "Psychic", pokemon: ['kadabra', 'starmie', 'kadabra'], region: "Johto" },
-    { name: "Karen", type: "Dark", pokemon: ['haunter', 'nidoking', 'gyarados'], region: "Johto" },
-    { name: "Sidney", type: "Dark", pokemon: ['nidoking', 'haunter', 'raticate'], region: "Hoenn" },
+    { name: "Karen", type: "Dark", pokemon: ['houndoom', 'murkrow', 'nidoking'], region: "Johto" },
+    { name: "Sidney", type: "Dark", pokemon: ['houndoom', 'murkrow', 'ursaring'], region: "Hoenn" },
     { name: "Phoebe", type: "Ghost", pokemon: ['haunter', 'haunter', 'kadabra'], region: "Hoenn" },
     { name: "Drake", type: "Dragon", pokemon: ['gyarados', 'aerodactyl', 'arcanine'], region: "Hoenn" },
     { name: "Flint", type: "Fire", pokemon: ['arcanine', 'ninetales', 'charizard'], region: "Sinnoh" },
