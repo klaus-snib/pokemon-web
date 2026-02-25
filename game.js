@@ -247,7 +247,10 @@ class Game {
             postGame: this.postGame,
             towerWins: this.towerWins,
             e4Progress: this.e4Progress,
-            inE4: this.inE4
+            inE4: this.inE4,
+            gymLeaders: GYM_LEADERS.map(g => ({ name: g.name, type: g.type, badge: g.badge, earlyTeam: g.earlyTeam, lateTeam: g.lateTeam, region: g.region, level: g.level })),
+            eliteFour: this.eliteFour,
+            champion: this.champion
         };
         localStorage.setItem('pokemon_roguelike_save', JSON.stringify(data));
     }
@@ -287,6 +290,13 @@ class Game {
             this.towerWins = data.towerWins || 0;
             this.e4Progress = data.e4Progress || 0;
             this.inE4 = data.inE4 || false;
+            // Restore shuffled leaders from save so refresh doesn't reshuffle
+            if (data.gymLeaders && data.gymLeaders.length === 8) {
+                GYM_LEADERS.length = 0;
+                data.gymLeaders.forEach(g => GYM_LEADERS.push(g));
+            }
+            if (data.eliteFour) this.eliteFour = data.eliteFour;
+            if (data.champion) this.champion = data.champion;
             this.state = 'playing';
             return true;
         } catch (e) {
@@ -576,16 +586,18 @@ class Game {
         if (this.inE4) {
             if (this.e4Progress < 4 && this.eliteFour[this.e4Progress]) {
                 const e4 = this.eliteFour[this.e4Progress];
+                const e4Region = e4.region ? ` (${e4.region})` : '';
                 choices.push({
                     icon: '⭐',
-                    text: `Elite Four: ${e4.name}`,
+                    text: `Elite Four: ${e4.name}${e4Region}`,
                     desc: `${e4.type} type - Lv.${e4.level}`,
                     action: () => this.e4Battle()
                 });
             } else if (this.e4Progress >= 4 && this.champion) {
+                const champRegion = this.champion.region ? ` (${this.champion.region})` : '';
                 choices.push({
                     icon: '👑',
-                    text: `Champion ${this.champion.name}`,
+                    text: `Champion ${this.champion.name}${champRegion}`,
                     desc: `The final battle! Lv.${this.champion.level}`,
                     action: () => this.championBattle()
                 });
@@ -598,10 +610,11 @@ class Game {
         // Gym challenge if ready
         if (this.currentGym < GYM_LEADERS.length && !this.postGame) {
             const gym = GYM_LEADERS[this.currentGym];
+            const regionTag = gym.region ? ` (${gym.region})` : '';
             choices.push({
                 icon: '🏛️',
-                text: `Challenge ${gym.name}`,
-                desc: `${gym.type} type - Lv.${gym.level}`,
+                text: `Challenge ${gym.name}${regionTag}`,
+                desc: `${gym.type} type - Lv.${gym.level} — ${gym.badge}`,
                 action: () => this.gymBattle()
             });
         }
