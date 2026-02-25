@@ -151,17 +151,42 @@ const ACHIEVEMENTS = {
 
 // ===== TRAINER DATA =====
 const NPC_TRAINERS = [
+    // Early game (no badge req)
     { name: "Bug Catcher Doug", team: ['caterpie', 'weedle'], levelMod: -2, reward: 200 },
+    { name: "Bug Catcher Sam", team: ['spinarak', 'caterpie'], levelMod: -2, reward: 200 },
+    { name: "Youngster Joey", team: ['rattata'], levelMod: -1, reward: 150 },
+    { name: "Youngster Mikey", team: ['sentret', 'pidgey'], levelMod: -1, reward: 200 },
     { name: "Lass Jenny", team: ['nidoran_m', 'pidgey'], levelMod: -1, reward: 300 },
+    { name: "Lass Dana", team: ['oddish', 'clefairy'], levelMod: -1, reward: 300 },
     { name: "Hiker Marcus", team: ['geodude', 'machop'], levelMod: 0, reward: 400 },
+    { name: "Hiker Trent", team: ['geodude', 'geodude', 'machop'], levelMod: 0, reward: 450 },
     { name: "Swimmer Lisa", team: ['staryu', 'psyduck'], levelMod: 0, reward: 400 },
+    { name: "Swimmer Brian", team: ['tentacool', 'poliwag'], levelMod: 0, reward: 400 },
+    { name: "Picnicker Liz", team: ['oddish', 'hoppip'], levelMod: -1, reward: 250 },
+    { name: "Camper Todd", team: ['sentret', 'hoothoot'], levelMod: -1, reward: 250 },
+    { name: "Firebreather Walt", team: ['growlithe', 'vulpix'], levelMod: 0, reward: 450 },
+    // Mid game (1-2 badges)
     { name: "Psychic Frank", team: ['abra', 'gastly'], levelMod: 1, reward: 500 },
-    { name: "Ace Trainer Zoe", team: ['pidgeotto', 'machoke', 'kadabra'], levelMod: 2, reward: 800 },
+    { name: "Psychic Jenna", team: ['abra', 'misdreavus'], levelMod: 1, reward: 500 },
+    { name: "Pokefan Ruth", team: ['clefairy', 'snubbull'], levelMod: 0, reward: 400, minBadges: 1 },
+    { name: "Sailor Duncan", team: ['machop', 'tentacool', 'poliwag'], levelMod: 1, reward: 500, minBadges: 1 },
+    { name: "Super Nerd Pat", team: ['mareep', 'gastly'], levelMod: 1, reward: 500, minBadges: 1 },
+    { name: "Medium Martha", team: ['gastly', 'misdreavus'], levelMod: 1, reward: 550, minBadges: 1 },
+    // Late game (2+ badges)
+    { name: "Ace Trainer Zoe", team: ['pidgeotto', 'machoke', 'kadabra'], levelMod: 2, reward: 800, minBadges: 2 },
+    { name: "Ace Trainer Gaven", team: ['flaaffy', 'nidorino', 'houndour'], levelMod: 2, reward: 800, minBadges: 2 },
     { name: "Cooltrainer Rex", team: ['graveler', 'haunter', 'charmeleon'], levelMod: 3, reward: 1000, minBadges: 2 },
-    { name: "Veteran Hana", team: ['gyarados', 'pidgeot', 'machoke'], levelMod: 4, reward: 1200, minBadges: 3 }
+    { name: "Cooltrainer Beth", team: ['ariados', 'granbull', 'quilava'], levelMod: 3, reward: 1000, minBadges: 2 },
+    { name: "Blackbelt Kenji", team: ['machoke', 'machop', 'machoke'], levelMod: 2, reward: 700, minBadges: 2 },
+    // Endgame (3+ badges)
+    { name: "Veteran Hana", team: ['gyarados', 'pidgeot', 'machoke'], levelMod: 4, reward: 1200, minBadges: 3 },
+    { name: "Veteran Knox", team: ['arcanine', 'nidoking', 'kadabra'], levelMod: 4, reward: 1200, minBadges: 3 },
+    { name: "Dragon Tamer Clair", team: ['gyarados', 'gyarados'], levelMod: 5, reward: 1500, minBadges: 4 },
+    { name: "Team Rocket Grunt", team: ['houndour', 'murkrow', 'rattata'], levelMod: 1, reward: 600, minBadges: 1 },
+    { name: "Team Rocket Admin", team: ['houndoom', 'nidoking', 'murkrow'], levelMod: 4, reward: 1400, minBadges: 4 },
 ];
 
-const RIVAL_NAMES = ["Blue", "Silver", "Gary", "Damian"];
+const RIVAL_NAMES = ["Blue", "Silver", "Gary", "Damian", "Brendan", "May", "Barry", "Hugh"];
 
 class Game {
     constructor() {
