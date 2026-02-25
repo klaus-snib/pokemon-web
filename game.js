@@ -533,7 +533,7 @@ class Game {
         const eventsLeft = this.maxEvents ? this.maxEvents - this.eventsExplored : '∞';
         document.getElementById('events-count').textContent = `Events: ${eventsLeft} left`;
 
-        const totalBalls = (this.bag['pokeball'] || 0) + (this.bag['great_ball'] || 0) + (this.bag['ultra_ball'] || 0);
+        const totalBalls = (this.bag['pokeball'] || 0) + (this.bag['great_ball'] || 0) + (this.bag['ultra_ball'] || 0) + (this.bag['master_ball'] || 0);
         document.getElementById('balls-count').textContent = `🔴 ${totalBalls}`;
 
         const teamDiv = document.getElementById('team-pokemon');
@@ -674,17 +674,26 @@ class Game {
             });
         }
 
-        // Random events (pick 1-2)
+        // Random events with rarity tiers (visual + weight)
         const earlyGame = this.eventsExplored < 5;
         const eventPool = [
-            { icon: '🏪', text: 'PokeMart', desc: 'Buy items', action: () => this.visitShop(), weight: 15 },
-            { icon: '🏥', text: 'Pokemon Center', desc: 'Heal your team', action: () => this.healTeam(), weight: earlyGame ? 20 : 15 },
-            { icon: '🎣', text: 'Go Fishing', desc: 'Find water Pokemon', action: () => this.goFishing(), weight: 12 },
-            ...(!earlyGame ? [{ icon: '🗻', text: 'Mystery Cave', desc: 'Something interesting...', action: () => this.mysteryCave(), weight: 12 }] : []),
-            { icon: '⚔️', text: 'Trainer Battle', desc: 'An NPC trainer challenges you!', action: () => this.trainerBattle(), weight: earlyGame ? 8 : 14 },
-            { icon: '🏕️', text: 'Campsite', desc: 'Rest, train, or forage', action: () => this.campsite(), weight: earlyGame ? 18 : 12 },
-            ...(!earlyGame ? [{ icon: '🦒', text: 'Safari Zone', desc: 'Catch rare Pokemon ($500 entry)', action: () => this.safariZone(), weight: 8 }] : []),
-            ...(this.badges >= 2 ? [{ icon: '🏠', text: 'Daycare', desc: 'Leave a Pokemon to train', action: () => this.daycare(), weight: 8 }] : []),
+            // Common (green border)
+            { icon: '🌿', text: 'Wild Grass', desc: 'Encounter wild Pokemon', action: () => this.wildBattle(), weight: earlyGame ? 18 : 14, rarity: 'common' },
+            { icon: '🏥', text: 'Pokemon Center', desc: 'Heal your team', action: () => this.healTeam(), weight: earlyGame ? 18 : 12, rarity: 'common' },
+            { icon: '🏕️', text: 'Campsite', desc: 'Rest, train, or forage', action: () => this.campsite(), weight: earlyGame ? 16 : 10, rarity: 'common' },
+            { icon: '⚔️', text: 'Trainer Battle', desc: 'An NPC trainer challenges you!', action: () => this.trainerBattle(), weight: earlyGame ? 6 : 12, rarity: 'common' },
+            // Uncommon (blue border)
+            { icon: '🏪', text: 'PokeMart', desc: 'Buy items', action: () => this.visitShop(), weight: 12, rarity: 'uncommon' },
+            { icon: '🎣', text: 'Go Fishing', desc: 'Find water Pokemon', action: () => this.goFishing(), weight: 10, rarity: 'uncommon' },
+            ...(!earlyGame ? [{ icon: '🗻', text: 'Mystery Cave', desc: 'Risk vs reward...', action: () => this.mysteryCave(), weight: 10, rarity: 'uncommon' }] : []),
+            ...(this.badges >= 2 ? [{ icon: '🏠', text: 'Daycare', desc: 'Leave a Pokemon to train', action: () => this.daycare(), weight: 7, rarity: 'uncommon' }] : []),
+            // Rare (purple border)
+            ...(!earlyGame ? [{ icon: '🦒', text: 'Safari Zone', desc: 'Catch rare Pokemon ($500)', action: () => this.safariZone(), weight: 5, rarity: 'rare' }] : []),
+            ...(this.badges >= 3 ? [{ icon: '🏬', text: 'Celadon Dept. Store', desc: 'Premium items at premium prices', action: () => this.celadonStore(), weight: 4, rarity: 'rare' }] : []),
+            ...(this.badges >= 4 ? [{ icon: '🎰', text: 'Game Corner', desc: 'Gamble for prizes', action: () => this.gameCorner(), weight: 4, rarity: 'rare' }] : []),
+            // Legendary (gold border)
+            ...(this.badges >= 5 ? [{ icon: '🔮', text: 'Move Tutor', desc: 'Teach a powerful new move', action: () => this.moveTutor(), weight: 2, rarity: 'legendary' }] : []),
+            ...(this.badges >= 6 && Math.random() < 0.3 ? [{ icon: '💎', text: 'Master Ball!', desc: 'Guaranteed catch on any Pokemon', action: () => this.findMasterBall(), weight: 1, rarity: 'legendary' }] : []),
         ];
 
         // Battle Tower in post-game
@@ -720,10 +729,13 @@ class Game {
 
         choices.forEach(choice => {
             const btn = document.createElement('button');
-            btn.className = 'choice-btn fade-in';
+            const rarityClass = choice.rarity ? ` rarity-${choice.rarity}` : '';
+            btn.className = `choice-btn fade-in${rarityClass}`;
+            const rarityLabel = choice.rarity && choice.rarity !== 'common' ?
+                `<span class="rarity-badge rarity-badge-${choice.rarity}">${choice.rarity}</span>` : '';
             btn.innerHTML = `
                 <span class="choice-icon">${choice.icon}</span>
-                <span class="choice-text">${choice.text}</span>
+                <span class="choice-text">${choice.text}${rarityLabel}</span>
                 <div class="choice-desc">${choice.desc}</div>
             `;
             btn.addEventListener('click', () => {
@@ -1382,6 +1394,164 @@ class Game {
         modal.classList.remove('hidden');
     }
 
+    // ===== CELADON DEPT. STORE (rare event) =====
+    celadonStore() {
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modal-body');
+        const premiumItems = [
+            { id: 'ultra_ball', name: 'Ultra Ball', price: 1200 },
+            { id: 'full_restore', name: 'Full Restore', price: 3000 },
+            { id: 'rare_candy', name: 'Rare Candy', price: 4800 },
+            { id: 'revive', name: 'Revive', price: 1500 },
+            { id: 'fire_stone', name: 'Fire Stone', price: 3000 },
+            { id: 'water_stone', name: 'Water Stone', price: 3000 },
+            { id: 'thunder_stone', name: 'Thunder Stone', price: 3000 },
+            { id: 'leaf_stone', name: 'Leaf Stone', price: 3000 },
+            { id: 'moon_stone', name: 'Moon Stone', price: 3000 },
+        ];
+        body.innerHTML = `
+            <h3>🏬 Celadon Dept. Store</h3>
+            <p>Premium items! You have $${this.money}</p>
+            <div class="shop-items"></div>
+        `;
+        const container = body.querySelector('.shop-items');
+        premiumItems.forEach(item => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            const canAfford = this.money >= item.price;
+            btn.innerHTML = `<span class="choice-text">${item.name} — $${item.price}</span>`;
+            btn.disabled = !canAfford;
+            btn.style.opacity = canAfford ? 1 : 0.5;
+            btn.onclick = () => {
+                if (this.money >= item.price) {
+                    this.money -= item.price;
+                    this.bag[item.id] = (this.bag[item.id] || 0) + 1;
+                    this.addMessage(`Bought ${item.name}!`, 'success');
+                    body.querySelector('p').textContent = `Premium items! You have $${this.money}`;
+                    if (this.money < item.price) { btn.disabled = true; btn.style.opacity = 0.5; }
+                    this.updateUI();
+                    this.saveGame();
+                }
+            };
+            container.appendChild(btn);
+        });
+        const leaveBtn = document.createElement('button');
+        leaveBtn.className = 'choice-btn';
+        leaveBtn.innerHTML = '<span class="choice-text">Leave store</span>';
+        leaveBtn.onclick = () => { modal.classList.add('hidden'); this.generateChoices(); };
+        container.appendChild(leaveBtn);
+        modal.classList.remove('hidden');
+    }
+
+    // ===== GAME CORNER (rare event) =====
+    gameCorner() {
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modal-body');
+        body.innerHTML = `
+            <h3>🎰 Game Corner</h3>
+            <p>Try your luck! You have $${this.money}</p>
+            <div class="game-corner-options"></div>
+        `;
+        const container = body.querySelector('.game-corner-options');
+
+        // Slot machine — $200 per spin
+        const slotBtn = document.createElement('button');
+        slotBtn.className = 'choice-btn';
+        slotBtn.innerHTML = '<span class="choice-text">🎰 Slots — $200</span><div class="choice-desc">Win big or lose it all!</div>';
+        slotBtn.onclick = () => {
+            if (this.money < 200) { this.addMessage("Not enough money!", 'danger'); return; }
+            this.money -= 200;
+            const roll = Math.random();
+            if (roll < 0.10) { // 10% jackpot
+                this.money += 2000;
+                this.unlockAchievement('high_roller');
+                this.addMessage('🎰 JACKPOT! +$2000!', 'success');
+            } else if (roll < 0.35) { // 25% small win
+                this.money += 400;
+                this.addMessage('🎰 Winner! +$400!', 'success');
+            } else { // 65% lose
+                this.addMessage('🎰 No luck this time...', 'warning');
+            }
+            body.querySelector('p').textContent = `Try your luck! You have $${this.money}`;
+            this.updateUI();
+            this.saveGame();
+        };
+        container.appendChild(slotBtn);
+
+        // Prize exchange — spend $1000 for a random good item
+        const prizeBtn = document.createElement('button');
+        prizeBtn.className = 'choice-btn';
+        prizeBtn.innerHTML = '<span class="choice-text">🎁 Prize Exchange — $1000</span><div class="choice-desc">Random rare prize</div>';
+        prizeBtn.onclick = () => {
+            if (this.money < 1000) { this.addMessage("Not enough money!", 'danger'); return; }
+            this.money -= 1000;
+            const prizes = ['rare_candy', 'revive', 'full_restore', 'ultra_ball', 'ultra_ball'];
+            const prize = prizes[Math.floor(Math.random() * prizes.length)];
+            this.bag[prize] = (this.bag[prize] || 0) + 1;
+            this.addMessage(`Won a ${ITEMS[prize].name}!`, 'success');
+            body.querySelector('p').textContent = `Try your luck! You have $${this.money}`;
+            this.updateUI();
+            this.saveGame();
+        };
+        container.appendChild(prizeBtn);
+
+        const leaveBtn = document.createElement('button');
+        leaveBtn.className = 'choice-btn';
+        leaveBtn.innerHTML = '<span class="choice-text">Leave</span>';
+        leaveBtn.onclick = () => { modal.classList.add('hidden'); this.generateChoices(); };
+        container.appendChild(leaveBtn);
+        modal.classList.remove('hidden');
+    }
+
+    // ===== MOVE TUTOR (legendary event) =====
+    moveTutor() {
+        if (this.team.length === 0) { this.generateChoices(); return; }
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modal-body');
+        body.innerHTML = `
+            <h3>🔮 Move Tutor</h3>
+            <p>A master trainer offers to teach one Pokemon a powerful move!</p>
+            <div class="tutor-choices"></div>
+        `;
+        const container = body.querySelector('.tutor-choices');
+
+        this.team.forEach((poke, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerHTML = `<span class="choice-text">${poke.displayName} Lv.${poke.level}</span>`;
+            btn.onclick = () => {
+                // Boost stats significantly
+                poke.attack += 5;
+                poke.defense += 5;
+                poke.speed += 5;
+                poke.maxHp += 10;
+                poke.hp = Math.min(poke.hp + 10, poke.maxHp);
+                this.addMessage(`${poke.displayName} learned secret techniques! All stats boosted!`, 'success');
+                modal.classList.add('hidden');
+                this.updateUI();
+                this.generateChoices();
+                this.saveGame();
+            };
+            container.appendChild(btn);
+        });
+
+        const skipBtn = document.createElement('button');
+        skipBtn.className = 'choice-btn';
+        skipBtn.innerHTML = '<span class="choice-text">Decline</span>';
+        skipBtn.onclick = () => { modal.classList.add('hidden'); this.generateChoices(); };
+        container.appendChild(skipBtn);
+        modal.classList.remove('hidden');
+    }
+
+    // ===== MASTER BALL (legendary event) =====
+    findMasterBall() {
+        this.addMessage('You found a Master Ball! It guarantees a catch on any Pokemon!', 'success');
+        this.bag['master_ball'] = (this.bag['master_ball'] || 0) + 1;
+        this.updateUI();
+        this.generateChoices();
+        this.saveGame();
+    }
+
     // ===== BATTLE TOWER (Post-game) =====
     battleTower() {
         const baseLevel = Math.max(...this.team.map(p => p.level));
@@ -1964,11 +2134,12 @@ class Game {
             return;
         }
 
+        const hasMasterball = (this.bag['master_ball'] || 0) > 0;
         const hasPokeball = (this.bag['pokeball'] || 0) > 0;
         const hasGreatball = (this.bag['great_ball'] || 0) > 0;
         const hasUltraball = (this.bag['ultra_ball'] || 0) > 0;
 
-        if (!hasPokeball && !hasGreatball && !hasUltraball) {
+        if (!hasPokeball && !hasGreatball && !hasUltraball && !hasMasterball) {
             this.addBattleLog('No Poke Balls!');
             return;
         }
@@ -1976,7 +2147,11 @@ class Game {
         this.battleTurnInProgress = true;
 
         let ballType, catchMod;
-        if (hasUltraball) {
+        if (hasMasterball) {
+            this.bag['master_ball']--;
+            ballType = 'Master Ball';
+            catchMod = 999; // Guaranteed catch
+        } else if (hasUltraball) {
             this.bag['ultra_ball']--;
             ballType = 'Ultra Ball';
             catchMod = 2.0;

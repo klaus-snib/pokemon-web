@@ -1376,3 +1376,23 @@ footer button:active {
 .gym-undefeated {
     opacity: 0.5;
 }
+
+/* Event rarity borders */
+.rarity-common { border-left: 3px solid #4ade80; }
+.rarity-uncommon { border-left: 3px solid #60a5fa; }
+.rarity-rare { border-left: 3px solid #a78bfa; }
+.rarity-legendary { border-left: 3px solid #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.3); }
+
+/* Rarity badges */
+.rarity-badge {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    margin-left: 0.4rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    vertical-align: middle;
+}
+.rarity-badge-uncommon { background: #60a5fa; color: white; }
+.rarity-badge-rare { background: #a78bfa; color: white; }
+.rarity-badge-legendary { background: #fbbf24; color: #1a1a2e; }
