@@ -1376,15 +1376,29 @@ class Game {
         const baseLevel = Math.max(...this.team.map(p => p.level));
         const towerLevel = baseLevel + Math.floor(this.towerWins / 2);
 
-        const pool = [...WILD_POKEMON.uncommon, ...WILD_POKEMON.rare, 'pidgeotto', 'machoke', 'kadabra', 'graveler', 'haunter'];
-        const id1 = pool[Math.floor(Math.random() * pool.length)];
-        const id2 = pool[Math.floor(Math.random() * pool.length)];
+        // Scale difficulty with win streak
+        const basicPool = [...WILD_POKEMON.uncommon, 'pidgeotto', 'machoke', 'kadabra', 'graveler', 'haunter'];
+        const evolvedPool = ['arcanine', 'nidoking', 'starmie', 'gyarados', 'machoke', 'kadabra', 'pidgeot', 'vileplume', 'houndoom', 'ampharos', 'piloswine', 'ursaring'];
+        const pool = this.towerWins >= 7 ? evolvedPool : this.towerWins >= 3 ? [...basicPool, ...evolvedPool] : basicPool;
 
-        this.battleEnemy = new Pokemon(id1, towerLevel);
-        this.battleEnemyTeam = [new Pokemon(id2, towerLevel)];
+        const teamSize = this.towerWins >= 10 ? 3 : this.towerWins >= 5 ? 3 : 2;
+        const ids = [];
+        for (let i = 0; i < teamSize; i++) {
+            ids.push(pool[Math.floor(Math.random() * pool.length)]);
+        }
+
+        this.battleEnemy = new Pokemon(ids[0], towerLevel);
+        this.battleEnemyTeam = ids.slice(1).map((id, i) => new Pokemon(id, towerLevel - 1 + i));
         this.battleType = 'tower';
         this.battleReward = { money: 500 + this.towerWins * 200 };
-        this.addMessage(`Battle Tower - Fight ${this.towerWins + 1}!`, 'warning');
+
+        // Milestone flavor text
+        const fight = this.towerWins + 1;
+        if (fight === 1) this.addMessage('Battle Tower — Floor 1! How far can you go?', 'warning');
+        else if (fight % 10 === 0) this.addMessage(`Battle Tower — Floor ${fight}! The crowd roars!`, 'warning');
+        else if (fight % 5 === 0) this.addMessage(`Battle Tower — Floor ${fight}! Getting serious now.`, 'warning');
+        else this.addMessage(`Battle Tower — Floor ${fight}!`, 'warning');
+
         this.startBattle();
     }
 
@@ -1738,6 +1752,14 @@ class Game {
         } else if (this.battleType === 'tower') {
             this.towerWins++;
             this.addMessage(`Battle Tower win #${this.towerWins}!`, 'success');
+            // Milestone rewards every 5 wins
+            if (this.towerWins % 5 === 0) {
+                this.bag['rare_candy'] = (this.bag['rare_candy'] || 0) + 1;
+                this.bag['full_restore'] = (this.bag['full_restore'] || 0) + 1;
+                const bonus = this.towerWins * 100;
+                this.money += bonus;
+                this.addMessage(`🏆 Milestone ${this.towerWins}! Rare Candy + Full Restore + $${bonus}!`, 'success');
+            }
         } else if (this.battleType === 'e4') {
             this.e4Progress++;
             const remaining = 4 - this.e4Progress;
