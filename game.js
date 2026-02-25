@@ -648,6 +648,8 @@ class Game {
             ...(!earlyGame ? [{ icon: '🗻', text: 'Mystery Cave', desc: 'Something interesting...', action: () => this.mysteryCave(), weight: 12 }] : []),
             { icon: '⚔️', text: 'Trainer Battle', desc: 'An NPC trainer challenges you!', action: () => this.trainerBattle(), weight: earlyGame ? 8 : 14 },
             { icon: '🏕️', text: 'Campsite', desc: 'Rest, train, or forage', action: () => this.campsite(), weight: earlyGame ? 18 : 12 },
+            ...(!earlyGame ? [{ icon: '🦒', text: 'Safari Zone', desc: 'Catch rare Pokemon ($500 entry)', action: () => this.safariZone(), weight: 8 }] : []),
+            ...(this.badges >= 2 ? [{ icon: '🏠', text: 'Daycare', desc: 'Leave a Pokemon to train', action: () => this.daycare(), weight: 8 }] : []),
         ];
 
         // Battle Tower in post-game
@@ -1203,6 +1205,145 @@ class Game {
         this.updateUI();
         this.generateChoices();
         this.saveGame();
+    }
+
+    // ===== SAFARI ZONE =====
+    safariZone() {
+        if (this.money < 500) {
+            this.addMessage("You can't afford the $500 entry fee!", 'danger');
+            this.generateChoices();
+            return;
+        }
+        this.money -= 500;
+        this.addMessage('Welcome to the Safari Zone! You get 3 Safari Balls!', 'success');
+
+        const avgLevel = this.team.reduce((s, p) => s + p.level, 0) / this.team.length;
+        const safariPool = [...WILD_POKEMON.uncommon, ...WILD_POKEMON.rare, 'nidorino', 'gloom', 'pidgeotto', 'flaaffy', 'ariados', 'noctowl'];
+        let ballsLeft = 3;
+        let caught = 0;
+
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modal-body');
+
+        const throwBall = () => {
+            if (ballsLeft <= 0) {
+                modal.classList.add('hidden');
+                this.addMessage(`Safari Zone over! Caught ${caught} Pokemon.`, caught > 0 ? 'success' : 'warning');
+                this.updateUI();
+                this.generateChoices();
+                this.saveGame();
+                return;
+            }
+
+            const speciesId = safariPool[Math.floor(Math.random() * safariPool.length)];
+            const species = POKEMON_DATA[speciesId];
+            if (!species) { ballsLeft--; throwBall(); return; }
+
+            const level = Math.max(5, Math.floor(avgLevel + (Math.random() * 4) - 2));
+
+            body.innerHTML = `
+                <h3>🦒 Safari Zone</h3>
+                <p>A wild <strong>${species.name}</strong> (Lv.${level}) appeared!</p>
+                <p>Safari Balls left: <strong>${ballsLeft}</strong> | Caught: <strong>${caught}</strong></p>
+                <div class="safari-actions"></div>
+            `;
+            const actions = body.querySelector('.safari-actions');
+
+            const throwBtn = document.createElement('button');
+            throwBtn.className = 'choice-btn';
+            throwBtn.innerHTML = '<span class="choice-text">🔴 Throw Safari Ball</span>';
+            throwBtn.onclick = () => {
+                ballsLeft--;
+                if (Math.random() < 0.40 && this.team.length < 6) {
+                    const pokemon = new Pokemon(speciesId, level);
+                    this.team.push(pokemon);
+                    this.catches++;
+                    caught++;
+                    this.addMessage(`Gotcha! ${pokemon.name} was caught!`, 'success');
+                } else if (this.team.length >= 6) {
+                    this.addMessage(`${species.name} was caught but your team is full!`, 'warning');
+                } else {
+                    this.addMessage(`${species.name} broke free!`, 'danger');
+                }
+                throwBall();
+            };
+            actions.appendChild(throwBtn);
+
+            const skipBtn = document.createElement('button');
+            skipBtn.className = 'choice-btn';
+            skipBtn.innerHTML = '<span class="choice-text">🏃 Skip</span>';
+            skipBtn.onclick = () => {
+                this.addMessage(`You let ${species.name} go.`);
+                throwBall();
+            };
+            actions.appendChild(skipBtn);
+
+            const leaveBtn = document.createElement('button');
+            leaveBtn.className = 'choice-btn';
+            leaveBtn.innerHTML = '<span class="choice-text">🚪 Leave Safari Zone</span>';
+            leaveBtn.onclick = () => {
+                ballsLeft = 0;
+                throwBall();
+            };
+            actions.appendChild(leaveBtn);
+
+            modal.classList.remove('hidden');
+        };
+
+        throwBall();
+    }
+
+    // ===== DAYCARE =====
+    daycare() {
+        if (this.team.length < 2) {
+            this.addMessage("You need at least 2 Pokemon to use the Daycare!", 'warning');
+            this.generateChoices();
+            return;
+        }
+
+        const cost = 300 + this.badges * 100;
+        if (this.money < cost) {
+            this.addMessage(`The Daycare costs $${cost}. You can't afford it!`, 'danger');
+            this.generateChoices();
+            return;
+        }
+
+        // Show Pokemon picker
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modal-body');
+        body.innerHTML = `
+            <h3>🏠 Daycare — $${cost}</h3>
+            <p>Leave a Pokemon for intensive training. It gains XP equal to 2 wild battles.</p>
+            <div class="daycare-choices"></div>
+        `;
+        const container = body.querySelector('.daycare-choices');
+
+        this.team.forEach((poke, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerHTML = `<span class="choice-text">${poke.displayName} Lv.${poke.level}</span>`;
+            btn.onclick = () => {
+                this.money -= cost;
+                const xpGain = Math.floor(poke.level * 25 + 40) * 2;
+                this.giveExp(xpGain, poke);
+                this.addMessage(`${poke.displayName} trained at the Daycare and gained XP!`, 'success');
+                modal.classList.add('hidden');
+                this.updateUI();
+                this.generateChoices();
+                this.saveGame();
+            };
+            container.appendChild(btn);
+        });
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'choice-btn';
+        cancelBtn.innerHTML = '<span class="choice-text">Never mind</span>';
+        cancelBtn.onclick = () => {
+            modal.classList.add('hidden');
+            this.generateChoices();
+        };
+        container.appendChild(cancelBtn);
+        modal.classList.remove('hidden');
     }
 
     // ===== BATTLE TOWER (Post-game) =====
