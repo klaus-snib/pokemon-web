@@ -146,7 +146,14 @@ const ACHIEVEMENTS = {
     high_roller: { name: "High Roller", desc: "Win the gambler's game", icon: "🎰" },
     starter_collector: { name: "Starter Collector", desc: "Have 3+ different starters", icon: "🌟" },
     underdog: { name: "Underdog", desc: "Beat a gym with lower-level Pokemon", icon: "💪" },
-    lucky: { name: "Lucky", desc: "Find a legendary Pokemon", icon: "🍀" }
+    lucky: { name: "Lucky", desc: "Find a legendary Pokemon", icon: "🍀" },
+    tower_5: { name: "Tower Climber", desc: "Reach Battle Tower floor 5", icon: "🗼" },
+    tower_10: { name: "Tower Master", desc: "Reach Battle Tower floor 10", icon: "🏆" },
+    safari_catch: { name: "Safari Pro", desc: "Catch a Pokemon in Safari Zone", icon: "🦒" },
+    rocket_buster: { name: "Rocket Buster", desc: "Defeat Team Rocket", icon: "🚀" },
+    type_master: { name: "Type Master", desc: "Have 5+ different types on your team", icon: "🌈" },
+    nightmare_clear: { name: "Nightmare Survivor", desc: "Beat the game on Nightmare", icon: "💀" },
+    hard_clear: { name: "Hard Mode", desc: "Beat the game on Hard", icon: "🔥" }
 };
 
 // ===== TRAINER DATA =====
@@ -552,6 +559,9 @@ class Game {
         // Check money achievement
         if (this.money >= 10000) this.unlockAchievement('loaded');
         if (this.team.length >= 6) this.unlockAchievement('squad_goals');
+        // Check type diversity
+        const teamTypes = new Set(this.team.map(p => p.type));
+        if (teamTypes.size >= 5) this.unlockAchievement('type_master');
 
         // Check starter collector
         const starterSet = new Set(this.team.map(p => p.speciesId).filter(id => STARTERS.includes(id)));
@@ -1284,6 +1294,7 @@ class Game {
                     this.team.push(pokemon);
                     this.catches++;
                     caught++;
+                    this.unlockAchievement('safari_catch');
                     this.addMessage(`Gotcha! ${pokemon.name} was caught!`, 'success');
                 } else if (this.team.length >= 6) {
                     this.addMessage(`${species.name} was caught but your team is full!`, 'warning');
@@ -1749,9 +1760,12 @@ class Game {
         } else if (this.battleType === 'trainer') {
             const name = this.battleReward.trainerName || 'Trainer';
             this.addMessage(`You defeated ${name}!`, 'success');
+            if (name.includes('Team Rocket')) this.unlockAchievement('rocket_buster');
         } else if (this.battleType === 'tower') {
             this.towerWins++;
             this.addMessage(`Battle Tower win #${this.towerWins}!`, 'success');
+            if (this.towerWins >= 5) this.unlockAchievement('tower_5');
+            if (this.towerWins >= 10) this.unlockAchievement('tower_10');
             // Milestone rewards every 5 wins
             if (this.towerWins % 5 === 0) {
                 this.bag['rare_candy'] = (this.bag['rare_candy'] || 0) + 1;
@@ -2538,6 +2552,8 @@ class Game {
         if (this.strikes === this.maxStrikes) this.unlockAchievement('flawless');
         if (this.strikes === 1) this.unlockAchievement('survivor');
         if (this.eventsExplored < 50) this.unlockAchievement('speedrunner');
+        if (this.difficulty === 'nightmare') this.unlockAchievement('nightmare_clear');
+        if (this.difficulty === 'hard') this.unlockAchievement('hard_clear');
 
         const elapsed = Date.now() - this.startTime;
         const minutes = Math.floor(elapsed / 60000);
