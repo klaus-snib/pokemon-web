@@ -168,10 +168,10 @@ const STONE_EVOLUTIONS = {
 };
 
 const DIFFICULTY_SETTINGS = {
-    easy: { startMoney: 2000, startItems: ['potion', 'potion', 'pokeball', 'pokeball', 'pokeball', 'pokeball', 'pokeball'], strikes: 5, badgesNeeded: 6, maxEvents: 50 },
-    normal: { startMoney: 1000, startItems: ['potion', 'pokeball', 'pokeball', 'pokeball'], strikes: 3, badgesNeeded: 8, maxEvents: 35 },
-    hard: { startMoney: 500, startItems: ['pokeball'], strikes: 2, badgesNeeded: 8, maxEvents: 28 },
-    nightmare: { startMoney: 0, startItems: [], strikes: 1, badgesNeeded: 8, maxEvents: 22 }
+    easy: { startMoney: 2000, startItems: ['potion', 'potion', 'pokeball', 'pokeball', 'pokeball', 'pokeball', 'pokeball'], strikes: 5, badgesNeeded: 6, maxEvents: 50, levelCapBonus: 3 },
+    normal: { startMoney: 1000, startItems: ['potion', 'pokeball', 'pokeball', 'pokeball'], strikes: 3, badgesNeeded: 8, maxEvents: 35, levelCapBonus: 1 },
+    hard: { startMoney: 500, startItems: ['pokeball'], strikes: 2, badgesNeeded: 8, maxEvents: 28, levelCapBonus: 0 },
+    nightmare: { startMoney: 0, startItems: [], strikes: 1, badgesNeeded: 8, maxEvents: 22, levelCapBonus: 0 }
 };
 
 const TYPE_EFFECTIVENESS = {

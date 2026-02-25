@@ -1565,11 +1565,12 @@ class Game {
     }
 
     getLevelCap() {
-        // Level cap based on badges — prevents infinite grinding past the next gym
-        // Cap = next gym's level + 2 (enough to prep but not massively overlevel)
+        // Level cap based on badges + difficulty — prevents grinding past the next gym
+        // Bonus varies by difficulty: Easy +3, Normal +1, Hard/Nightmare +0
         const nextGymIndex = this.currentGym;
         if (nextGymIndex >= GYM_LEADERS.length) return 100; // No cap after all badges
-        return GYM_LEADERS[nextGymIndex].level + 2;
+        const bonus = DIFFICULTY_SETTINGS[this.difficulty]?.levelCapBonus ?? 2;
+        return GYM_LEADERS[nextGymIndex].level + bonus;
     }
 
     giveExp(amount, pokemon) {
