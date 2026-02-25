@@ -141,6 +141,87 @@ const WILD_POKEMON = {
     fishing: ['magikarp', 'goldeen', 'psyduck', 'tentacool', 'staryu', 'poliwag', 'wooper']
 };
 
+// Route environments — shuffled per run, rotate every 2 badges
+// Each route biases wild encounters toward its themed species
+const ROUTE_ENVIRONMENTS = [
+    {
+        name: "Viridian Forest", icon: "🌲", desc: "Dense woodland buzzing with life",
+        common: ['caterpie', 'weedle', 'oddish', 'hoppip', 'spinarak'],
+        uncommon: ['pikachu', 'clefairy', 'abra'],
+        rare: ['eevee'],
+        fishing: ['poliwag', 'goldeen', 'magikarp']
+    },
+    {
+        name: "Mt. Moon", icon: "⛰️", desc: "Dark tunnels echo with strange cries",
+        common: ['geodude', 'rattata', 'machop', 'swinub'],
+        uncommon: ['clefairy', 'gastly', 'misdreavus'],
+        rare: ['larvitar'],
+        fishing: ['wooper', 'magikarp', 'psyduck']
+    },
+    {
+        name: "Cerulean Coast", icon: "🏖️", desc: "Waves crash against sandy shores",
+        common: ['tentacool', 'staryu', 'psyduck', 'wooper', 'poliwag'],
+        uncommon: ['growlithe', 'vulpix', 'mareep'],
+        rare: ['pikachu'],
+        fishing: ['magikarp', 'goldeen', 'tentacool', 'staryu', 'psyduck', 'poliwag']
+    },
+    {
+        name: "Lavender Ruins", icon: "👻", desc: "A chill runs down your spine...",
+        common: ['gastly', 'murkrow', 'hoothoot', 'rattata', 'spinarak'],
+        uncommon: ['misdreavus', 'houndour', 'abra'],
+        rare: ['eevee'],
+        fishing: ['magikarp', 'goldeen', 'psyduck']
+    },
+    {
+        name: "Safari Grasslands", icon: "🦒", desc: "Wide open plains teeming with Pokemon",
+        common: ['sentret', 'pidgey', 'oddish', 'mareep', 'hoppip'],
+        uncommon: ['nidoran_m', 'teddiursa', 'snubbull', 'wooper'],
+        rare: ['pikachu', 'eevee'],
+        fishing: ['poliwag', 'magikarp', 'wooper', 'psyduck']
+    },
+    {
+        name: "Volcanic Path", icon: "🌋", desc: "The ground radiates intense heat",
+        common: ['growlithe', 'geodude', 'machop', 'houndour'],
+        uncommon: ['vulpix', 'nidoran_m', 'gastly'],
+        rare: ['larvitar'],
+        fishing: ['magikarp', 'goldeen', 'tentacool']
+    },
+    {
+        name: "Frosty Cavern", icon: "❄️", desc: "Icicles glitter in the dim light",
+        common: ['swinub', 'geodude', 'rattata', 'hoothoot'],
+        uncommon: ['clefairy', 'misdreavus', 'snubbull'],
+        rare: ['pikachu'],
+        fishing: ['magikarp', 'psyduck', 'poliwag']
+    },
+    {
+        name: "Power Plant", icon: "⚡", desc: "Sparks fly from rusted machinery",
+        common: ['mareep', 'rattata', 'geodude', 'machop'],
+        uncommon: ['pikachu', 'abra', 'gastly'],
+        rare: ['eevee'],
+        fishing: ['magikarp', 'goldeen', 'tentacool']
+    },
+    {
+        name: "Dark Forest", icon: "🌑", desc: "Shadows move between ancient trees",
+        common: ['murkrow', 'spinarak', 'hoothoot', 'oddish', 'hoppip'],
+        uncommon: ['misdreavus', 'houndour', 'gastly', 'teddiursa'],
+        rare: ['larvitar'],
+        fishing: ['poliwag', 'wooper', 'magikarp']
+    },
+    {
+        name: "Meadow Fields", icon: "🌻", desc: "Flowers sway in a gentle breeze",
+        common: ['oddish', 'hoppip', 'sentret', 'pidgey', 'caterpie'],
+        uncommon: ['clefairy', 'vulpix', 'mareep', 'snubbull'],
+        rare: ['pikachu', 'eevee'],
+        fishing: ['goldeen', 'poliwag', 'magikarp']
+    }
+];
+
+// Shuffle and pick route sequence for a run
+function shuffleRoutes() {
+    const shuffled = [...ROUTE_ENVIRONMENTS].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 5); // 5 routes per run
+}
+
 // Master gym leader pool — 8 picked per run, scaled to tier levels
 // earlyTeam = used for tiers 1-4 (pre-evos), lateTeam = tiers 5-8 (evolved)
 const GYM_LEADER_POOL = [

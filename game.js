@@ -247,6 +247,10 @@ class Game {
         this.e4Progress = 0; // 0-3 = E4 members, 4 = champion
         this.inE4 = false;
 
+        // Route environments — shuffled per run, rotate every 2 badges
+        this.routes = typeof shuffleRoutes === 'function' ? shuffleRoutes() : [];
+        this.currentRouteIndex = 0;
+
         this.init();
     }
 
@@ -282,7 +286,9 @@ class Game {
             inE4: this.inE4,
             gymLeaders: GYM_LEADERS.map(g => ({ name: g.name, type: g.type, badge: g.badge, earlyTeam: g.earlyTeam, lateTeam: g.lateTeam, region: g.region, level: g.level })),
             eliteFour: this.eliteFour,
-            champion: this.champion
+            champion: this.champion,
+            routes: this.routes,
+            currentRouteIndex: this.currentRouteIndex
         };
         localStorage.setItem('pokemon_roguelike_save', JSON.stringify(data));
     }
@@ -329,6 +335,8 @@ class Game {
             }
             if (data.eliteFour) this.eliteFour = data.eliteFour;
             if (data.champion) this.champion = data.champion;
+            if (data.routes) this.routes = data.routes;
+            if (data.currentRouteIndex !== undefined) this.currentRouteIndex = data.currentRouteIndex;
             this.state = 'playing';
             return true;
         } catch (e) {
@@ -339,6 +347,21 @@ class Game {
 
     deleteSave() {
         localStorage.removeItem('pokemon_roguelike_save');
+    }
+
+    // Get current route environment (rotates every 2 badges)
+    getCurrentRoute() {
+        if (!this.routes || this.routes.length === 0) return null;
+        return this.routes[this.currentRouteIndex % this.routes.length];
+    }
+
+    // Get wild encounter pool — route-biased if route exists, else fallback to global
+    getWildPool(tier) {
+        const route = this.getCurrentRoute();
+        if (route && route[tier] && route[tier].length > 0) {
+            return route[tier];
+        }
+        return WILD_POKEMON[tier] || WILD_POKEMON.common;
     }
 
     loadHallOfFame() {
@@ -511,6 +534,10 @@ class Game {
         this.updateUI();
         this.addMessage(`You chose ${starter.name}! Your adventure begins!`, 'success');
         this.addMessage(`Your rival ${this.rivalName} chose ${POKEMON_DATA[this.rivalStarter].name}!`, 'warning');
+        const startRoute = this.getCurrentRoute();
+        if (startRoute) {
+            this.addMessage(`${startRoute.icon} ${startRoute.name} — ${startRoute.desc}`, 'success');
+        }
         this.generateChoices();
         this.saveGame();
     }
@@ -532,6 +559,16 @@ class Game {
         document.getElementById('strikes').textContent = '❤️'.repeat(this.strikes) + '🖤'.repeat(this.maxStrikes - this.strikes);
         const eventsLeft = this.maxEvents ? this.maxEvents - this.eventsExplored : '∞';
         document.getElementById('events-count').textContent = `Events: ${eventsLeft} left`;
+
+        // Route display
+        const route = this.getCurrentRoute();
+        const routeEl = document.getElementById('route-name');
+        if (routeEl && route) {
+            routeEl.textContent = `${route.icon} ${route.name}`;
+            routeEl.title = route.desc;
+        } else if (routeEl) {
+            routeEl.textContent = '';
+        }
 
         const totalBalls = (this.bag['pokeball'] || 0) + (this.bag['great_ball'] || 0) + (this.bag['ultra_ball'] || 0) + (this.bag['master_ball'] || 0);
         document.getElementById('balls-count').textContent = `🔴 ${totalBalls}`;
@@ -608,11 +645,12 @@ class Game {
         }
 
         // Wild battle (not available if out of events)
+        const currentRoute = this.getCurrentRoute();
         if (!outOfEvents) {
             choices.push({
-                icon: '🌿',
-                text: 'Explore Tall Grass',
-                desc: 'Encounter wild Pokemon',
+                icon: currentRoute ? currentRoute.icon : '🌿',
+                text: currentRoute ? `Explore ${currentRoute.name}` : 'Explore Tall Grass',
+                desc: currentRoute ? currentRoute.desc : 'Encounter wild Pokemon',
                 action: () => this.wildBattle()
             });
         }
@@ -765,8 +803,9 @@ class Game {
 
     // ===== WILD BATTLES =====
     wildBattle() {
-        const pool = Math.random() < 0.65 ? WILD_POKEMON.common :
-                     Math.random() < 0.85 ? WILD_POKEMON.uncommon : WILD_POKEMON.rare;
+        const tier = Math.random() < 0.65 ? 'common' :
+                     Math.random() < 0.85 ? 'uncommon' : 'rare';
+        const pool = this.getWildPool(tier);
         const speciesId = pool[Math.floor(Math.random() * pool.length)];
 
         const avgLevel = this.team.reduce((sum, p) => sum + p.level, 0) / this.team.length;
@@ -856,7 +895,8 @@ class Game {
                 // Check if in zone
                 const inZone = needlePos >= zoneStart && needlePos <= zoneStart + 30;
                 if (inZone) {
-                    const speciesId = WILD_POKEMON.fishing[Math.floor(Math.random() * WILD_POKEMON.fishing.length)];
+                    const fishPool = this.getWildPool('fishing');
+                    const speciesId = fishPool[Math.floor(Math.random() * fishPool.length)];
                     const avgLevel = this.team.reduce((sum, p) => sum + p.level, 0) / this.team.length;
                     const level = Math.max(5, Math.floor(avgLevel + (Math.random() * 6) - 3));
 
@@ -1912,6 +1952,15 @@ class Game {
             const eventsPerPhase = Math.floor(this.maxEvents / this.badgesNeeded);
             this.eventsExplored = Math.max(0, this.eventsExplored - eventsPerPhase);
             this.addMessage(`New area unlocked! +${eventsPerPhase} exploration events!`, 'success');
+            // Advance route every 2 badges
+            if (this.routes && this.routes.length > 0 && this.badges % 2 === 0) {
+                this.currentRouteIndex = Math.min(this.currentRouteIndex + 1, this.routes.length - 1);
+                const newRoute = this.getCurrentRoute();
+                if (newRoute) {
+                    this.addMessage(`Arrived at ${newRoute.icon} ${newRoute.name}!`, 'success');
+                }
+            }
+
             this.showEventResult(`🏅 Badge earned! +${eventsPerPhase} events to explore!`, 'success');
 
             // Check underdog achievement

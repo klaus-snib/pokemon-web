@@ -1396,3 +1396,14 @@ footer button:active {
 .rarity-badge-uncommon { background: #60a5fa; color: white; }
 .rarity-badge-rare { background: #a78bfa; color: white; }
 .rarity-badge-legendary { background: #fbbf24; color: #1a1a2e; }
+
+/* Route indicator */
+.route-indicator {
+display: block;
+width: 100%;
+text-align: center;
+font-size: 0.85rem;
+color: #a0c4ff;
+padding: 2px 0;
+letter-spacing: 0.5px;
+}
