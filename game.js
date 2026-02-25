@@ -209,6 +209,12 @@ class Game {
         this.postGame = false;
         this.towerWins = 0;
 
+        // Elite Four + Champion gauntlet
+        this.eliteFour = typeof shuffleEliteFour === 'function' ? shuffleEliteFour() : [];
+        this.champion = typeof shuffleChampion === 'function' ? shuffleChampion() : null;
+        this.e4Progress = 0; // 0-3 = E4 members, 4 = champion
+        this.inE4 = false;
+
         this.init();
     }
 
@@ -239,7 +245,9 @@ class Game {
             lastRivalBadge: this.lastRivalBadge,
             activePokemonIndex: this.activePokemonIndex,
             postGame: this.postGame,
-            towerWins: this.towerWins
+            towerWins: this.towerWins,
+            e4Progress: this.e4Progress,
+            inE4: this.inE4
         };
         localStorage.setItem('pokemon_roguelike_save', JSON.stringify(data));
     }
@@ -277,6 +285,8 @@ class Game {
             }
             this.postGame = data.postGame || false;
             this.towerWins = data.towerWins || 0;
+            this.e4Progress = data.e4Progress || 0;
+            this.inE4 = data.inE4 || false;
             this.state = 'playing';
             return true;
         } catch (e) {
@@ -418,6 +428,16 @@ class Game {
         this.lastRivalBadge = 0;
         this.rivalName = RIVAL_NAMES[Math.floor(Math.random() * RIVAL_NAMES.length)];
 
+        // Shuffle gym leaders, E4, and champion for this run
+        // Reassign the global GYM_LEADERS so rest of code picks it up
+        const newGyms = shuffleGymLeaders();
+        GYM_LEADERS.length = 0;
+        newGyms.forEach(g => GYM_LEADERS.push(g));
+        this.eliteFour = shuffleEliteFour();
+        this.champion = shuffleChampion();
+        this.e4Progress = 0;
+        this.inE4 = false;
+
         // Apply difficulty settings
         const settings = DIFFICULTY_SETTINGS[this.difficulty];
         this.money = settings.startMoney;
@@ -550,6 +570,29 @@ class Game {
                 desc: 'Encounter wild Pokemon',
                 action: () => this.wildBattle()
             });
+        }
+
+        // E4/Champion gauntlet
+        if (this.inE4) {
+            if (this.e4Progress < 4 && this.eliteFour[this.e4Progress]) {
+                const e4 = this.eliteFour[this.e4Progress];
+                choices.push({
+                    icon: '⭐',
+                    text: `Elite Four: ${e4.name}`,
+                    desc: `${e4.type} type - Lv.${e4.level}`,
+                    action: () => this.e4Battle()
+                });
+            } else if (this.e4Progress >= 4 && this.champion) {
+                choices.push({
+                    icon: '👑',
+                    text: `Champion ${this.champion.name}`,
+                    desc: `The final battle! Lv.${this.champion.level}`,
+                    action: () => this.championBattle()
+                });
+            }
+            // Only heal + E4/champ during gauntlet
+            choices.push({ icon: '🏥', text: 'Pokemon Center', desc: 'Heal before the next fight', action: () => this.healTeam() });
+            return choices;
         }
 
         // Gym challenge if ready
@@ -763,39 +806,70 @@ class Game {
     // ===== GYM BATTLES =====
     gymBattle() {
         const gym = GYM_LEADERS[this.currentGym];
-        const gymPokemon = this.getGymPokemon(gym);
-        this.battleEnemy = new Pokemon(gymPokemon, gym.level);
+        // Use leader's specific Pokemon if available, else fallback to type pool
+        const team = gym.pokemon || [this.getGymPokemonFallback(gym)];
+        this.battleEnemy = new Pokemon(team[0], gym.level);
         this.battleEnemyTeam = [];
 
-        // Give gym leaders 2-3 Pokemon at higher gyms
-        if (this.currentGym >= 3) {
-            const extraId = this.getGymPokemon(gym);
-            this.battleEnemyTeam.push(new Pokemon(extraId, gym.level - 2));
+        // Give gym leaders extra Pokemon at higher gyms
+        if (this.currentGym >= 3 && team.length > 1) {
+            this.battleEnemyTeam.push(new Pokemon(team[1] || team[0], gym.level - 2));
         }
-        if (this.currentGym >= 6) {
-            const extraId = this.getGymPokemon(gym);
-            this.battleEnemyTeam.push(new Pokemon(extraId, gym.level - 1));
+        if (this.currentGym >= 6 && team.length > 1) {
+            const extra = team[2] || team[1] || team[0];
+            this.battleEnemyTeam.push(new Pokemon(extra, gym.level - 1));
         }
 
         this.battleType = 'gym';
         this.battleReward = { money: 1000 + this.currentGym * 500 };
-        this.addMessage(`Gym Leader ${gym.name} wants to battle!`, 'warning');
+        const regionTag = gym.region ? ` (${gym.region})` : '';
+        this.addMessage(`Gym Leader ${gym.name}${regionTag} wants to battle!`, 'warning');
         this.startBattle();
     }
 
-    getGymPokemon(gym) {
+    getGymPokemonFallback(gym) {
         const typeMap = {
-            'Rock': ['geodude', 'geodude', 'omanyte'],
-            'Water': ['staryu', 'psyduck', 'goldeen'],
-            'Electric': ['pikachu', 'pikachu'],
-            'Grass': ['bulbasaur', 'chikorita', 'bayleef'],
-            'Poison': ['gastly', 'nidoran_m', 'nidorino'],
-            'Psychic': ['kadabra', 'abra', 'kadabra'],
-            'Fire': ['charmeleon', 'cyndaquil', 'quilava'],
-            'Ground': ['geodude', 'graveler', 'geodude']
+            'Rock': ['geodude', 'graveler'], 'Water': ['staryu', 'starmie'],
+            'Electric': ['pikachu', 'raichu'], 'Grass': ['oddish', 'vileplume'],
+            'Poison': ['nidoran_m', 'nidoking'], 'Psychic': ['abra', 'kadabra'],
+            'Fire': ['growlithe', 'arcanine'], 'Ground': ['geodude', 'graveler'],
+            'Flying': ['pidgey', 'pidgeot'], 'Bug': ['caterpie', 'butterfree'],
+            'Ghost': ['gastly', 'haunter'], 'Fighting': ['machop', 'machoke'],
+            'Normal': ['raticate', 'clefable'], 'Dragon': ['gyarados'],
+            'Ice': ['tentacruel'], 'Steel': ['graveler'], 'Dark': ['haunter', 'nidoking'],
+            'Fairy': ['clefairy', 'clefable']
         };
         const pool = typeMap[gym.type] || ['rattata'];
         return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    // ===== ELITE FOUR BATTLES =====
+    e4Battle() {
+        const e4 = this.eliteFour[this.e4Progress];
+        if (!e4) return;
+
+        this.battleEnemy = new Pokemon(e4.pokemon[0], e4.level);
+        this.battleEnemyTeam = e4.pokemon.slice(1).map((id, i) => new Pokemon(id, e4.level - 1 + i));
+
+        this.battleType = 'e4';
+        this.battleReward = { money: 3000 + this.e4Progress * 1000, e4: true };
+        this.addMessage(`Elite Four ${e4.name} (${e4.region}) wants to battle!`, 'warning');
+        this.startBattle();
+    }
+
+    // ===== CHAMPION BATTLE =====
+    championBattle() {
+        if (!this.champion) return;
+
+        this.battleEnemy = new Pokemon(this.champion.pokemon[0], this.champion.level);
+        this.battleEnemyTeam = this.champion.pokemon.slice(1).map((id, i) =>
+            new Pokemon(id, this.champion.level - 2 + i)
+        );
+
+        this.battleType = 'champion';
+        this.battleReward = { money: 10000, champion: true };
+        this.addMessage(`Champion ${this.champion.name} (${this.champion.region}) challenges you!`, 'warning');
+        this.startBattle();
     }
 
     // ===== TRAINER BATTLES =====
@@ -1461,6 +1535,13 @@ class Game {
             }
 
             if (this.badges >= this.badgesNeeded) {
+                if (this.eliteFour.length > 0 && !this.inE4) {
+                    this.inE4 = true;
+                    this.e4Progress = 0;
+                    this.addMessage('All badges collected! The Elite Four awaits!', 'success');
+                    setTimeout(() => this.generateChoices(), 1500);
+                    return;
+                }
                 setTimeout(() => this.victory(), 1500);
                 return;
             }
@@ -1476,6 +1557,20 @@ class Game {
         } else if (this.battleType === 'tower') {
             this.towerWins++;
             this.addMessage(`Battle Tower win #${this.towerWins}!`, 'success');
+        } else if (this.battleType === 'e4') {
+            this.e4Progress++;
+            const remaining = 4 - this.e4Progress;
+            if (remaining > 0) {
+                this.addMessage(`Elite Four member defeated! ${remaining} more to go!`, 'success');
+            } else {
+                this.addMessage('All Elite Four defeated! The Champion awaits!', 'success');
+            }
+        } else if (this.battleType === 'champion') {
+            this.unlockAchievement('champion');
+            this.addMessage(`You defeated Champion ${this.champion.name}!`, 'success');
+            this.inE4 = false;
+            setTimeout(() => this.victory(), 1500);
+            return; // Don't continue to normal flow — victory handles it
         }
 
         // Fishing catch tracking
@@ -2268,7 +2363,8 @@ class Game {
         this.showScreen('gameover-screen');
         document.getElementById('gameover-title').textContent = '🎉 Victory!';
         document.getElementById('gameover-title').className = 'victory';
-        document.getElementById('gameover-message').textContent = `You collected all ${this.badgesNeeded} badges and became the Champion!`;
+        const champName = this.champion ? this.champion.name : 'the Champion';
+        document.getElementById('gameover-message').textContent = `You defeated ${champName} and became the new Champion!`;
 
         const teamHtml = this.team.map(p => `
             <div class="victory-pokemon">

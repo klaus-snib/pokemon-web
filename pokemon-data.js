@@ -114,16 +114,122 @@ const WILD_POKEMON = {
     fishing: ['magikarp', 'goldeen', 'psyduck', 'tentacool', 'staryu', 'poliwag']
 };
 
-const GYM_LEADERS = [
-    { name: "Brock", type: "Rock", badge: "Boulder Badge", level: 10 },
-    { name: "Misty", type: "Water", badge: "Cascade Badge", level: 14 },
-    { name: "Lt. Surge", type: "Electric", badge: "Thunder Badge", level: 18 },
-    { name: "Erika", type: "Grass", badge: "Rainbow Badge", level: 22 },
-    { name: "Koga", type: "Poison", badge: "Soul Badge", level: 26 },
-    { name: "Sabrina", type: "Psychic", badge: "Marsh Badge", level: 30 },
-    { name: "Blaine", type: "Fire", badge: "Volcano Badge", level: 34 },
-    { name: "Giovanni", type: "Ground", badge: "Earth Badge", level: 38 }
+// Master gym leader pool — 8 picked per run, scaled to tier levels
+const GYM_LEADER_POOL = [
+    // Kanto
+    { name: "Brock", type: "Rock", badge: "Boulder Badge", pokemon: ['geodude', 'graveler'], region: "Kanto" },
+    { name: "Misty", type: "Water", badge: "Cascade Badge", pokemon: ['staryu', 'starmie'], region: "Kanto" },
+    { name: "Lt. Surge", type: "Electric", badge: "Thunder Badge", pokemon: ['pikachu', 'raichu'], region: "Kanto" },
+    { name: "Erika", type: "Grass", badge: "Rainbow Badge", pokemon: ['oddish', 'vileplume'], region: "Kanto" },
+    { name: "Koga", type: "Poison", badge: "Soul Badge", pokemon: ['nidoran_m', 'nidoking'], region: "Kanto" },
+    { name: "Sabrina", type: "Psychic", badge: "Marsh Badge", pokemon: ['abra', 'kadabra'], region: "Kanto" },
+    { name: "Blaine", type: "Fire", badge: "Volcano Badge", pokemon: ['growlithe', 'arcanine'], region: "Kanto" },
+    { name: "Giovanni", type: "Ground", badge: "Earth Badge", pokemon: ['geodude', 'graveler', 'nidoking'], region: "Kanto" },
+    // Johto
+    { name: "Falkner", type: "Flying", badge: "Zephyr Badge", pokemon: ['pidgey', 'pidgeotto'], region: "Johto" },
+    { name: "Bugsy", type: "Bug", badge: "Hive Badge", pokemon: ['caterpie', 'butterfree'], region: "Johto" },
+    { name: "Whitney", type: "Normal", badge: "Plain Badge", pokemon: ['clefairy', 'clefable'], region: "Johto" },
+    { name: "Morty", type: "Ghost", badge: "Fog Badge", pokemon: ['gastly', 'haunter'], region: "Johto" },
+    { name: "Chuck", type: "Fighting", badge: "Storm Badge", pokemon: ['machop', 'machoke'], region: "Johto" },
+    { name: "Jasmine", type: "Steel", badge: "Mineral Badge", pokemon: ['geodude', 'graveler'], region: "Johto" },
+    { name: "Pryce", type: "Ice", badge: "Glacier Badge", pokemon: ['tentacool', 'tentacruel'], region: "Johto" },
+    { name: "Clair", type: "Dragon", badge: "Rising Badge", pokemon: ['gyarados', 'gyarados'], region: "Johto" },
+    // Hoenn
+    { name: "Roxanne", type: "Rock", badge: "Stone Badge", pokemon: ['geodude', 'graveler'], region: "Hoenn" },
+    { name: "Brawly", type: "Fighting", badge: "Knuckle Badge", pokemon: ['machop', 'machoke'], region: "Hoenn" },
+    { name: "Wattson", type: "Electric", badge: "Dynamo Badge", pokemon: ['pikachu', 'raichu'], region: "Hoenn" },
+    { name: "Flannery", type: "Fire", badge: "Heat Badge", pokemon: ['vulpix', 'ninetales'], region: "Hoenn" },
+    { name: "Norman", type: "Normal", badge: "Balance Badge", pokemon: ['raticate', 'clefable'], region: "Hoenn" },
+    { name: "Winona", type: "Flying", badge: "Feather Badge", pokemon: ['pidgeotto', 'pidgeot'], region: "Hoenn" },
+    { name: "Wallace", type: "Water", badge: "Rain Badge", pokemon: ['starmie', 'gyarados'], region: "Hoenn" },
+    // Sinnoh
+    { name: "Roark", type: "Rock", badge: "Coal Badge", pokemon: ['geodude', 'graveler'], region: "Sinnoh" },
+    { name: "Gardenia", type: "Grass", badge: "Forest Badge", pokemon: ['oddish', 'vileplume'], region: "Sinnoh" },
+    { name: "Maylene", type: "Fighting", badge: "Cobble Badge", pokemon: ['machop', 'machoke'], region: "Sinnoh" },
+    { name: "Crasher Wake", type: "Water", badge: "Fen Badge", pokemon: ['poliwag', 'poliwrath'], region: "Sinnoh" },
+    { name: "Fantina", type: "Ghost", badge: "Relic Badge", pokemon: ['gastly', 'haunter'], region: "Sinnoh" },
+    { name: "Volkner", type: "Electric", badge: "Beacon Badge", pokemon: ['pikachu', 'raichu', 'jolteon'], region: "Sinnoh" },
 ];
+
+// Tier levels — gym leaders are scaled to these regardless of who they are
+const GYM_TIER_LEVELS = [10, 14, 18, 22, 26, 30, 34, 38];
+
+// Elite Four pool — 4 picked per run
+const ELITE_FOUR_POOL = [
+    { name: "Lorelei", type: "Ice", pokemon: ['tentacruel', 'starmie', 'gyarados'], region: "Kanto" },
+    { name: "Bruno", type: "Fighting", pokemon: ['machoke', 'machoke', 'poliwrath'], region: "Kanto" },
+    { name: "Agatha", type: "Ghost", pokemon: ['haunter', 'haunter', 'nidoking'], region: "Kanto" },
+    { name: "Lance", type: "Dragon", pokemon: ['gyarados', 'aerodactyl', 'charizard'], region: "Kanto" },
+    { name: "Will", type: "Psychic", pokemon: ['kadabra', 'starmie', 'kadabra'], region: "Johto" },
+    { name: "Karen", type: "Dark", pokemon: ['haunter', 'nidoking', 'gyarados'], region: "Johto" },
+    { name: "Sidney", type: "Dark", pokemon: ['nidoking', 'haunter', 'raticate'], region: "Hoenn" },
+    { name: "Phoebe", type: "Ghost", pokemon: ['haunter', 'haunter', 'kadabra'], region: "Hoenn" },
+    { name: "Drake", type: "Dragon", pokemon: ['gyarados', 'aerodactyl', 'arcanine'], region: "Hoenn" },
+    { name: "Flint", type: "Fire", pokemon: ['arcanine', 'ninetales', 'charizard'], region: "Sinnoh" },
+    { name: "Lucian", type: "Psychic", pokemon: ['kadabra', 'starmie', 'kadabra'], region: "Sinnoh" },
+];
+
+// Champion pool — 1 picked per run
+const CHAMPION_POOL = [
+    { name: "Blue", pokemon: ['blastoise', 'arcanine', 'pidgeot', 'machoke', 'kadabra', 'raichu'], region: "Kanto" },
+    { name: "Lance", pokemon: ['gyarados', 'aerodactyl', 'charizard', 'nidoking', 'machoke'], region: "Johto" },
+    { name: "Steven", pokemon: ['graveler', 'starmie', 'aerodactyl', 'kadabra', 'machoke'], region: "Hoenn" },
+    { name: "Cynthia", pokemon: ['gyarados', 'arcanine', 'starmie', 'machoke', 'haunter', 'vileplume'], region: "Sinnoh" },
+    { name: "Red", pokemon: ['pikachu', 'venusaur', 'charizard', 'blastoise', 'kadabra'], region: "Kanto" },
+];
+
+// Shuffled gym selection for a run — picks 8 unique leaders, avoids duplicate types
+function shuffleGymLeaders() {
+    const pool = [...GYM_LEADER_POOL];
+    const selected = [];
+    const usedTypes = new Set();
+
+    // Shuffle pool
+    for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+
+    // Pick 8, preferring unique types
+    for (const leader of pool) {
+        if (selected.length >= 8) break;
+        if (!usedTypes.has(leader.type)) {
+            selected.push({ ...leader, level: GYM_TIER_LEVELS[selected.length] });
+            usedTypes.add(leader.type);
+        }
+    }
+
+    // If we don't have 8 unique types, fill with remaining (allow type repeats)
+    if (selected.length < 8) {
+        for (const leader of pool) {
+            if (selected.length >= 8) break;
+            if (!selected.find(s => s.name === leader.name)) {
+                selected.push({ ...leader, level: GYM_TIER_LEVELS[selected.length] });
+            }
+        }
+    }
+
+    return selected;
+}
+
+// Shuffle E4 — pick 4 unique, scale to levels 40-46
+function shuffleEliteFour() {
+    const pool = [...ELITE_FOUR_POOL];
+    for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return pool.slice(0, 4).map((e, i) => ({ ...e, level: 40 + i * 2 }));
+}
+
+// Pick random champion, scale to level 50
+function shuffleChampion() {
+    const champ = CHAMPION_POOL[Math.floor(Math.random() * CHAMPION_POOL.length)];
+    return { ...champ, level: 50 };
+}
+
+// Legacy constant for backward compatibility
+const GYM_LEADERS = shuffleGymLeaders();
 
 const ITEMS = {
     potion: { name: "Potion", desc: "Heals 20 HP", effect: "heal", value: 20, price: 200 },
