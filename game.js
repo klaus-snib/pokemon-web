@@ -806,8 +806,10 @@ class Game {
     // ===== GYM BATTLES =====
     gymBattle() {
         const gym = GYM_LEADERS[this.currentGym];
-        // Use leader's specific Pokemon if available, else fallback to type pool
-        const team = gym.pokemon || [this.getGymPokemonFallback(gym)];
+        // Pick team based on tier — early gyms (0-3) use pre-evos, late (4-7) use evolved
+        const isLate = this.currentGym >= 4;
+        const team = isLate ? (gym.lateTeam || gym.pokemon || [this.getGymPokemonFallback(gym)])
+                            : (gym.earlyTeam || gym.pokemon || [this.getGymPokemonFallback(gym)]);
         this.battleEnemy = new Pokemon(team[0], gym.level);
         this.battleEnemyTeam = [];
 
