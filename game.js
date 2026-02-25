@@ -46,10 +46,15 @@ class Pokemon {
         this.hp = Math.min(this.maxHp, this.hp + amount);
     }
 
-    addXp(amount) {
+    addXp(amount, levelCap) {
         this.xp += amount;
         const evolutions = [];
         while (this.xp >= this.xpToNext) {
+            // Stop leveling at cap
+            if (levelCap && this.level >= levelCap) {
+                this.xp = this.xpToNext - 1; // Freeze XP just under threshold
+                break;
+            }
             this.xp -= this.xpToNext;
             const evo = this.levelUp();
             this.xpToNext = this.calcXpToNext();
@@ -458,7 +463,9 @@ class Game {
     }
 
     updateUI() {
-        document.getElementById('badges').textContent = `Badges: ${this.badges}/${this.badgesNeeded}`;
+        const lvlCap = this.getLevelCap();
+        const capText = lvlCap < 100 ? ` (Lv.Cap: ${lvlCap})` : '';
+        document.getElementById('badges').textContent = `Badges: ${this.badges}/${this.badgesNeeded}${capText}`;
         document.getElementById('money').textContent = `$${this.money}`;
         document.getElementById('strikes').textContent = '❤️'.repeat(this.strikes) + '🖤'.repeat(this.maxStrikes - this.strikes);
         const eventsLeft = this.maxEvents ? this.maxEvents - this.eventsExplored : '∞';
@@ -1557,10 +1564,26 @@ class Game {
         log.scrollTop = log.scrollHeight;
     }
 
+    getLevelCap() {
+        // Level cap based on badges — prevents infinite grinding past the next gym
+        // Cap = next gym's level + 2 (enough to prep but not massively overlevel)
+        const nextGymIndex = this.currentGym;
+        if (nextGymIndex >= GYM_LEADERS.length) return 100; // No cap after all badges
+        return GYM_LEADERS[nextGymIndex].level + 2;
+    }
+
     giveExp(amount, pokemon) {
         if (!pokemon) pokemon = this.team[this.activePokemonIndex];
+
+        // Check level cap before giving XP
+        const levelCap = this.getLevelCap();
+        if (pokemon.level >= levelCap) {
+            this.addMessage(`${pokemon.displayName} is at the level cap (${levelCap}) — beat the next gym to raise it!`, 'warning');
+            return;
+        }
+
         const oldLevel = pokemon.level;
-        const evolutions = pokemon.addXp(amount);
+        const evolutions = pokemon.addXp(amount, levelCap);
 
         for (const evo of evolutions) {
             this.evolutionCount++;
