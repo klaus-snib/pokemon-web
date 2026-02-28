@@ -1699,6 +1699,24 @@ class Game {
             ${enemy.name} Lv.${enemy.level}
             <span class="type-badge type-bg-${enemy.type.toLowerCase()}">${enemy.type}</span>
         `;
+        
+        // Speed indicator
+        const speedIndicator = document.getElementById('enemy-speed');
+        if (speedIndicator) {
+            const playerSpeed = player.speed;
+            const enemySpeed = enemy.speed;
+            if (playerSpeed > enemySpeed) {
+                speedIndicator.innerHTML = '⚡ Faster';
+                speedIndicator.className = 'speed-indicator speed-fast';
+            } else if (playerSpeed < enemySpeed) {
+                speedIndicator.innerHTML = '🐢 Slower';
+                speedIndicator.className = 'speed-indicator speed-slow';
+            } else {
+                speedIndicator.innerHTML = '⚖️ Even';
+                speedIndicator.className = 'speed-indicator speed-even';
+            }
+        }
+        
         const enemyHpText = document.getElementById('enemy-hp-text');
         if (enemyHpText) enemyHpText.textContent = `${enemy.hp}/${enemy.maxHp}`;
 

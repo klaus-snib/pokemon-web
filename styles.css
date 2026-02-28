@@ -1407,3 +1407,22 @@ color: #a0c4ff;
 padding: 2px 0;
 letter-spacing: 0.5px;
 }
+
+/* Speed indicator for battle */
+.speed-indicator {
+    font-size: 0.85rem;
+    margin-left: 8px;
+    font-weight: bold;
+}
+
+.speed-fast {
+    color: #4ade80; /* green */
+}
+
+.speed-slow {
+    color: #ef4444; /* red */
+}
+
+.speed-even {
+    color: #fbbf24; /* yellow */
+}
