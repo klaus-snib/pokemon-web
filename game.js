@@ -406,6 +406,12 @@ class DragDropManager {
     }
     
     destroy() {
+        // Remove ghost element from body if it exists
+        if (this.ghostElement) {
+            this.ghostElement.remove();
+        }
+        // Remove any lingering drop indicators
+        this.container?.querySelectorAll('.drop-indicator').forEach(el => el.remove());
         this.reset();
         // Event listeners are automatically cleaned up when container is removed
     }
@@ -433,6 +439,7 @@ class Game {
         this.activePokemonIndex = 0;
         this.battleTurnInProgress = false;
         this.awaitingFaintSwitch = false;
+        this.battleWon = false; // Prevents player fainting after victory
 
         // Stats
         this.catches = 0;
@@ -607,11 +614,21 @@ class Game {
 
         document.querySelector('.close-btn').addEventListener('click', () => {
             document.getElementById('modal').classList.add('hidden');
+            // Clean up drag manager if active
+            if (this.dragManager) {
+                this.dragManager.destroy();
+                this.dragManager = null;
+            }
         });
 
         document.getElementById('modal').addEventListener('click', (e) => {
             if (e.target === document.getElementById('modal')) {
                 document.getElementById('modal').classList.add('hidden');
+                // Clean up drag manager if active
+                if (this.dragManager) {
+                    this.dragManager.destroy();
+                    this.dragManager = null;
+                }
             }
         });
 
@@ -1871,6 +1888,7 @@ class Game {
         }
         this.battleTurnInProgress = false;
         this.awaitingFaintSwitch = false;
+        this.battleWon = false; // Reset battle won flag
 
         // Clear battle log
         document.getElementById('battle-log').innerHTML = '';
@@ -2155,6 +2173,9 @@ class Game {
             return;
         }
 
+        // Battle is won - set flag to prevent player fainting
+        this.battleWon = true;
+
         // Give EXP — active Pokemon gets full, team gets 40%
         const expGain = Math.floor(enemy.level * 25 + 40);
         const active = this.team[this.activePokemonIndex];
@@ -2270,6 +2291,9 @@ class Game {
     }
 
     playerPokemonFainted() {
+        // If battle was already won, don't process player fainting
+        if (this.battleWon) return;
+        
         const player = this.team[this.activePokemonIndex];
         this.addBattleLog(`${player.displayName} fainted!`, 'danger');
 
