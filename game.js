@@ -18,7 +18,54 @@ class Pokemon {
         this.attack = Math.floor((base.atk * 2 * level) / 100) + 5;
         this.defense = Math.floor((base.def * 2 * level) / 100) + 5;
         this.speed = Math.floor((base.spd * 2 * level) / 100) + 5;
-        this.moves = getMovesForPokemon(this.type);
+        
+        // Get canonical moves from learnset
+        this.moves = this.generateStartingMoves();
+    }
+    
+    // Generate starting moves from learnset (up to 4 moves available at current level)
+    generateStartingMoves() {
+        // Check if canonical learnset exists
+        if (typeof LEARNSETS !== 'undefined' && LEARNSETS[this.speciesId]) {
+            const learnset = LEARNSETS[this.speciesId];
+            // Get moves available at current level or below
+            const availableMoves = learnset
+                .filter(entry => entry.level <= this.level)
+                .slice(-4); // Take last 4 (most recent)
+            
+            // Map to move data
+            return availableMoves.map(entry => {
+                const moveData = (typeof CANONICAL_MOVES !== 'undefined' && CANONICAL_MOVES[entry.move]) 
+                    ? CANONICAL_MOVES[entry.move] 
+                    : null;
+                if (moveData) {
+                    return {
+                        id: entry.move,
+                        name: moveData.name,
+                        type: moveData.type,
+                        power: moveData.power,
+                        pp: moveData.pp,
+                        maxPp: moveData.pp,
+                        accuracy: moveData.accuracy,
+                        category: moveData.category
+                    };
+                }
+                // Fallback if move not in database
+                return {
+                    id: entry.move,
+                    name: entry.move.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                    type: this.type,
+                    power: 50,
+                    pp: 15,
+                    maxPp: 15,
+                    accuracy: 100,
+                    category: 'physical'
+                };
+            });
+        }
+        
+        // Fallback to old system if no learnset
+        return getMovesForPokemon(this.type);
     }
 
     calcXpToNext() {
@@ -77,12 +124,74 @@ class Pokemon {
         this.defense = Math.floor((base.def * 2 * this.level) / 100) + 5;
         this.speed = Math.floor((base.spd * 2 * this.level) / 100) + 5;
 
+        // Check for new moves to learn
+        this.checkAndLearnNewMoves();
+
         // Check evolution
         const evo = this.species.evolves;
         if (evo && evo.level && this.level >= evo.level) {
             return evo.into;
         }
         return null;
+    }
+    
+    // Check for new moves at current level and learn them
+    checkAndLearnNewMoves() {
+        if (typeof LEARNSETS === 'undefined' || !LEARNSETS[this.speciesId]) {
+            return; // No learnset available
+        }
+        
+        const learnset = LEARNSETS[this.speciesId];
+        const newMoves = learnset.filter(entry => entry.level === this.level);
+        
+        for (const entry of newMoves) {
+            // Check if already knows this move
+            if (this.moves.some(m => m.id === entry.move)) {
+                continue;
+            }
+            
+            // Get move data
+            const moveData = (typeof CANONICAL_MOVES !== 'undefined' && CANONICAL_MOVES[entry.move]) 
+                ? CANONICAL_MOVES[entry.move] 
+                : null;
+            
+            const newMove = moveData ? {
+                id: entry.move,
+                name: moveData.name,
+                type: moveData.type,
+                power: moveData.power,
+                pp: moveData.pp,
+                maxPp: moveData.pp,
+                accuracy: moveData.accuracy,
+                category: moveData.category
+            } : {
+                id: entry.move,
+                name: entry.move.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                type: this.type,
+                power: 50,
+                pp: 15,
+                maxPp: 15,
+                accuracy: 100,
+                category: 'physical'
+            };
+            
+            // If less than 4 moves, just add it
+            if (this.moves.length < 4) {
+                this.moves.push(newMove);
+                // Store for notification (game will handle displaying this)
+                if (typeof game !== 'undefined' && game.addMessage) {
+                    game.addMessage(`${this.displayName} learned ${newMove.name}!`, 'success');
+                }
+            } else {
+                // At 4 moves - would need to forget one (simplified: auto-replace last move)
+                // In future: prompt player which move to forget
+                const oldMove = this.moves[3];
+                this.moves[3] = newMove;
+                if (typeof game !== 'undefined' && game.addMessage) {
+                    game.addMessage(`${this.displayName} learned ${newMove.name}! Forgot ${oldMove.name}.`, 'warning');
+                }
+            }
+        }
     }
 
     evolve(newSpeciesId) {
