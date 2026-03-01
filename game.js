@@ -1538,17 +1538,18 @@ class Game {
 
     // ===== SAFARI ZONE =====
     safariZone() {
-        if (this.money < 500) {
-            this.addMessage("You can't afford the $500 entry fee!", 'danger');
+        const entryFee = 1000; // Increased from $500
+        if (this.money < entryFee) {
+            this.addMessage(`You can't afford the $${entryFee} entry fee!`, 'danger');
             this.generateChoices();
             return;
         }
-        this.money -= 500;
-        this.addMessage('Welcome to the Safari Zone! You get 3 Safari Balls!', 'success');
+        this.money -= entryFee;
+        this.addMessage('Welcome to the Safari Zone! You get 1 Safari Ball!', 'success');
 
         const avgLevel = this.team.reduce((s, p) => s + p.level, 0) / this.team.length;
         const safariPool = [...WILD_POKEMON.uncommon, ...WILD_POKEMON.rare, 'nidorino', 'gloom', 'pidgeotto', 'flaaffy', 'ariados', 'noctowl'];
-        let ballsLeft = 3;
+        let ballsLeft = 1; // Reduced from 3 to 1
         let caught = 0;
 
         const modal = document.getElementById('modal');
