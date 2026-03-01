@@ -1426,3 +1426,104 @@ letter-spacing: 0.5px;
 .speed-even {
     color: #fbbf24; /* yellow */
 }
+
+/* ===== DRAG AND DROP STYLES ===== */
+
+.team-list {
+    position: relative;
+}
+
+.drag-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin: -0.5rem 0 0.5rem 0;
+    opacity: 0.7;
+}
+
+.team-card {
+    touch-action: pan-y;
+    user-select: none;
+    position: relative;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.team-card.dragging {
+    opacity: 0.4;
+    transform: scale(0.98);
+}
+
+.team-card-header {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding-left: 2rem;
+}
+
+.drag-handle {
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1;
+    letter-spacing: 1px;
+    opacity: 0.4;
+    cursor: grab;
+    padding: 0.5rem 0.25rem;
+    touch-action: none;
+    user-select: none;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+    opacity: 0.7;
+}
+
+.team-card:hover .drag-handle {
+    opacity: 0.6;
+}
+
+.team-card.ghost {
+    position: fixed !important;
+    pointer-events: none !important;
+    z-index: 1000 !important;
+    opacity: 0.9 !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+    transform: scale(1.02) !important;
+    background: var(--bg-light) !important;
+    border-radius: 8px !important;
+    border: 2px solid var(--accent) !important;
+}
+
+.drop-indicator {
+    height: 4px;
+    background: var(--accent);
+    border-radius: 2px;
+    margin: 0.25rem 0;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.drop-indicator.active {
+    opacity: 1;
+}
+
+/* Mobile optimizations */
+@media (max-width: 500px) {
+    .drag-handle {
+        font-size: 1rem;
+        padding: 0.75rem 0.5rem;
+        opacity: 0.5;
+    }
+    
+    .drag-hint {
+        font-size: 0.75rem;
+    }
+    
+    .team-card.ghost {
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5) !important;
+    }
+}

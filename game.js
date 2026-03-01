@@ -195,6 +195,222 @@ const NPC_TRAINERS = [
 
 const RIVAL_NAMES = ["Blue", "Silver", "Gary", "Damian", "Brendan", "May", "Barry", "Hugh"];
 
+// Drag and Drop Manager for Mobile UX
+class DragDropManager {
+    constructor(container, onReorder) {
+        this.container = container;
+        this.onReorder = onReorder;
+        this.draggedElement = null;
+        this.ghostElement = null;
+        this.startIndex = -1;
+        this.currentIndex = -1;
+        this.touchStartY = 0;
+        this.touchCurrentY = 0;
+        this.isDragging = false;
+        this.dragThreshold = 10;
+        this.longPressDelay = 200;
+        this.longPressTimer = null;
+        
+        this.init();
+    }
+    
+    init() {
+        this.container.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
+        this.container.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
+        this.container.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: true });
+        this.container.addEventListener('touchcancel', this.handleTouchEnd.bind(this), { passive: true });
+        
+        // Mouse fallback for desktop testing
+        this.container.addEventListener('mousedown', this.handleMouseDown.bind(this));
+        document.addEventListener('mousemove', this.handleMouseMove.bind(this));
+        document.addEventListener('mouseup', this.handleMouseUp.bind(this));
+    }
+    
+    getCardIndex(element) {
+        const cards = Array.from(this.container.querySelectorAll('.team-card'));
+        return cards.indexOf(element.closest('.team-card'));
+    }
+    
+    handleTouchStart(e) {
+        const card = e.target.closest('.team-card');
+        if (!card) return;
+        
+        this.touchStartY = e.touches[0].clientY;
+        this.startIndex = this.getCardIndex(card);
+        this.currentIndex = this.startIndex;
+        this.isDragging = false;
+        
+        // Start long press timer
+        this.longPressTimer = setTimeout(() => {
+            this.startDrag(card, e.touches[0].clientY);
+        }, this.longPressDelay);
+    }
+    
+    handleTouchMove(e) {
+        if (this.startIndex === -1) return;
+        
+        this.touchCurrentY = e.touches[0].clientY;
+        const deltaY = Math.abs(this.touchCurrentY - this.touchStartY);
+        
+        // If moved beyond threshold, cancel long press and start drag immediately
+        if (deltaY > this.dragThreshold && !this.isDragging) {
+            clearTimeout(this.longPressTimer);
+            const card = this.container.querySelectorAll('.team-card')[this.startIndex];
+            this.startDrag(card, this.touchCurrentY);
+        }
+        
+        if (this.isDragging) {
+            e.preventDefault();
+            this.updateGhostPosition(this.touchCurrentY);
+            this.updateDropIndicator(this.touchCurrentY);
+        }
+    }
+    
+    handleTouchEnd(e) {
+        clearTimeout(this.longPressTimer);
+        
+        if (!this.isDragging) {
+            this.reset();
+            return;
+        }
+        
+        if (this.currentIndex !== -1 && this.currentIndex !== this.startIndex) {
+            this.onReorder(this.startIndex, this.currentIndex);
+            if (navigator.vibrate) navigator.vibrate(10);
+        }
+        
+        this.endDrag();
+    }
+    
+    handleMouseDown(e) {
+        const card = e.target.closest('.team-card');
+        if (!card) return;
+        
+        this.isMouse = true;
+        this.startIndex = this.getCardIndex(card);
+        this.currentIndex = this.startIndex;
+        this.startDrag(card, e.clientY);
+    }
+    
+    handleMouseMove(e) {
+        if (!this.isDragging || !this.isMouse) return;
+        this.updateGhostPosition(e.clientY);
+        this.updateDropIndicator(e.clientY);
+    }
+    
+    handleMouseUp(e) {
+        if (!this.isDragging || !this.isMouse) return;
+        
+        if (this.currentIndex !== -1 && this.currentIndex !== this.startIndex) {
+            this.onReorder(this.startIndex, this.currentIndex);
+        }
+        
+        this.endDrag();
+        this.isMouse = false;
+    }
+    
+    startDrag(card, y) {
+        this.isDragging = true;
+        this.draggedElement = card;
+        
+        // Create ghost element
+        this.ghostElement = card.cloneNode(true);
+        this.ghostElement.classList.add('ghost');
+        this.ghostElement.style.width = `${card.offsetWidth}px`;
+        this.ghostElement.style.position = 'fixed';
+        this.ghostElement.style.zIndex = '1000';
+        this.ghostElement.style.pointerEvents = 'none';
+        document.body.appendChild(this.ghostElement);
+        
+        // Add dragging class to original
+        card.classList.add('dragging');
+        
+        // Create drop indicators between cards
+        this.createDropIndicators();
+        
+        // Initial position
+        this.updateGhostPosition(y);
+    }
+    
+    updateGhostPosition(y) {
+        if (!this.ghostElement) return;
+        const rect = this.draggedElement.getBoundingClientRect();
+        this.ghostElement.style.top = `${y - rect.height / 2}px`;
+        this.ghostElement.style.left = `${rect.left}px`;
+    }
+    
+    createDropIndicators() {
+        const cards = this.container.querySelectorAll('.team-card');
+        cards.forEach((card, i) => {
+            if (i === this.startIndex) return;
+            
+            const indicator = document.createElement('div');
+            indicator.className = 'drop-indicator';
+            indicator.dataset.index = i;
+            card.parentNode.insertBefore(indicator, card);
+        });
+        
+        // Add final indicator
+        const lastIndicator = document.createElement('div');
+        lastIndicator.className = 'drop-indicator';
+        lastIndicator.dataset.index = cards.length;
+        this.container.appendChild(lastIndicator);
+    }
+    
+    updateDropIndicator(y) {
+        const indicators = this.container.querySelectorAll('.drop-indicator');
+        let closestIndex = -1;
+        let closestDistance = Infinity;
+        
+        indicators.forEach(indicator => {
+            const rect = indicator.getBoundingClientRect();
+            const distance = Math.abs(rect.top - y);
+            
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestIndex = parseInt(indicator.dataset.index);
+            }
+        });
+        
+        // Adjust for the removed card
+        if (closestIndex > this.startIndex) {
+            closestIndex--;
+        }
+        
+        this.currentIndex = Math.max(0, Math.min(closestIndex, this.container.querySelectorAll('.team-card').length - 1));
+        
+        // Visual feedback
+        indicators.forEach(ind => ind.classList.remove('active'));
+        const activeIndicator = Array.from(indicators).find(ind => {
+            let idx = parseInt(ind.dataset.index);
+            if (idx > this.startIndex) idx--;
+            return idx === this.currentIndex;
+        });
+        if (activeIndicator) activeIndicator.classList.add('active');
+    }
+    
+    endDrag() {
+        this.draggedElement?.classList.remove('dragging');
+        this.ghostElement?.remove();
+        this.container.querySelectorAll('.drop-indicator').forEach(el => el.remove());
+        this.reset();
+    }
+    
+    reset() {
+        this.draggedElement = null;
+        this.ghostElement = null;
+        this.isDragging = false;
+        this.startIndex = -1;
+        this.currentIndex = -1;
+        clearTimeout(this.longPressTimer);
+    }
+    
+    destroy() {
+        this.reset();
+        // Event listeners are automatically cleaned up when container is removed
+    }
+}
+
 class Game {
     constructor() {
         this.state = 'start';
@@ -2620,12 +2836,23 @@ class Game {
         const modal = document.getElementById('modal');
         const body = document.getElementById('modal-body');
 
-        body.innerHTML = '<h3>👥 Team Management</h3>';
+        body.innerHTML = '<h3>👥 Team Management</h3><p class="drag-hint">👆 Long-press or drag handles to reorder</p>';
+
+        // Create container for drag-drop
+        const teamList = document.createElement('div');
+        teamList.className = 'team-list';
+        teamList.id = 'team-list';
+
+        // Initialize drag manager if not exists or recreate
+        if (this.dragManager) {
+            this.dragManager.destroy();
+        }
 
         this.team.forEach((poke, i) => {
             const card = document.createElement('div');
             card.className = `team-card ${!poke.isAlive ? 'fainted' : ''}`;
             card.innerHTML = `
+                <div class="drag-handle" aria-label="Drag to reorder">⋮⋮</div>
                 <div class="team-card-header">
                     <img src="${getSpriteUrl(poke.speciesId)}" class="team-card-sprite" alt="${poke.displayName}">
                     <div class="team-card-info">
@@ -2651,34 +2878,10 @@ class Game {
                     ${poke.moves.map(m => `<span class="move-tag type-bg-${m.type}">${m.name} (${m.power})</span>`).join(' ')}
                 </div>
                 <div class="team-card-actions">
-                    ${i > 0 ? '<button class="team-action-btn move-up-btn" title="Move up">▲</button>' : ''}
-                    ${i < this.team.length - 1 ? '<button class="team-action-btn move-down-btn" title="Move down">▼</button>' : ''}
                     <button class="team-action-btn nickname-btn" title="Nickname">✏️</button>
                     ${this.team.length > 1 ? '<button class="team-action-btn release-btn" title="Release">🔓</button>' : ''}
                 </div>
             `;
-
-            // Move up
-            const moveUp = card.querySelector('.move-up-btn');
-            if (moveUp) {
-                moveUp.onclick = () => {
-                    [this.team[i-1], this.team[i]] = [this.team[i], this.team[i-1]];
-                    this.showTeamManagement();
-                    this.updateUI();
-                    this.saveGame();
-                };
-            }
-
-            // Move down
-            const moveDown = card.querySelector('.move-down-btn');
-            if (moveDown) {
-                moveDown.onclick = () => {
-                    [this.team[i], this.team[i+1]] = [this.team[i+1], this.team[i]];
-                    this.showTeamManagement();
-                    this.updateUI();
-                    this.saveGame();
-                };
-            }
 
             // Nickname
             card.querySelector('.nickname-btn').onclick = () => {
@@ -2705,7 +2908,30 @@ class Game {
                 };
             }
 
-            body.appendChild(card);
+            teamList.appendChild(card);
+        });
+
+        body.appendChild(teamList);
+
+        // Initialize drag-drop manager
+        this.dragManager = new DragDropManager(teamList, (fromIndex, toIndex) => {
+            // Reorder team array
+            const [moved] = this.team.splice(fromIndex, 1);
+            this.team.splice(toIndex, 0, moved);
+
+            // Update active index if needed
+            if (this.activePokemonIndex === fromIndex) {
+                this.activePokemonIndex = toIndex;
+            } else if (fromIndex < this.activePokemonIndex && toIndex >= this.activePokemonIndex) {
+                this.activePokemonIndex--;
+            } else if (fromIndex > this.activePokemonIndex && toIndex <= this.activePokemonIndex) {
+                this.activePokemonIndex++;
+            }
+
+            this.saveGame();
+            this.updateUI();
+            // Re-render to show new order
+            this.showTeamManagement();
         });
 
         modal.classList.remove('hidden');
