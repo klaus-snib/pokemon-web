@@ -2150,17 +2150,48 @@ class Game {
         const actions = document.getElementById('battle-actions');
         actions.innerHTML = '';
 
-        player.moves.forEach((move, i) => {
-            const btn = document.createElement('button');
-            const moveType = move.type;
-            btn.className = `action-btn move-btn type-bg-${moveType}`;
-            btn.innerHTML = `${move.name}<br><small>${move.type.toUpperCase()} · ${move.power}${move.isStab ? ' · STAB' : ''}</small>`;
-            btn.addEventListener('click', () => {
-                this.selectedMove = move;
-                this.doBattleRound(i);
+        // Check if all moves have 0 PP
+        const allMovesExhausted = player.moves.every(m => m.pp !== undefined && m.pp <= 0);
+        
+        if (allMovesExhausted) {
+            // Show Struggle button
+            const struggleBtn = document.createElement('button');
+            struggleBtn.className = 'action-btn move-btn type-bg-normal';
+            struggleBtn.innerHTML = `Struggle<br><small>NORMAL · 50 · No PP</small>`;
+            struggleBtn.addEventListener('click', () => {
+                // Create a struggle move
+                const struggleMove = {
+                    name: 'Struggle',
+                    type: 'normal',
+                    power: 50,
+                    pp: 999, // Won't decrement
+                    maxPp: 999
+                };
+                this.selectedMove = struggleMove;
+                // Override the move for this round
+                player.moves.push(struggleMove);
+                this.doBattleRound(player.moves.length - 1);
+                player.moves.pop(); // Remove after use
             });
-            actions.appendChild(btn);
-        });
+            actions.appendChild(struggleBtn);
+        } else {
+            player.moves.forEach((move, i) => {
+                const btn = document.createElement('button');
+                const moveType = move.type;
+                const ppText = move.pp !== undefined ? `${move.pp}/${move.maxPp || move.pp}` : '';
+                const disabled = move.pp !== undefined && move.pp <= 0;
+                btn.className = `action-btn move-btn type-bg-${moveType}${disabled ? ' disabled' : ''}`;
+                btn.innerHTML = `${move.name}<br><small>${move.type.toUpperCase()} · ${move.power}${move.isStab ? ' · STAB' : ''}${ppText ? ' · ' + ppText : ''}</small>`;
+                btn.disabled = disabled;
+                if (!disabled) {
+                    btn.addEventListener('click', () => {
+                        this.selectedMove = move;
+                        this.doBattleRound(i);
+                    });
+                }
+                actions.appendChild(btn);
+            });
+        }
 
         // Back button
         const backBtn = document.createElement('button');
@@ -2200,6 +2231,12 @@ class Game {
 
         const doAttack = (attacker, defender, isPlayer) => {
             const move = isPlayer ? playerMove : enemyMove;
+            
+            // Decrement PP for player moves
+            if (isPlayer && move && move.pp !== undefined) {
+                move.pp = Math.max(0, move.pp - 1);
+            }
+            
             const result = this.calculateDamage(attacker, defender, move);
             const fainted = defender.takeDamage(result.damage);
 
