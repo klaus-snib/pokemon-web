@@ -158,6 +158,26 @@ class Pokemon {
         this.hp = Math.min(this.maxHp, this.hp + amount);
     }
 
+    // Special Attack and Special Defense getters for physical/special split
+    // Uses real Foul Play dataset values
+    get specialAttack() {
+        const base = this.species;
+        // Try various property names for special attack
+        const spa = base.spa !== undefined ? base.spa : 
+                    base['special-attack'] !== undefined ? base['special-attack'] :
+                    50; // Default fallback
+        return Math.floor((spa * 2 * this.level) / 100) + 5;
+    }
+    
+    get specialDefense() {
+        const base = this.species;
+        // Try various property names for special defense
+        const spd = base.spd_def !== undefined ? base.spd_def :
+                    base['special-defense'] !== undefined ? base['special-defense'] :
+                    50; // Default fallback
+        return Math.floor((spd * 2 * this.level) / 100) + 5;
+    }
+
     addXp(amount, levelCap) {
         this.xp += amount;
         const evolutions = [];
@@ -2195,7 +2215,22 @@ class Game {
     calculateDamage(attacker, defender, move = null) {
         // Move power scales damage (default 60 for enemies without moves)
         const movePower = move ? move.power : 60;
-        const base = Math.floor(((2 * attacker.level / 5 + 2) * movePower * attacker.attack / defender.defense) / 50) + 2;
+        
+        // Physical/Special split - use appropriate stats
+        const category = move ? move.category : 'physical';
+        let attackStat, defenseStat;
+        
+        if (category === 'special') {
+            // Special moves use special attack / special defense
+            attackStat = attacker.specialAttack;
+            defenseStat = defender.specialDefense;
+        } else {
+            // Physical moves (or status with damage) use attack / defense
+            attackStat = attacker.getModifiedAttack ? attacker.getModifiedAttack() : attacker.attack;
+            defenseStat = defender.defense;
+        }
+        
+        const base = Math.floor(((2 * attacker.level / 5 + 2) * movePower * attackStat / defenseStat) / 50) + 2;
         const variance = 0.85 + Math.random() * 0.15;
 
         // Type effectiveness — use move type if provided, else attacker type
