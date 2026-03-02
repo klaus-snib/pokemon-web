@@ -1345,6 +1345,15 @@ class Game {
     // ===== GYM BATTLES =====
     gymBattle() {
         const gym = GYM_LEADERS[this.currentGym];
+        
+        // Cash payout for unused events
+        if (this.maxEvents && this.eventsExplored < this.maxEvents) {
+            const remainingEvents = this.maxEvents - this.eventsExplored;
+            const payout = remainingEvents * 50; // $50 per unused event
+            this.money += payout;
+            this.showEventResult(`💰 Skipped ${remainingEvents} events! Bonus: $${payout}!`, 'success');
+        }
+        
         // Pick team based on tier — early gyms (0-3) use pre-evos, late (4-7) use evolved
         const isLate = this.currentGym >= 4;
         const team = isLate ? (gym.lateTeam || gym.pokemon || [this.getGymPokemonFallback(gym)])
