@@ -212,10 +212,32 @@ class Pokemon {
         // Check for new moves to learn
         this.checkAndLearnNewMoves();
 
-        // Check evolution
+        // Check evolution - probabilistic system
         const evo = this.species.evolves;
-        if (evo && evo.level && this.level >= evo.level) {
-            return evo.into;
+        if (evo) {
+            // Stone and trade (with Link Cable) evolutions are immediate
+            if (evo.stone || evo.trade) {
+                // These are handled by item use, not level-up
+                return null;
+            }
+            
+            // Level-based evolution with probability
+            if (evo.level) {
+                const canonicalLevel = evo.level;
+                const rollStartLevel = canonicalLevel - 5;
+                
+                // Start rolling 5 levels before canonical
+                if (this.level >= rollStartLevel) {
+                    // Base 20% chance, +1% per level above roll start
+                    const levelsPastStart = this.level - rollStartLevel;
+                    const evolutionChance = 20 + levelsPastStart;
+                    
+                    // Roll for evolution
+                    if (Math.random() * 100 < evolutionChance) {
+                        return evo.into;
+                    }
+                }
+            }
         }
         return null;
     }
@@ -3055,6 +3077,27 @@ class Game {
         return true;
     }
 
+    useLinkCable(pokemonIndex) {
+        const pokemon = this.team[pokemonIndex];
+        if (!pokemon) return false;
+
+        if (typeof TRADE_EVOLUTIONS === 'undefined') return false;
+
+        const target = TRADE_EVOLUTIONS[pokemon.speciesId];
+        if (!target) return false;
+
+        const oldName = pokemon.name;
+        pokemon.evolve(target);
+        this.bag['link_cable']--;
+        this.evolutionCount++;
+        this.unlockAchievement('evolution');
+        this.addMessage(`${oldName} evolved into ${pokemon.name} via trade!`, 'success');
+        this.showEvolutionAnimation(oldName, pokemon.name, pokemon.speciesId);
+        this.updateUI();
+        this.saveGame();
+        return true;
+    }
+
     // ===== SWITCH MENU =====
     showSwitchMenu() {
         const modal = document.getElementById('modal');
@@ -3189,6 +3232,20 @@ class Game {
                         }
                     }
                 }
+                
+                // For Link Cable, show trade evolution compatibility
+                if (id === 'link_cable' && typeof TRADE_EVOLUTIONS !== 'undefined') {
+                    const compat = this.team.filter(p => TRADE_EVOLUTIONS[p.speciesId]).map(p => {
+                        const evoTarget = TRADE_EVOLUTIONS[p.speciesId];
+                        const evoData = POKEMON_DATA[evoTarget];
+                        return `${p.displayName} → ${evoData ? evoData.name : evoTarget}`;
+                    });
+                    if (compat.length > 0) {
+                        compatInfo = `<div class="compat-list" style="color:#4CAF50;font-size:0.85em;margin-top:4px;">✓ Trade evo: ${compat.join(', ')}</div>`;
+                    } else {
+                        compatInfo = `<div class="compat-list" style="color:#999;font-size:0.85em;margin-top:4px;">○ No trade evolutions</div>`;
+                    }
+                }
 
                 div.innerHTML = `
                     <div class="bag-item-info">
@@ -3255,6 +3312,9 @@ class Game {
                 const stoneEvos = STONE_EVOLUTIONS[itemId];
                 if (!stoneEvos || !stoneEvos[poke.speciesId]) valid = false;
             }
+            if (itemId === 'link_cable') {
+                if (typeof TRADE_EVOLUTIONS === 'undefined' || !TRADE_EVOLUTIONS[poke.speciesId]) valid = false;
+            }
 
             btn.disabled = !valid;
             btn.style.opacity = valid ? '1' : '0.5';
@@ -3281,6 +3341,8 @@ class Game {
                     this.addMessage(`Revived ${poke.displayName}!`, 'success');
                 } else if (itemId.includes('_stone')) {
                     this.useStone(itemId, i);
+                } else if (itemId === 'link_cable') {
+                    this.useLinkCable(i);
                 }
 
                 this.updateUI();

@@ -613,17 +613,17 @@ function shuffleGymLeaders() {
     return selected;
 }
 
-// Shuffle E4 — pick 4 unique, scale to levels 40-46
+// Shuffle E4 — pick 4 unique, scale to levels 50-56
 function shuffleEliteFour() {
     const pool = [...ELITE_FOUR_POOL];
     for (let i = pool.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [pool[i], pool[j]] = [pool[j], pool[i]];
     }
-    return pool.slice(0, 4).map((e, i) => ({ ...e, level: 40 + i * 2 }));
+    return pool.slice(0, 4).map((e, i) => ({ ...e, level: 50 + i * 2 }));
 }
 
-// Pick random champion, scale to level 50
+// Pick random champion, scale to level 60
 function shuffleChampion() {
     const champ = CHAMPION_POOL[Math.floor(Math.random() * CHAMPION_POOL.length)];
     return { ...champ, level: 50 };
@@ -647,6 +647,7 @@ const ITEMS = {
     thunder_stone: { name: "Thunder Stone", desc: "Evolves certain Electric Pokemon", effect: "stone", value: 0, price: 5000 },
     leaf_stone: { name: "Leaf Stone", desc: "Evolves certain Grass Pokemon", effect: "stone", value: 0, price: 5000 },
     moon_stone: { name: "Moon Stone", desc: "Evolves certain Pokemon", effect: "stone", value: 0, price: 5000 },
+    link_cable: { name: "Link Cable", desc: "Triggers trade evolution", effect: "trade", value: 0, price: 8000 },
 };
 
 // Stone evolution mappings
@@ -654,25 +655,62 @@ const STONE_EVOLUTIONS = {
     fire_stone: {
         eevee: 'flareon',
         growlithe: 'arcanine',
-        vulpix: 'ninetales'
+        vulpix: 'ninetales',
+        pansear: 'simisear'
     },
     water_stone: {
         eevee: 'vaporeon',
         poliwhirl: 'poliwrath',
-        staryu: 'starmie'
+        staryu: 'starmie',
+        panpour: 'simipour',
+        shellder: 'cloyster',
+        lombre: 'ludicolo',
+        nuzleaf: 'shiftry'
     },
     thunder_stone: {
         eevee: 'jolteon',
-        pikachu: 'raichu'
+        pikachu: 'raichu',
+        panpour: 'simipour'
     },
     leaf_stone: {
         gloom: 'vileplume',
-        oddish: 'vileplume'
+        oddish: 'vileplume',
+        pansage: 'simisage',
+        nuzleaf: 'shiftry',
+        lombre: 'ludicolo',
+        weepinbell: 'victreebel'
     },
     moon_stone: {
         clefairy: 'clefable',
-        nidorino: 'nidoking'
+        nidorino: 'nidoking',
+        nidorina: 'nidoqueen',
+        jigglypuff: 'wigglytuff',
+        skitty: 'delcatty',
+        munna: 'musharna'
+    },
+    sun_stone: {
+        gloom: 'bellossom',
+        sunkern: 'sunflora',
+        cottonee: 'whimsicott',
+        petilil: 'lilligant'
     }
+};
+
+// Trade evolution mappings (for Link Cable)
+const TRADE_EVOLUTIONS = {
+    kadabra: 'alakazam',
+    machoke: 'machamp',
+    graveler: 'golem',
+    haunter: 'gengar',
+    onix: 'steelix',
+    scyther: 'scizor',
+    poliwhirl: 'politoed',
+    slowpoke: 'slowking',
+    seadra: 'kingdra',
+    porygon: 'porygon2',
+    clamperl: 'huntail',
+    duskull: 'dusclops',
+    clampearl: 'gorebyss'
 };
 
 const DIFFICULTY_SETTINGS = {
