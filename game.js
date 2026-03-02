@@ -3102,10 +3102,10 @@ class Game {
                     btn.querySelector('.shop-item-owned').textContent = `Owned: ${this.bag[id]}`;
                     this.saveGame();
                 } else {
-                    this.addMessage("Not enough money!", 'warning');
-                }
-            };
-            body.appendChild(btn);
+        } else {
+            this.showMoveReplacementPrompt(tmId, pokemonIndex, moveData);
+            return;
+        }
         });
 
         modal.classList.remove('hidden');
