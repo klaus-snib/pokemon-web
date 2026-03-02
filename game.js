@@ -3167,10 +3167,29 @@ class Game {
                 const usable = item.effect === 'heal' || item.effect === 'levelup' || item.effect === 'revive' ||
                                id.includes('_stone');
 
+                // For stones, show compatible Pokemon
+                let compatInfo = '';
+                if (id.includes('_stone') && typeof STONE_EVOLUTIONS !== 'undefined') {
+                    const stoneEvos = STONE_EVOLUTIONS[id];
+                    if (stoneEvos) {
+                        const compat = this.team.filter(p => stoneEvos[p.speciesId]).map(p => {
+                            const evoTarget = stoneEvos[p.speciesId];
+                            const evoData = POKEMON_DATA[evoTarget];
+                            return `${p.displayName} → ${evoData ? evoData.name : evoTarget}`;
+                        });
+                        if (compat.length > 0) {
+                            compatInfo = `<div class="compat-list" style="color:#4CAF50;font-size:0.85em;margin-top:4px;">✓ Can evolve: ${compat.join(', ')}</div>`;
+                        } else {
+                            compatInfo = `<div class="compat-list" style="color:#999;font-size:0.85em;margin-top:4px;">○ No compatible Pokemon</div>`;
+                        }
+                    }
+                }
+
                 div.innerHTML = `
                     <div class="bag-item-info">
                         <strong>${item.name}</strong> x${count}
                         <div class="choice-desc">${item.desc}</div>
+                        ${compatInfo}
                     </div>
                     ${usable ? '<button class="bag-use-btn">Use</button>' : ''}
                 `;
@@ -3268,6 +3287,35 @@ class Game {
         modal.classList.remove('hidden');
     }
 
+    // ===== EVOLUTION PATH HELPER =====
+    getEvolutionPathHTML(pokemon) {
+        const species = POKEMON_DATA[pokemon.speciesId];
+        if (!species || !species.evolves) return '';
+        
+        let evoText = '';
+        const evo = species.evolves;
+        
+        if (evo.level) {
+            evoText = `Evolves at Lv.${evo.level}`;
+        } else if (evo.stone) {
+            const stoneItem = ITEMS[evo.stone];
+            evoText = `Evolves with ${stoneItem ? stoneItem.name : evo.stone}`;
+        } else if (evo.condition) {
+            evoText = `Evolves: ${evo.condition}`;
+        }
+        
+        if (evoText) {
+            const evoTarget = POKEMON_DATA[evo.into];
+            const targetName = evoTarget ? evoTarget.name : evo.into;
+            return `
+                <div class="evo-path" style="font-size:0.85em;color:#4CAF50;margin-top:8px;padding:4px 8px;background:rgba(76,175,80,0.1);border-radius:4px;">
+                    🧬 ${evoText} → ${targetName}
+                </div>
+            `;
+        }
+        return '';
+    }
+
     // ===== TEAM MANAGEMENT =====
     showTeamManagement() {
         const modal = document.getElementById('modal');
@@ -3314,6 +3362,9 @@ class Game {
                 <div class="team-card-moves">
                     ${poke.moves.map(m => `<span class="move-tag type-bg-${m.type}">${m.name} (${m.power})</span>`).join(' ')}
                 </div>
+                <!-- Evolution path info -->
+                ${this.getEvolutionPathHTML(poke)}
+                
                 <div class="team-card-actions">
                     <button class="team-action-btn nickname-btn" title="Nickname">✏️</button>
                     ${this.team.length > 1 ? '<button class="team-action-btn release-btn" title="Release">🔓</button>' : ''}
