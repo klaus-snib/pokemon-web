@@ -3443,7 +3443,7 @@ class Game {
                     <span>SPD: ${poke.speed}</span>
                 </div>
                 <div class="team-card-moves">
-                    ${poke.moves.map(m => `<span class="move-tag type-bg-${m.type}">${m.name} (${m.power})</span>`).join(' ')}
+                    ${poke.moves.map(m => `<span class="move-tag type-bg-${m.type}">${m.name}${m.power > 0 ? ` (${m.power})` : ''}</span>`).join(' ')}
                 </div>
                 <!-- Evolution path info -->
                 ${this.getEvolutionPathHTML(poke)}
