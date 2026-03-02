@@ -2237,6 +2237,18 @@ class Game {
                 move.pp = Math.max(0, move.pp - 1);
             }
             
+            // Accuracy check (default 100 if not specified)
+            const accuracy = move && move.accuracy !== undefined ? move.accuracy : 100;
+            const hitRoll = Math.random() * 100;
+            
+            if (hitRoll > accuracy) {
+                // Miss
+                this.addBattleLog(`${attacker.displayName} used ${move ? move.name : 'Attack'}! It missed!`);
+                gameAudio.miss?.() || gameAudio.attack(); // Fallback to attack sound if miss sound doesn't exist
+                this.updateBattleUI();
+                return false; // Didn't faint
+            }
+            
             const result = this.calculateDamage(attacker, defender, move);
             const fainted = defender.takeDamage(result.damage);
 
