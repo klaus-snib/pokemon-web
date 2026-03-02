@@ -1918,6 +1918,8 @@ class Game {
             { id: 'thunder_stone', name: 'Thunder Stone', price: 3000 },
             { id: 'leaf_stone', name: 'Leaf Stone', price: 3000 },
             { id: 'moon_stone', name: 'Moon Stone', price: 3000 },
+            { id: 'link_cable', name: 'Link Cable', price: 8000 },
+            { id: 'moon_stone', name: 'Moon Stone', price: 3000 },
         ];
         body.innerHTML = `
             <h3>🏬 Celadon Dept. Store</h3>
