@@ -1808,7 +1808,8 @@ class Game {
             skipBtn.className = 'choice-btn';
             skipBtn.innerHTML = '<span class="choice-text">🏃 Skip</span>';
             skipBtn.onclick = () => {
-                this.addMessage(`You let ${species.name} go.`);
+                this.addMessage(`${species.name} fled!`, 'warning');
+                ballsLeft = 0;
                 throwBall();
             };
             actions.appendChild(skipBtn);
