@@ -434,20 +434,38 @@ function getRandomStarterPool(count = 3) {
         }
     }
     
-    // Unplayable starters (only know useless moves at level 1)
-    const unplayable = ['abra', 'magikarp', 'beldum', 'larvesta'];
+    // Check if Pokemon has at least one level-1 damaging move
+    function hasDamagingMoveAtLevel1(pokemonId) {
+        const learnset = LEARNSETS[pokemonId];
+        if (!learnset) return false;
+        
+        // Get all level-1 moves
+        const level1Moves = learnset.filter(entry => entry.level === 1).map(entry => entry.move);
+        if (level1Moves.length === 0) return false;
+        
+        // Check if any level-1 move has power > 0
+        for (const moveId of level1Moves) {
+            const move = MOVES[moveId];
+            if (move && move.power > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
     
     // Add Stage 1 Pokemon with BST <= 320
     for (const [id, data] of Object.entries(POKEMON_DATA)) {
         if (!data.baseStats) continue;
         if (canonical.includes(id)) continue;
-        if (unplayable.includes(id)) continue;
         
         // Skip if anything evolves into this (it's Stage 2+)
         if (evolutionTargets.has(id)) continue;
         
         // Must have an evolution (Stage 1, not fully evolved)
         if (!data.evolves || !data.evolves.into) continue;
+        
+        // Must have at least one damaging move at level 1
+        if (!hasDamagingMoveAtLevel1(id)) continue;
         
         const bst = data.baseStats.hp + data.baseStats.atk + data.baseStats.def + data.baseStats.spd + (data.spa || 0) + (data.spd_def || 0);
         if (bst <= 320) {
