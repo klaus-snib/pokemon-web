@@ -2224,6 +2224,11 @@ class Game {
     }
 
     calculateDamage(attacker, defender, move = null) {
+        // Status moves deal no damage
+        if (move && (move.category === 'status' || move.power === 0)) {
+            return { damage: 0, effectiveness: 1, crit: false, moveName: move.name };
+        }
+        
         // Move power scales damage (default 60 for enemies without moves)
         const movePower = move ? move.power : 60;
         
