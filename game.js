@@ -2347,6 +2347,14 @@ class Game {
         const playerFirst = player.speed >= enemy.speed;
 
         const doAttack = (attacker, defender, isPlayer) => {
+            // Check if attacker can move (paralysis, sleep, freeze)
+            const moveCheck = attacker.canMove();
+            if (!moveCheck.canMove) {
+                this.addBattleLog(moveCheck.message);
+                this.updateBattleUI();
+                return false;
+            }
+            
             const move = isPlayer ? playerMove : enemyMove;
             
             // Decrement PP for player moves
@@ -2404,8 +2412,50 @@ class Game {
                 setTimeout(() => document.getElementById(defenderId).classList.remove('damage-shake'), 300);
             }, 200);
 
+            // Apply status effects from move secondary
+            if (!fainted && move && move.secondary) {
+                applyMoveStatusEffect(move, defender);
+            }
+
             this.updateBattleUI();
             return fainted;
+        };
+
+        // Apply status effect from move
+        const applyMoveStatusEffect = (move, target) => {
+            const secondary = move.secondary;
+            if (!secondary) return;
+
+            // Handle different secondary effect structures
+            let status = null;
+            let chance = 0;
+
+            if (secondary.status) {
+                // Direct status with chance
+                status = secondary.status;
+                chance = secondary.chance || 10;
+            } else if (typeof secondary === 'object' && !Array.isArray(secondary)) {
+                // Object with status and chance keys
+                if (secondary.status) {
+                    status = secondary.status;
+                    chance = secondary.chance || secondary.odds || 10;
+                }
+            }
+
+            if (status && Math.random() * 100 < chance) {
+                // Apply status if target doesn't have one
+                if (!target.status) {
+                    target.status = status;
+                    
+                    // Set status duration for sleep (1-3 turns)
+                    if (status === 'sleep') {
+                        target.statusTurns = Math.floor(Math.random() * 3) + 1;
+                    }
+                    
+                    const statusName = status.charAt(0).toUpperCase() + status.slice(1);
+                    this.addBattleLog(`${target.displayName || target.name} was ${status === 'paralyze' ? 'paralyzed' : status + 'ed'}!`, 'warning');
+                }
+            }
         };
 
         const processFirst = () => {
