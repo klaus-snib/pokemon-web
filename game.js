@@ -3638,6 +3638,139 @@ class Game {
         this.renderStartScreen();
         document.getElementById('message-log').innerHTML = '<div class="message">Welcome to Pokemon Roguelike!</div>';
     }
+
+    // ===== TM TEACHING =====
+    showTMTeach(tmId) {
+        const tm = TMS[tmId];
+        if (!tm) return;
+        
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modal-body');
+        
+        body.innerHTML = `<h3>📀 Teach ${tm.name}</h3>
+            <p><strong>Type:</strong> ${tm.type} · <strong>Power:</strong> ${tm.power || '—'} · <strong>Accuracy:</strong> ${tm.accuracy}%</p>
+            <p>${tm.description}</p>
+            <hr>
+            <h4>Select Pokemon to teach:</h4>
+        `;
+        
+        this.team.forEach((poke, i) => {
+            const isCompatible = tm.compatible.includes(poke.speciesId);
+            const alreadyKnows = poke.moves.some(m => m.id === tm.move);
+            
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.disabled = !isCompatible || alreadyKnows;
+            btn.style.opacity = (!isCompatible || alreadyKnows) ? '0.5' : '1';
+            
+            let status = '';
+            if (alreadyKnows) status = ' (already knows)';
+            else if (!isCompatible) status = ' (incompatible)';
+            
+            btn.innerHTML = `
+                <img src="${getSpriteUrl(poke.speciesId)}" style="width:32px;height:32px;image-rendering:pixelated;vertical-align:middle;margin-right:8px;">
+                ${poke.displayName} Lv.${poke.level}${status}
+            `;
+            
+            btn.onclick = () => {
+                if (poke.moves.length >= 4) {
+                    this.showMoveReplacementPrompt(tmId, i);
+                } else {
+                    this.teachMoveToPokemon(tmId, i);
+                    modal.classList.add('hidden');
+                }
+            };
+            
+            body.appendChild(btn);
+        });
+        
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'choice-btn';
+        cancelBtn.textContent = 'Cancel';
+        cancelBtn.onclick = () => this.showBag();
+        body.appendChild(cancelBtn);
+        
+        modal.classList.remove('hidden');
+    }
+
+    showMoveReplacementPrompt(tmId, pokemonIndex) {
+        const tm = TMS[tmId];
+        const pokemon = this.team[pokemonIndex];
+        
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modal-body');
+        
+        body.innerHTML = `
+            <h3>📀 ${pokemon.displayName} wants to learn ${tm.name}</h3>
+            <p>${tm.description}</p>
+            <p><strong>Type:</strong> ${tm.type} · <strong>Power:</strong> ${tm.power || '—'} · <strong>PP:</strong> ${tm.pp}</p>
+            <hr>
+            <h4>But ${pokemon.displayName} already knows 4 moves.</h4>
+            <p>Which move should be forgotten?</p>
+        `;
+        
+        pokemon.moves.forEach((move, index) => {
+            const moveBtn = document.createElement('button');
+            moveBtn.className = 'choice-btn';
+            moveBtn.style.marginBottom = '0.5rem';
+            moveBtn.innerHTML = `
+                <strong>${move.name}</strong><br>
+                <small>${move.type.toUpperCase()} · ${move.power ? move.power + ' PWR' : 'Status'} · PP: ${move.pp}/${move.maxPp}</small>
+            `;
+            moveBtn.onclick = () => this.confirmMoveReplace(tmId, pokemonIndex, index);
+            body.appendChild(moveBtn);
+        });
+        
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'choice-btn';
+        cancelBtn.textContent = 'Cancel';
+        cancelBtn.onclick = () => this.showBag();
+        body.appendChild(cancelBtn);
+        
+        modal.classList.remove('hidden');
+    }
+
+    confirmMoveReplace(tmId, pokemonIndex, moveIndex) {
+        const tm = TMS[tmId];
+        const pokemon = this.team[pokemonIndex];
+        const oldMoveName = pokemon.moves[moveIndex].name;
+        
+        pokemon.moves[moveIndex] = {
+            id: tm.move,
+            name: tm.name.replace('TM: ', ''),
+            type: tm.type,
+            power: tm.power,
+            pp: tm.pp,
+            maxPp: tm.pp,
+            accuracy: tm.accuracy,
+            category: tm.category
+        };
+        
+        this.addMessage(`${pokemon.displayName} learned ${tm.name}! Forgot ${oldMoveName}.`, 'success');
+        this.saveGame();
+        this.updateUI();
+        document.getElementById('modal').classList.add('hidden');
+    }
+
+    teachMoveToPokemon(tmId, pokemonIndex) {
+        const tm = TMS[tmId];
+        const pokemon = this.team[pokemonIndex];
+        
+        pokemon.moves.push({
+            id: tm.move,
+            name: tm.name.replace('TM: ', ''),
+            type: tm.type,
+            power: tm.power,
+            pp: tm.pp,
+            maxPp: tm.pp,
+            accuracy: tm.accuracy,
+            category: tm.category
+        });
+        
+        this.addMessage(`${pokemon.displayName} learned ${tm.name}!`, 'success');
+        this.saveGame();
+        this.updateUI();
+    }
 }
 
 // Start the game
