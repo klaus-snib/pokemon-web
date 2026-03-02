@@ -2409,8 +2409,23 @@ class Game {
 
     restoreBattleActions() {
         const actions = document.getElementById('battle-actions');
+        const player = this.team[this.activePokemonIndex];
+        
+        // Show moves directly (no Fight button needed)
+        let movesHtml = '';
+        player.moves.forEach((move, i) => {
+            const ppText = move.pp !== undefined ? `${move.pp}/${move.maxPp || move.pp}` : '';
+            const disabled = move.pp !== undefined && move.pp <= 0 ? 'disabled' : '';
+            const powerText = move.power > 0 ? ` · ${move.power}` : '';
+            movesHtml += `
+                <button class="action-btn move-btn type-bg-${move.type.toLowerCase()}" data-action="fight${i}" ${disabled}>
+                    ${move.name}${powerText}<br><small>${move.type.toUpperCase()}${ppText ? ' · ' + ppText : ''}</small>
+                </button>
+            `;
+        });
+        
         actions.innerHTML = `
-            <button class="action-btn" data-action="fight">⚔️ Fight</button>
+            ${movesHtml}
             <button class="action-btn" data-action="catch">🔴 Catch</button>
             <button class="action-btn" data-action="switch">🔄 Switch</button>
             <button class="action-btn" data-action="item">💊 Item</button>
