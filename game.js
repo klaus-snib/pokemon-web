@@ -136,6 +136,29 @@ class Pokemon {
     calcXpToNext() {
         return Math.floor(this.level * 15 + 40);
     }
+    
+    // Special Attack and Special Defense (for physical/special split)
+    // Currently derived from base stats; can be overridden when data is updated
+    get specialAttack() {
+        // If baseStats has spa, use it; otherwise derive from attack
+        const base = this.species.baseStats;
+        if (base.spa !== undefined) {
+            return Math.floor((base.spa * 2 * this.level) / 100) + 5;
+        }
+        // Derive from attack (most Pokemon have similar or slightly lower special attack)
+        return Math.floor(this.attack * 0.95);
+    }
+    
+    get specialDefense() {
+        // If baseStats has spd (special defense), use it; otherwise derive from defense
+        const base = this.species.baseStats;
+        if (base.spd !== undefined) {
+            // Note: spd might be speed in old data, check carefully
+            return Math.floor((base.spd * 2 * this.level) / 100) + 5;
+        }
+        // Derive from defense
+        return Math.floor(this.defense * 1.05);
+    }
 
     get displayName() {
         return this.nickname || this.name;
@@ -2195,7 +2218,22 @@ class Game {
     calculateDamage(attacker, defender, move = null) {
         // Move power scales damage (default 60 for enemies without moves)
         const movePower = move ? move.power : 60;
-        const base = Math.floor(((2 * attacker.level / 5 + 2) * movePower * attacker.attack / defender.defense) / 50) + 2;
+        
+        // Physical/Special split
+        const category = move ? move.category : 'physical';
+        let attackStat, defenseStat;
+        
+        if (category === 'special') {
+            // Special moves: use special attack/defense
+            attackStat = attacker.specialAttack !== undefined ? attacker.specialAttack : attacker.attack * 0.95;
+            defenseStat = defender.specialDefense !== undefined ? defender.specialDefense : defender.defense * 1.05;
+        } else {
+            // Physical moves (or status moves with damage): use attack/defense
+            attackStat = attacker.getModifiedAttack ? attacker.getModifiedAttack() : attacker.attack;
+            defenseStat = defender.defense;
+        }
+        
+        const base = Math.floor(((2 * attacker.level / 5 + 2) * movePower * attackStat / defenseStat) / 50) + 2;
         const variance = 0.85 + Math.random() * 0.15;
 
         // Type effectiveness — use move type if provided, else attacker type
