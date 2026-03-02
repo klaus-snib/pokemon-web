@@ -1577,11 +1577,11 @@ class Game {
                 () => { // Treasure
                     const amount = Math.floor(Math.random() * 500) + 200;
                     this.money += amount;
-                    this.addMessage(`You found a treasure chest with $${amount}!`, 'success');
+                    this.showEventResult(`💰 You found a treasure chest with $${amount}!`, 'success');
                 },
                 () => { // Rare candy
                     this.bag['rare_candy'] = (this.bag['rare_candy'] || 0) + 1;
-                    this.addMessage('You found a Rare Candy deep in the cave!', 'success');
+                    this.showEventResult('🍬 You found a Rare Candy deep in the cave!', 'success');
                 },
                 () => { // Wild Pokemon joins
                     if (this.team.length < 6) {
@@ -1591,10 +1591,10 @@ class Game {
                         const pokemon = new Pokemon(id, level);
                         this.team.push(pokemon);
                         this.catches++;
-                        this.addMessage(`A wild ${pokemon.name} decided to join you!`, 'success');
+                        this.showEventResult(`🎉 A wild ${pokemon.name} decided to join you!`, 'success');
                     } else {
                         this.money += 400;
-                        this.addMessage('A friendly Pokemon showed you its treasure stash! Found $400!', 'success');
+                        this.showEventResult('💰 A friendly Pokemon showed you its treasure stash! Found $400!', 'success');
                     }
                 },
                 () => { // Level boost
@@ -1618,10 +1618,10 @@ class Game {
                         this.team.push(pokemon);
                         this.catches++;
                         this.unlockAchievement('fossil_hunter');
-                        this.addMessage(`You revived a fossil! ${pokemon.name} joined your team!`, 'success');
+                        this.showEventResult(`🦴 You revived a fossil! ${pokemon.name} joined your team!`, 'success');
                     } else {
                         this.money += 800;
-                        this.addMessage('You found a rare fossil and sold it for $800!', 'success');
+                        this.showEventResult('💰 You found a rare fossil and sold it for $800!', 'success');
                     }
                 },
                 () => { // Move tutor (stat boost)
@@ -1713,12 +1713,12 @@ class Game {
                     this.team.forEach(p => {
                         if (p.isAlive) p.takeDamage(Math.floor(p.maxHp * 0.15));
                     });
-                    this.addMessage('A cave curse drains your team\'s energy!', 'danger');
+                    this.showEventResult('💀 A cave curse drains your team\'s energy!', 'danger');
                 },
                 () => { // Shrine curse
                     const loss = Math.floor(this.money * 0.15);
                     this.money = Math.max(0, this.money - loss);
-                    this.addMessage(`A cursed shrine stole $${loss}!`, 'danger');
+                    this.showEventResult(`💀 A cursed shrine stole $${loss}!`, 'danger');
                 }
             ];
             const event = badEvents[Math.floor(Math.random() * badEvents.length)];
