@@ -9,6 +9,7 @@ const TMS = {
         move: 'rock-tomb',
         description: 'Boulders are hurled at the target. Lowers Speed.',
         power: 60,
+        accuracy: 95,
         type: 'rock',
         rarity: 'gym'
     },
@@ -17,6 +18,7 @@ const TMS = {
         move: 'water-pulse',
         description: 'A pulsing blast of water. May confuse the target.',
         power: 60,
+        accuracy: 100,
         type: 'water',
         rarity: 'gym'
     },
@@ -25,6 +27,7 @@ const TMS = {
         move: 'shock-wave',
         description: 'A fast electric shock. Never misses.',
         power: 60,
+        accuracy: 100,
         type: 'electric',
         rarity: 'gym'
     },
@@ -33,6 +36,7 @@ const TMS = {
         move: 'giga-drain',
         description: 'Drains HP from the target.',
         power: 75,
+        accuracy: 100,
         type: 'grass',
         rarity: 'gym'
     },
@@ -41,6 +45,7 @@ const TMS = {
         move: 'flamethrower',
         description: 'A powerful flame. May burn the target.',
         power: 90,
+        accuracy: 100,
         type: 'fire',
         rarity: 'gym'
     },
@@ -49,6 +54,7 @@ const TMS = {
         move: 'ice-beam',
         description: 'A chilling beam. May freeze the target.',
         power: 90,
+        accuracy: 100,
         type: 'ice',
         rarity: 'gym'
     },
@@ -57,6 +63,7 @@ const TMS = {
         move: 'thunderbolt',
         description: 'A strong electric blast. May paralyze.',
         power: 90,
+        accuracy: 100,
         type: 'electric',
         rarity: 'gym'
     },
@@ -65,6 +72,7 @@ const TMS = {
         move: 'earthquake',
         description: 'A powerful quake. Strong against diggers.',
         power: 100,
+        accuracy: 100,
         type: 'ground',
         rarity: 'gym'
     },
@@ -75,6 +83,7 @@ const TMS = {
         move: 'toxic',
         description: 'Badly poisons the target. Damage worsens.',
         power: 0,
+        accuracy: 90,
         type: 'poison',
         rarity: 'common',
         cost: 3000
@@ -84,6 +93,7 @@ const TMS = {
         move: 'hidden-power',
         description: 'Power varies by the user.',
         power: 60,
+        accuracy: 100,
         type: 'normal',
         rarity: 'common',
         cost: 2000
@@ -93,6 +103,7 @@ const TMS = {
         move: 'protect',
         description: 'Evades all attacks. May fail if used in succession.',
         power: 0,
+        accuracy: 100,
         type: 'normal',
         rarity: 'common',
         cost: 2500
@@ -102,6 +113,7 @@ const TMS = {
         move: 'return',
         description: 'Power increases with friendship.',
         power: 102,
+        accuracy: 100,
         type: 'normal',
         rarity: 'common',
         cost: 1500
@@ -111,6 +123,7 @@ const TMS = {
         move: 'shadow-ball',
         description: 'Hurls a shadowy blob. May lower Sp. Def.',
         power: 80,
+        accuracy: 100,
         type: 'ghost',
         rarity: 'common',
         cost: 3500
@@ -120,6 +133,7 @@ const TMS = {
         move: 'sludge-bomb',
         description: 'Unsanitary sludge. May poison.',
         power: 90,
+        accuracy: 100,
         type: 'poison',
         rarity: 'common',
         cost: 3500
@@ -129,6 +143,7 @@ const TMS = {
         move: 'aerial-ace',
         description: 'An extremely fast attack. Never misses.',
         power: 60,
+        accuracy: 100,
         type: 'flying',
         rarity: 'common',
         cost: 2500
@@ -138,6 +153,7 @@ const TMS = {
         move: 'thief',
         description: 'Attacks and steals the target\'s held item.',
         power: 60,
+        accuracy: 100,
         type: 'dark',
         rarity: 'common',
         cost: 2000
@@ -149,6 +165,7 @@ const TMS = {
         move: 'swords-dance',
         description: 'Sharply raises Attack.',
         power: 0,
+        accuracy: 100,
         type: 'normal',
         rarity: 'rare',
         dropRate: 0.02 // 2% from wild encounters
@@ -158,6 +175,7 @@ const TMS = {
         move: 'dragon-claw',
         description: 'Slashes the target with sharp claws.',
         power: 80,
+        accuracy: 100,
         type: 'dragon',
         rarity: 'rare',
         dropRate: 0.03
@@ -167,6 +185,7 @@ const TMS = {
         move: 'focus-blast',
         description: 'Fires a blast of aura. May lower Sp. Def.',
         power: 120,
+        accuracy: 70,
         type: 'fighting',
         rarity: 'rare',
         dropRate: 0.01
