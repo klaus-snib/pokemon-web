@@ -616,6 +616,7 @@ class Game {
         this.state = 'start';
         this.team = [];
         this.bag = {};
+        this.tmBag = [];  // Technical Machines inventory
         this.money = 1000;
         this.badges = 0;
         this.strikes = 3;
@@ -2562,6 +2563,19 @@ class Game {
 
         if (this.battleType === 'gym') {
             this.badges++;
+            
+            // Award TM for gym victory
+            if (typeof GYM_TM_REWARDS !== 'undefined' && GYM_TM_REWARDS[this.currentGym]) {
+                const tmId = GYM_TM_REWARDS[this.currentGym];
+                if (!this.tmBag.includes(tmId)) {
+                    this.tmBag.push(tmId);
+                    const tm = TMS[tmId];
+                    if (tm) {
+                        this.addMessage(`Received TM: ${tm.name}!`, 'success');
+                    }
+                }
+            }
+            
             this.currentGym++;
             this.addMessage(`You defeated the Gym Leader and earned a badge!`, 'success');
             this.addBattleLog('Badge earned!', 'success');
@@ -3158,6 +3172,28 @@ class Game {
                     };
                 }
 
+                body.appendChild(div);
+            });
+        }
+
+        // Display TMs
+        if (this.tmBag && this.tmBag.length > 0) {
+            body.innerHTML += '<hr><h4>📀 Technical Machines</h4>';
+            this.tmBag.forEach(tmId => {
+                const tm = TMS[tmId];
+                if (!tm) return;
+                const div = document.createElement('div');
+                div.className = 'bag-item';
+                div.innerHTML = `
+                    <div class="bag-item-info">
+                        <strong>${tm.name}</strong>
+                        <div class="choice-desc">${tm.type} · ${tm.power ? tm.power + ' PWR' : 'Status'} · ${tm.description ? tm.description.substring(0, 40) + '...' : ''}</div>
+                    </div>
+                    <button class="bag-use-btn">Teach</button>
+                `;
+                div.querySelector('.bag-use-btn').onclick = () => {
+                    this.showTMTeach(tmId);
+                };
                 body.appendChild(div);
             });
         }
