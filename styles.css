@@ -891,9 +891,10 @@ footer button:active {
 }
 
 .team-card-stats {
-    display: flex;
-    gap: 1rem;
-    font-size: 0.8rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.3rem 1rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     margin-bottom: 0.5rem;
     padding: 0.3rem 0;
@@ -1437,8 +1438,11 @@ letter-spacing: 0.5px;
     font-size: 0.8rem;
     color: var(--text-muted);
     text-align: center;
-    margin: -0.5rem 0 0.5rem 0;
-    opacity: 0.7;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px;
+    opacity: 0.8;
 }
 
 .team-card {
@@ -1541,3 +1545,22 @@ letter-spacing: 0.5px;
 .status-paralyze { color: #fbbf24; }
 .status-sleep { color: #60a5fa; }
 .status-freeze { color: #22d3ee; }
+
+
+/* Move tooltip */
+.move-tooltip {
+    position: absolute;
+    background: var(--bg-dark);
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text);
+    z-index: 100;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.move-tooltip .type { color: var(--accent); font-weight: bold; }
+.move-tooltip .power { color: #ff6b6b; }
+.move-tooltip .accuracy { color: #4ecdc4; }

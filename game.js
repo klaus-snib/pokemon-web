@@ -3454,9 +3454,12 @@ class Game {
                     </div>
                 </div>
                 <div class="team-card-stats">
+                    <span>HP: ${poke.maxHp}</span>
                     <span>ATK: ${poke.attack}</span>
                     <span>DEF: ${poke.defense}</span>
-                    <span>SPD: ${poke.speed}</span>
+                    <span>SPA: ${poke.specialAttack || poke.spa || '-'}</span>
+                    <span>SPD: ${poke.specialDefense || poke.spd_def || '-'}</span>
+                    <span>SPE: ${poke.speed}</span>
                 </div>
                 <div class="team-card-moves">
                     ${poke.moves.map(m => `<span class="move-tag type-bg-${m.type}">${m.name}${m.power > 0 ? ` (${m.power})` : ''}</span>`).join(' ')}
