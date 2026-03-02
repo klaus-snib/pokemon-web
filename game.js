@@ -21,6 +21,71 @@ class Pokemon {
         
         // Get canonical moves from learnset
         this.moves = this.generateStartingMoves();
+        
+        // Status conditions
+        this.status = null; // 'burn', 'poison', 'paralyze', 'sleep', 'freeze'
+        this.statusTurns = 0; // For sleep/freeze duration
+    }
+    
+    // Apply status damage (burn/poison) at end of turn
+    applyStatusDamage() {
+        if (!this.status || this.hp <= 0) return 0;
+        
+        let damage = 0;
+        if (this.status === 'poison') {
+            damage = Math.floor(this.maxHp * 0.125); // 1/8 max HP
+            this.hp = Math.max(1, this.hp - damage);
+        } else if (this.status === 'burn') {
+            damage = Math.floor(this.maxHp * 0.0625); // 1/16 max HP
+            this.hp = Math.max(1, this.hp - damage);
+        }
+        
+        return damage;
+    }
+    
+    // Check if can move (paralysis, sleep, freeze)
+    canMove() {
+        if (this.status === 'sleep') {
+            this.statusTurns--;
+            if (this.statusTurns <= 0) {
+                this.status = null;
+                return { canMove: true, message: `${this.displayName} woke up!` };
+            }
+            return { canMove: false, message: `${this.displayName} is fast asleep!` };
+        }
+        
+        if (this.status === 'freeze') {
+            // 20% chance to thaw
+            if (Math.random() < 0.2) {
+                this.status = null;
+                return { canMove: true, message: `${this.displayName} thawed out!` };
+            }
+            return { canMove: false, message: `${this.displayName} is frozen solid!` };
+        }
+        
+        if (this.status === 'paralyze') {
+            // 25% chance to be fully paralyzed
+            if (Math.random() < 0.25) {
+                return { canMove: false, message: `${this.displayName} is paralyzed! It can't move!` };
+            }
+        }
+        
+        return { canMove: true };
+    }
+    
+    // Apply stat modifiers from status
+    getModifiedAttack() {
+        if (this.status === 'burn') {
+            return Math.floor(this.attack * 0.5); // Burn halves attack
+        }
+        return this.attack;
+    }
+    
+    getModifiedSpeed() {
+        if (this.status === 'paralyze') {
+            return Math.floor(this.speed * 0.25); // Paralysis quarters speed
+        }
+        return this.speed;
     }
     
     // Generate starting moves from learnset (up to 4 moves available at current level)
@@ -2015,6 +2080,18 @@ class Game {
         }
     }
 
+    // Get status icon for UI
+    getStatusIcon(status) {
+        const icons = {
+            'burn': '🔥',
+            'poison': '☠️',
+            'paralyze': '⚡',
+            'sleep': '💤',
+            'freeze': '❄️'
+        };
+        return icons[status] || '';
+    }
+
     updateBattleUI() {
         const player = this.team[this.activePokemonIndex];
         const enemy = this.battleEnemy;
@@ -2022,8 +2099,9 @@ class Game {
         // Player Pokemon
         const playerSprite = document.getElementById('player-sprite');
         playerSprite.src = getBackSpriteUrl(player.speciesId);
+        const statusIconPlayer = player.status ? this.getStatusIcon(player.status) : '';
         document.getElementById('player-name').innerHTML = `
-            ${player.displayName} Lv.${player.level}
+            ${player.displayName} Lv.${player.level}${statusIconPlayer}
             <span class="type-badge type-bg-${player.type.toLowerCase()}">${player.type}</span>
         `;
         const playerHpText = document.getElementById('player-hp-text');
@@ -2039,8 +2117,9 @@ class Game {
         // Enemy Pokemon
         const enemySprite = document.getElementById('enemy-sprite');
         enemySprite.src = getSpriteUrl(enemy.speciesId);
+        const statusIconEnemy = enemy.status ? this.getStatusIcon(enemy.status) : '';
         document.getElementById('enemy-name').innerHTML = `
-            ${enemy.name} Lv.${enemy.level}
+            ${enemy.name} Lv.${enemy.level}${statusIconEnemy}
             <span class="type-badge type-bg-${enemy.type.toLowerCase()}">${enemy.type}</span>
         `;
         
@@ -2142,6 +2221,44 @@ class Game {
             crit: crit > 1,
             moveName: move ? move.name : 'Attack'
         };
+    }
+
+    // Apply status damage at end of battle turn
+    applyEndOfTurnStatusDamage() {
+        const player = this.team[this.activePokemonIndex];
+        const enemy = this.battleEnemy;
+        
+        // Player status damage
+        if (player && player.status) {
+            const damage = player.applyStatusDamage();
+            if (damage > 0) {
+                const statusName = player.status === 'poison' ? 'Poison' : 'Burn';
+                this.addBattleLog(`${player.displayName} is hurt by ${statusName}! ${damage} damage!`, 'warning');
+                
+                // Check if player fainted from status
+                if (player.hp <= 0) {
+                    setTimeout(() => this.playerPokemonFainted(), 600);
+                    return;
+                }
+            }
+        }
+        
+        // Enemy status damage
+        if (enemy && enemy.status) {
+            const damage = enemy.applyStatusDamage();
+            if (damage > 0) {
+                const statusName = enemy.status === 'poison' ? 'Poison' : 'Burn';
+                this.addBattleLog(`${enemy.name} is hurt by ${statusName}! ${damage} damage!`, 'warning');
+                
+                // Check if enemy fainted from status
+                if (enemy.hp <= 0) {
+                    setTimeout(() => this.enemyFainted(), 600);
+                    return;
+                }
+            }
+        }
+        
+        this.updateBattleUI();
     }
 
     showMoveSelection() {
@@ -2312,6 +2429,12 @@ class Game {
                     }
                     return;
                 }
+                
+                // Apply status damage (burn/poison) after both attacks
+                setTimeout(() => {
+                    this.applyEndOfTurnStatusDamage();
+                }, 300);
+                
                 this.battleTurnInProgress = false;
             }, 700);
         };

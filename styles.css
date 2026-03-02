@@ -1527,3 +1527,17 @@ letter-spacing: 0.5px;
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5) !important;
     }
 }
+
+
+/* Status condition indicators */
+.status-icon {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 0.9em;
+}
+
+.status-burn { color: #ff6b6b; }
+.status-poison { color: #a855f7; }
+.status-paralyze { color: #fbbf24; }
+.status-sleep { color: #60a5fa; }
+.status-freeze { color: #22d3ee; }
