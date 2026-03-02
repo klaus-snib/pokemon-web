@@ -3655,7 +3655,7 @@ class Game {
         `;
         
         this.team.forEach((poke, i) => {
-            const isCompatible = tm.compatible.includes(poke.speciesId);
+            const isCompatible = typeof canLearnTM === "function" ? canLearnTM(tmId, POKEMON_DATA[poke.speciesId]) : true;
             const alreadyKnows = poke.moves.some(m => m.id === tm.move);
             
             const btn = document.createElement('button');
