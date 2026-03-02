@@ -2138,6 +2138,7 @@ class Game {
         document.getElementById('battle-log').innerHTML = '';
 
         this.showScreen('battle-screen');
+        this.restoreBattleActions();
         this.updateBattleUI();
         this.updateBattleButtons();
 
