@@ -872,8 +872,13 @@ class Game {
         const grid = document.getElementById('starter-selection');
         grid.innerHTML = '';
 
-        STARTERS.forEach(id => {
+        // Get 3 random starters
+        const starterPool = typeof getRandomStarterPool === 'function' ? 
+            getRandomStarterPool(3) : STARTERS.slice(0, 3);
+
+        starterPool.forEach(id => {
             const pokemon = POKEMON_DATA[id];
+            if (!pokemon) return;
             const div = document.createElement('div');
             div.className = 'starter-option';
             div.dataset.pokemon = id;
@@ -968,12 +973,21 @@ class Game {
         });
 
         // Rival gets type-advantage starter
-        const starterTypes = { bulbasaur: 'Grass', charmander: 'Fire', squirtle: 'Water', chikorita: 'Grass', cyndaquil: 'Fire', totodile: 'Water', pikachu: 'Electric', eevee: 'Normal' };
-        const advantage = { Grass: 'Fire', Fire: 'Water', Water: 'Grass', Electric: 'Grass', Normal: 'Fighting' };
-        const myType = starterTypes[this.selectedStarter];
+        const advantage = { Grass: 'Fire', Fire: 'Water', Water: 'Grass', Electric: 'Grass', Normal: 'Fighting', Bug: 'Fire', Poison: 'Ground' };
+        const myData = POKEMON_DATA[this.selectedStarter];
+        const myType = myData ? myData.type : 'Normal';
         const rivalType = advantage[myType] || 'Fire';
-        const rivalOptions = STARTERS.filter(s => POKEMON_DATA[s].type === rivalType);
-        this.rivalStarter = rivalOptions.length > 0 ? rivalOptions[0] : 'charmander';
+        
+        // Find rival options from all Pokemon with the advantage type
+        const rivalOptions = Object.keys(POKEMON_DATA).filter(id => {
+            const data = POKEMON_DATA[id];
+            return data && data.type === rivalType && data.baseStats;
+        });
+        
+        // Pick random from options, fallback to charmander
+        this.rivalStarter = rivalOptions.length > 0 ? 
+            rivalOptions[Math.floor(Math.random() * rivalOptions.length)] : 
+            'charmander';
 
         // Create starter Pokemon
         const starter = new Pokemon(this.selectedStarter, 5);

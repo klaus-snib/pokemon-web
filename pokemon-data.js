@@ -419,7 +419,26 @@ const POKEMON_DATA = {
     zubat: { name: "zubat", type: "Poison", baseStats: { hp: 40, atk: 45, def: 35, spd: 55 }, spa: 30, spd_def: 40, type2: 'Flying' },
 };
 
-const STARTERS = ['bulbasaur', 'charmander', 'squirtle', 'chikorita', 'cyndaquil', 'totodile', 'pikachu', 'eevee'];
+const STARTERS = ['bulbasaur', 'charmander', 'squirtle', 'chikorita', 'cyndaquil', 'totodile', 'pikachu', 'eevee', 'treecko', 'torchic', 'mudkip'];
+
+// Get random starter pool: canonical starters + Stage 1 Pokemon with BST <= 320
+function getRandomStarterPool(count = 3) {
+    const canonical = ['bulbasaur', 'charmander', 'squirtle', 'chikorita', 'cyndaquil', 'totodile', 'pikachu', 'eevee', 'treecko', 'torchic', 'mudkip'];
+    const eligible = [...canonical];
+    
+    // Add Stage 1 Pokemon with BST <= 320
+    for (const [id, data] of Object.entries(POKEMON_DATA)) {
+        if (!data.baseStats) continue;
+        const bst = data.baseStats.hp + data.baseStats.atk + data.baseStats.def + data.baseStats.spd + (data.spa || 0) + (data.spd_def || 0);
+        if (bst <= 320 && !canonical.includes(id) && data.evolves) {
+            eligible.push(id);
+        }
+    }
+    
+    // Shuffle and pick
+    const shuffled = [...eligible].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, count);
+}
 
 const LEGENDARY_POKEMON = ['articuno', 'zapdos', 'moltres', 'mewtwo'];
 
