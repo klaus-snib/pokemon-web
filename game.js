@@ -2150,13 +2150,13 @@ class Game {
             const playerSpeed = player.speed;
             const enemySpeed = enemy.speed;
             if (playerSpeed > enemySpeed) {
-                speedIndicator.innerHTML = '⚡ Faster';
+                speedIndicator.innerHTML = '🐇 You move first';
                 speedIndicator.className = 'speed-indicator speed-fast';
             } else if (playerSpeed < enemySpeed) {
-                speedIndicator.innerHTML = '🐢 Slower';
+                speedIndicator.innerHTML = '🐢 They move first';
                 speedIndicator.className = 'speed-indicator speed-slow';
             } else {
-                speedIndicator.innerHTML = '⚖️ Even';
+                speedIndicator.innerHTML = '⚖️ Same speed';
                 speedIndicator.className = 'speed-indicator speed-even';
             }
         }
