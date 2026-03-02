@@ -426,11 +426,31 @@ function getRandomStarterPool(count = 3) {
     const canonical = ['bulbasaur', 'charmander', 'squirtle', 'chikorita', 'cyndaquil', 'totodile', 'pikachu', 'eevee', 'treecko', 'torchic', 'mudkip'];
     const eligible = [...canonical];
     
+    // Build set of all evolution targets (Stage 2+ Pokemon)
+    const evolutionTargets = new Set();
+    for (const [id, data] of Object.entries(POKEMON_DATA)) {
+        if (data.evolves && data.evolves.into) {
+            evolutionTargets.add(data.evolves.into);
+        }
+    }
+    
+    // Unplayable starters (only know useless moves at level 1)
+    const unplayable = ['abra', 'magikarp', 'beldum', 'larvesta'];
+    
     // Add Stage 1 Pokemon with BST <= 320
     for (const [id, data] of Object.entries(POKEMON_DATA)) {
         if (!data.baseStats) continue;
+        if (canonical.includes(id)) continue;
+        if (unplayable.includes(id)) continue;
+        
+        // Skip if anything evolves into this (it's Stage 2+)
+        if (evolutionTargets.has(id)) continue;
+        
+        // Must have an evolution (Stage 1, not fully evolved)
+        if (!data.evolves || !data.evolves.into) continue;
+        
         const bst = data.baseStats.hp + data.baseStats.atk + data.baseStats.def + data.baseStats.spd + (data.spa || 0) + (data.spd_def || 0);
-        if (bst <= 320 && !canonical.includes(id) && data.evolves) {
+        if (bst <= 320) {
             eligible.push(id);
         }
     }
