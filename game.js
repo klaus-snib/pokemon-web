@@ -2434,7 +2434,6 @@ class Game {
         `;
         
         // Add event listeners with long-press for move details
-        const player = this.team[this.activePokemonIndex];
         actions.querySelectorAll('.move-btn').forEach((btn, i) => {
             let pressTimer;
             const move = player.moves[i];
