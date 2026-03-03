@@ -25,6 +25,57 @@ class Pokemon {
         // Status conditions
         this.status = null; // 'burn', 'poison', 'paralyze', 'sleep', 'freeze'
         this.statusTurns = 0; // For sleep/freeze duration
+        
+        // Stat stages (-6 to +6, default 0)
+        this.statStages = {
+            attack: 0,
+            defense: 0,
+            specialAttack: 0,
+            specialDefense: 0,
+            speed: 0,
+            accuracy: 0,
+            evasion: 0
+        };
+    }
+    
+    // Apply stat boosts from a move
+    applyStatBoosts(boosts) {
+        if (!boosts) return [];
+        const changes = [];
+        const statNames = {
+            attack: 'Atk',
+            defense: 'Def',
+            specialAttack: 'SpA',
+            specialDefense: 'SpD',
+            speed: 'Spe',
+            accuracy: 'Acc',
+            evasion: 'Eva'
+        };
+        
+        for (const [stat, change] of Object.entries(boosts)) {
+            if (this.statStages[stat] !== undefined) {
+                const oldStage = this.statStages[stat];
+                this.statStages[stat] = Math.max(-6, Math.min(6, this.statStages[stat] + change));
+                const actualChange = this.statStages[stat] - oldStage;
+                if (actualChange !== 0) {
+                    changes.push({
+                        stat: statNames[stat] || stat,
+                        change: actualChange,
+                        stage: this.statStages[stat]
+                    });
+                }
+            }
+        }
+        return changes;
+    }
+    
+    // Get modified stat with stage multiplier
+    getStatWithStage(statName, baseValue) {
+        const stage = this.statStages[statName] || 0;
+        if (stage === 0) return baseValue;
+        // Gen 3+ formula: multiplier = (2 + stage) / 2 for positive, 2 / (2 - stage) for negative
+        const multiplier = stage > 0 ? (2 + stage) / 2 : 2 / (2 - stage);
+        return Math.floor(baseValue * multiplier);
     }
     
     // Apply status damage (burn/poison) at end of turn
@@ -2162,6 +2213,19 @@ class Game {
         return icons[status] || '';
     }
 
+    // Format stat stages for UI display
+    formatStatStages(statStages) {
+        if (!statStages) return '';
+        const abbrev = { attack: 'Atk', defense: 'Def', specialAttack: 'SpA', specialDefense: 'SpD', speed: 'Spe', accuracy: 'Acc', evasion: 'Eva' };
+        const activeStages = Object.entries(statStages).filter(([_, v]) => v !== 0);
+        if (activeStages.length === 0) return '';
+        const stageText = activeStages.map(([stat, val]) => {
+            const arrows = val > 0 ? '↑'.repeat(Math.min(val, 3)) : '↓'.repeat(Math.min(Math.abs(val), 3));
+            return `${abbrev[stat]}${arrows}`;
+        }).join(' ');
+        return `<span class="stat-stages">${stageText}</span>`;
+    }
+
     updateBattleUI() {
         const player = this.team[this.activePokemonIndex];
         const enemy = this.battleEnemy;
@@ -2170,9 +2234,11 @@ class Game {
         const playerSprite = document.getElementById('player-sprite');
         playerSprite.src = getBackSpriteUrl(player.speciesId);
         const statusIconPlayer = player.status ? this.getStatusIcon(player.status) : '';
+        const statStagesPlayer = this.formatStatStages(player.statStages);
         document.getElementById('player-name').innerHTML = `
             ${player.displayName} Lv.${player.level}${statusIconPlayer}
             <span class="type-badge type-bg-${player.type.toLowerCase()}">${player.type}</span>
+            ${statStagesPlayer}
         `;
         const playerHpText = document.getElementById('player-hp-text');
         if (playerHpText) playerHpText.textContent = `${player.hp}/${player.maxHp}`;
@@ -2188,9 +2254,11 @@ class Game {
         const enemySprite = document.getElementById('enemy-sprite');
         enemySprite.src = getSpriteUrl(enemy.speciesId);
         const statusIconEnemy = enemy.status ? this.getStatusIcon(enemy.status) : '';
+        const statStagesEnemy = this.formatStatStages(enemy.statStages);
         document.getElementById('enemy-name').innerHTML = `
             ${enemy.name} Lv.${enemy.level}${statusIconEnemy}
             <span class="type-badge type-bg-${enemy.type.toLowerCase()}">${enemy.type}</span>
+            ${statStagesEnemy}
         `;
         
         // Speed indicator
@@ -2552,6 +2620,15 @@ class Game {
             // Apply status effects from move secondary
             if (!fainted && move && move.secondary) {
                 applyMoveStatusEffect(move, defender);
+            }
+
+            // Apply stat boosts from move
+            if (!fainted && move && move.boosts) {
+                const changes = defender.applyStatBoosts(move.boosts);
+                if (changes.length > 0) {
+                    const changeText = changes.map(c => `${c.stat} ${c.change > 0 ? '↑' : '↓'}`).join(', ');
+                    this.addBattleLog(`${defender.displayName}'s ${changeText}!`);
+                }
             }
 
             this.updateBattleUI();

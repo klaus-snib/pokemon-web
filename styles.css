@@ -1564,3 +1564,12 @@ letter-spacing: 0.5px;
 .move-tooltip .type { color: var(--accent); font-weight: bold; }
 .move-tooltip .power { color: #ff6b6b; }
 .move-tooltip .accuracy { color: #4ecdc4; }
+
+
+/* Stat stage indicators */
+.stat-stages {
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin-left: 0.5rem;
+    font-weight: bold;
+}
