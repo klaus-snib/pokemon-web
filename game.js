@@ -2583,6 +2583,28 @@ class Game {
                 return false; // Didn't faint
             }
             
+            // Handle status moves (no damage, just effects)
+            if (move && move.category === 'status') {
+                this.addBattleLog(`${attacker.displayName} used ${move.name}!`);
+                
+                // Apply stat boosts
+                if (move.boosts) {
+                    const changes = defender.applyStatBoosts(move.boosts);
+                    if (changes.length > 0) {
+                        const changeText = changes.map(c => `${c.stat} ${c.change > 0 ? '↑' : '↓'}`).join(', ');
+                        this.addBattleLog(`${defender.displayName}'s ${changeText}!`);
+                    }
+                }
+                
+                // Apply secondary status effects
+                if (move.secondary) {
+                    applyMoveStatusEffect(move, defender);
+                }
+                
+                this.updateBattleUI();
+                return false; // Status moves don't faint
+            }
+            
             const result = this.calculateDamage(attacker, defender, move);
             const fainted = defender.takeDamage(result.damage);
 
