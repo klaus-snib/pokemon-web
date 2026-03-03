@@ -163,7 +163,9 @@ class Pokemon {
                         pp: moveData.pp,
                         maxPp: moveData.pp,
                         accuracy: moveData.accuracy,
-                        category: moveData.category
+                        category: moveData.category,
+                        boosts: moveData.boosts,
+                        secondary: moveData.secondary
                     };
                 }
                 // Fallback if move not in database
@@ -321,7 +323,9 @@ class Pokemon {
                 pp: moveData.pp,
                 maxPp: moveData.pp,
                 accuracy: moveData.accuracy,
-                category: moveData.category
+                category: moveData.category,
+                boosts: moveData.boosts,
+                secondary: moveData.secondary
             } : {
                 id: entry.move,
                 name: entry.move.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
