@@ -2419,7 +2419,7 @@ class Game {
             const disabled = move.pp !== undefined && move.pp <= 0 ? 'disabled' : '';
             const powerText = move.power > 0 ? ` · ${move.power}` : '';
             movesHtml += `
-                <button class="action-btn move-btn type-bg-${move.type.toLowerCase()}" data-action="fight${i}" ${disabled}>
+                <button class="action-btn move-btn type-bg-${move.type.toLowerCase()}" data-action="fight${i}" data-move-idx="${i}" ${disabled}>
                     ${move.name}${powerText}<br><small>${move.type.toUpperCase()}${ppText ? ' · ' + ppText : ''}</small>
                 </button>
             `;
@@ -2432,9 +2432,42 @@ class Game {
             <button class="action-btn" data-action="item">💊 Item</button>
             <button class="action-btn" data-action="run">🏃 Run</button>
         `;
-        actions.querySelectorAll('.action-btn').forEach(btn => {
+        
+        // Add event listeners with long-press for move details
+        const player = this.team[this.activePokemonIndex];
+        actions.querySelectorAll('.move-btn').forEach((btn, i) => {
+            let pressTimer;
+            const move = player.moves[i];
+            
+            const showTooltip = () => {
+                const tooltip = document.createElement('div');
+                tooltip.className = 'move-tooltip';
+                tooltip.innerHTML = `
+                    <div class="type">${move.type}</div>
+                    <div>Power: <span class="power">${move.power || '—'}</span></div>
+                    <div>Acc: <span class="accuracy">${move.accuracy}%</span></div>
+                `;
+                btn.appendChild(tooltip);
+            };
+            
+            const hideTooltip = () => {
+                const tooltip = btn.querySelector('.move-tooltip');
+                if (tooltip) tooltip.remove();
+            };
+            
+            btn.addEventListener('mousedown', () => { pressTimer = setTimeout(showTooltip, 500); });
+            btn.addEventListener('mouseup', () => { clearTimeout(pressTimer); hideTooltip(); });
+            btn.addEventListener('mouseleave', () => { clearTimeout(pressTimer); hideTooltip(); });
+            btn.addEventListener('touchstart', (e) => { e.preventDefault(); pressTimer = setTimeout(showTooltip, 500); });
+            btn.addEventListener('touchend', () => { clearTimeout(pressTimer); hideTooltip(); });
+            btn.addEventListener('click', () => { clearTimeout(pressTimer); hideTooltip(); this.doBattleRound(i); });
+        });
+        
+        // Non-move buttons
+        actions.querySelectorAll('.action-btn:not(.move-btn)').forEach(btn => {
             btn.addEventListener('click', () => this.handleBattleAction(btn.dataset.action));
         });
+        
         this.updateBattleButtons();
     }
 
