@@ -17,8 +17,8 @@ class Pokemon {
         this.hp = this.maxHp;
         this.attack = Math.floor((base.atk * 2 * level) / 100) + 5;
         this.defense = Math.floor((base.def * 2 * level) / 100) + 5;
-        this.specialAttack = Math.floor((base.spa * 2 * level) / 100) + 5;
-        this.specialDefense = Math.floor((base.spd_def * 2 * level) / 100) + 5;
+        this.specialAttack = Math.floor(((this.species.spa || base.atk) * 2 * level) / 100) + 5;
+        this.specialDefense = Math.floor(((this.species.spd_def || base.def) * 2 * level) / 100) + 5;
         this.speed = Math.floor((base.spd * 2 * level) / 100) + 5;
         
         // Get canonical moves from learnset
