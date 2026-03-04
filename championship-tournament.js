@@ -1,0 +1,173 @@
+// Championship Tournament System
+// Post-game tournament with ghost rivals, regional champions, and custom champions
+
+const CHAMPIONSHIP_TOURNAMENT = {
+    // Tournament format: 2 groups of 5, top 2 advance to knockouts
+    GROUP_SIZE: 5,
+    GROUP_COUNT: 2,
+    ADVANCING_COUNT: 2,
+    
+    // Regional Champions from games (Gen 1-5)
+    REGIONAL_CHAMPIONS: [
+        // Kanto Champions
+        {
+            name: "Blue",
+            region: "Kanto",
+            team: [
+                { speciesId: 'pidgeot', level: 70, moves: ['wingattack', 'agility', 'mirrormove'] },
+                { speciesId: 'alakazam', level: 70, moves: ['psychic', 'psybeam', 'recover', 'reflect'] },
+                { speciesId: 'rhydon', level: 70, moves: ['earthquake', 'rockslide', 'takedown'] },
+                { speciesId: 'gyarados', level: 70, moves: ['hydropump', 'dragonrage', 'bite', 'thrash'] },
+                { speciesId: 'exeggutor', level: 70, moves: ['eggbomb', 'stunspore', 'psychic', 'leechseed'] },
+                { speciesId: 'charizard', level: 72, moves: ['flamethrower', 'slash', 'fly', 'firespin'] }
+            ]
+        },
+        {
+            name: "Lance",
+            region: "Kanto (Elite Four)",
+            team: [
+                { speciesId: 'gyarados', level: 70, moves: ['hydropump', 'dragonrage', 'bite'] },
+                { speciesId: 'dragonair', level: 70, moves: ['thunderwave', 'slam', 'agility', 'wrap'] },
+                { speciesId: 'dragonair', level: 70, moves: ['thunderwave', 'slam', 'agility', 'wrap'] },
+                { speciesId: 'aerodactyl', level: 70, moves: ['wingattack', 'hyperbeam', 'rockslide'] },
+                { speciesId: 'dragonite', level: 72, moves: ['hyperbeam', 'blizzard', 'thunder', 'fireblast'] }
+            ]
+        },
+        // Johto Champions
+        {
+            name: "Lance (Champion)",
+            region: "Johto",
+            team: [
+                { speciesId: 'gyarados', level: 68, moves: ['flail', 'dragonrage', 'raindance', 'surf'] },
+                { speciesId: 'dragonite', level: 68, moves: ['thunderwave', 'twister', 'thunder', 'hyperbeam'] },
+                { speciesId: 'aerodactyl', level: 70, moves: ['rockslide', 'wingattack', 'hyperbeam', 'scaryface'] },
+                { speciesId: 'charizard', level: 70, moves: ['flamethrower', 'wingattack', 'slash', 'hyperbeam'] },
+                { speciesId: 'dragonite', level: 75, moves: ['hyperbeam', 'safeguard', 'outrage', 'wingattack'] }
+            ]
+        },
+        // Hoenn Champions
+        {
+            name: "Steven",
+            region: "Hoenn",
+            team: [
+                { speciesId: 'skarmory', level: 75, moves: ['steelwing', 'aerialace', 'spikes', 'roar'] },
+                { speciesId: 'claydol', level: 75, moves: ['earthquake', 'ancientpower', 'psychic', 'lightscreen'] },
+                { speciesId: 'aggron', level: 75, moves: ['earthquake', 'irontail', 'dragonclaw', 'thunder'] },
+                { speciesId: 'cradily', level: 75, moves: ['gigadrain', 'ancientpower', 'confuseray', 'ingrain'] },
+                { speciesId: 'armaldo', level: 75, moves: ['waterpulse', 'ancientpower', 'aerialace', 'slash'] },
+                { speciesId: 'metagross', level: 78, moves: ['earthquake', 'psychic', 'meteormash', 'shadowball'] }
+            ]
+        },
+        // Sinnoh Champions
+        {
+            name: "Cynthia",
+            region: "Sinnoh",
+            team: [
+                { speciesId: 'spiritomb', level: 75, moves: ['darkpulse', 'shadowball', 'doubleteam', 'suckerpunch'] },
+                { speciesId: 'roserade', level: 75, moves: ['energyball', 'sludgebomb', 'extrasensory', 'toxic'] },
+                { speciesId: 'togekiss', level: 76, moves: ['airslash', 'aurasphere', 'psychic', 'thunderwave'] },
+                { speciesId: 'lucario', level: 76, moves: ['aurasphere', 'dragonpulse', 'psychic', 'earthquake'] },
+                { speciesId: 'milotic', level: 76, moves: ['surf', 'icebeam', 'mirrorcoat', 'aquaring'] },
+                { speciesId: 'garchomp', level: 78, moves: ['dragonrush', 'earthquake', 'brickbreak', 'gigaimpact'] }
+            ]
+        },
+        // Unova Champions
+        {
+            name: "Alder",
+            region: "Unova",
+            team: [
+                { speciesId: 'accelgor', level: 75, moves: ['bugbuzz', 'focusblast', 'swift', 'megadrain'] },
+                { speciesId: 'bouffalant', level: 75, moves: ['headcharge', 'megahorn', 'stoneedge', 'earthquake'] },
+                { speciesId: 'escavalier', level: 75, moves: ['xscissor', 'ironhead', 'reversal', 'swordsdance'] },
+                { speciesId: 'druddigon', level: 75, moves: ['crunch', 'dragonclaw', 'rockslide', 'firefang'] },
+                { speciesId: 'vanilluxe', level: 75, moves: ['blizzard', 'flashcannon', 'lightscreen', 'explosion'] },
+                { speciesId: 'volcarona', level: 77, moves: ['bugbuzz', 'heatwave', 'psychic', 'quiverdance'] }
+            ]
+        }
+    ],
+    
+    // Custom Champion Teams (to be filled by players)
+    CUSTOM_CHAMPIONS: {
+        // Format: name: { name: "Player Name", team: [{speciesId, level, moves}, ...] }
+    }
+};
+
+// Ghost Rivals - teams from successful runs
+// Stored in localStorage as 'pokemon_ghost_rivals'
+function saveGhostRival(team, playerName) {
+    const ghostRivals = JSON.parse(localStorage.getItem('pokemon_ghost_rivals') || '[]');
+    
+    // Save team snapshot with timestamp
+    const rival = {
+        name: playerName || 'Champion ' + (ghostRivals.length + 1),
+        team: team.map(p => ({
+            speciesId: p.speciesId,
+            level: p.level,
+            moves: p.moves.map(m => ({ id: m.id, name: m.name, type: m.type, pp: m.pp, maxPp: m.maxPp }))
+        })),
+        timestamp: Date.now(),
+        wins: 1
+    };
+    
+    // Add to front, keep max 20 ghost rivals
+    ghostRivals.unshift(rival);
+    if (ghostRivals.length > 20) {
+        ghostRivals.pop();
+    }
+    
+    localStorage.setItem('pokemon_ghost_rivals', JSON.stringify(ghostRivals));
+    return rival;
+}
+
+function getGhostRivals() {
+    return JSON.parse(localStorage.getItem('pokemon_ghost_rivals') || '[]');
+}
+
+// Generate tournament bracket
+function generateTournament() {
+    const ghostRivals = getGhostRivals();
+    const regionalChampions = CHAMPIONSHIP_TOURNAMENT.REGIONAL_CHAMPIONS;
+    const customChampions = Object.values(CHAMPIONSHIP_TOURNAMENT.CUSTOM_CHAMPIONS);
+    
+    // Build pool of all challengers
+    let pool = [];
+    
+    // Add ghost rivals (up to 5 recent ones)
+    pool.push(...ghostRivals.slice(0, 5).map(r => ({ ...r, type: 'ghost' })));
+    
+    // Add regional champions
+    pool.push(...regionalChampions.map(c => ({ ...c, type: 'regional' })));
+    
+    // Add custom champions
+    pool.push(...customChampions.map(c => ({ ...c, type: 'custom' })));
+    
+    // Shuffle pool
+    pool = shuffleArray(pool);
+    
+    // Split into 2 groups of 5
+    const groupA = pool.slice(0, 5);
+    const groupB = pool.slice(5, 10);
+    
+    return {
+        groupA,
+        groupB,
+        stage: 'group', // 'group', 'semifinal', 'final'
+        groupResults: { a: [], b: [] },
+        knockoutResults: { semifinal: [], final: null }
+    };
+}
+
+// Fisher-Yates shuffle
+function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+// Export for use in game
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { CHAMPIONSHIP_TOURNAMENT, saveGhostRival, getGhostRivals, generateTournament };
+}
