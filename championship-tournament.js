@@ -58,6 +58,26 @@ const CHAMPIONSHIP_TOURNAMENT = {
                 { speciesId: 'metagross', level: 78, moves: ['earthquake', 'psychic', 'meteormash', 'shadowball'] }
             ]
         },
+        {
+            name: "May",
+            region: "Hoenn (Rival)",
+            team: [
+                { speciesId: 'swellow', level: 59, moves: ['aerialace', 'quickattack', 'doubleteam', 'endeavor'] },
+                { speciesId: 'wailord', level: 61, moves: ['waterpulse', 'raindance', 'bodyslam', 'rest'] },
+                { speciesId: 'magnezone', level: 61, moves: ['thunderbolt', 'supersonic', 'thunderwave', 'screech'] },
+                { speciesId: 'blaziken', level: 63, moves: ['blazekick', 'skyuppercut', 'quickattack', 'slash'] }
+            ]
+        },
+        {
+            name: "Brendan",
+            region: "Hoenn (Rival)",
+            team: [
+                { speciesId: 'swellow', level: 59, moves: ['aerialace', 'quickattack', 'doubleteam', 'endeavor'] },
+                { speciesId: 'shiftry', level: 61, moves: ['leafblade', 'faintattack', 'swagger', 'extrasensory'] },
+                { speciesId: 'magneton', level: 61, moves: ['thunderbolt', 'supersonic', 'thunderwave', 'screech'] },
+                { speciesId: 'swampert', level: 63, moves: ['muddywater', 'earthquake', 'icebeam', 'protect'] }
+            ]
+        },
         // Sinnoh Champions
         {
             name: "Cynthia",
