@@ -2359,6 +2359,8 @@ class Game {
             defenseStat = defender.defense;
         }
         
+        // Ensure minimum defense of 1 to prevent division by zero
+        defenseStat = Math.max(1, defenseStat);
         const base = Math.floor(((2 * attacker.level / 5 + 2) * movePower * attackStat / defenseStat) / 50) + 2;
         const variance = 0.85 + Math.random() * 0.15;
 
