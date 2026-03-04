@@ -2550,7 +2550,7 @@ class Game {
         const enemy = this.battleEnemy;
         const playerMove = player.moves[moveIndex] || player.moves[0];
         // Enemy picks random move (or uses default attack)
-        const enemyMove = enemy.moves ? enemy.moves[Math.floor(Math.random() * enemy.moves.length)] : null;
+        const enemyMove = enemy.moves && enemy.moves.length > 0 ? enemy.moves[Math.floor(Math.random() * enemy.moves.length)] : null;
 
         // Restore battle action buttons
         this.restoreBattleActions();
@@ -4033,6 +4033,14 @@ class Game {
     confirmMoveReplace(tmId, pokemonIndex, moveIndex) {
         const tm = TMS[tmId];
         const pokemon = this.team[pokemonIndex];
+        
+        // Bounds check to prevent crash on invalid move index
+        if (moveIndex < 0 || moveIndex >= pokemon.moves.length) {
+            console.error('Invalid move index:', moveIndex, 'for pokemon', pokemon.displayName);
+            this.addMessage('Error: Invalid move selection.', 'danger');
+            return;
+        }
+        
         const oldMoveName = pokemon.moves[moveIndex].name;
         
         pokemon.moves[moveIndex] = {
