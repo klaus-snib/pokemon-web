@@ -78,6 +78,17 @@ const CHAMPIONSHIP_TOURNAMENT = {
                 { speciesId: 'swampert', level: 63, moves: ['muddywater', 'earthquake', 'icebeam', 'protect'] }
             ]
         },
+        {
+            name: "Wally",
+            region: "Hoenn (Rival)",
+            team: [
+                { speciesId: 'altaria', level: 57, moves: ['dragonpulse', 'cottonguard', 'dazzlinggleam', 'takedown'] },
+                { speciesId: 'delcatty', level: 57, moves: ['playrough', 'feintattack', 'sing', 'attract'] },
+                { speciesId: 'roselia', level: 57, moves: ['sludgebomb', 'gigadrain', 'toxic', 'synthesis'] },
+                { speciesId: 'magneton', level: 57, moves: ['thunderbolt', 'thunderwave', 'screech', 'supersonic'] },
+                { speciesId: 'gardevoir', level: 59, moves: ['moonblast', 'psychic', 'shadowball', 'calmmind'] }
+            ]
+        },
         // Sinnoh Champions
         {
             name: "Cynthia",
