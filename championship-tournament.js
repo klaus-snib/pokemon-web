@@ -86,9 +86,52 @@ const CHAMPIONSHIP_TOURNAMENT = {
         }
     ],
     
-    // Custom Champion Teams (to be filled by players)
+    // Custom Champion Teams (filled by players)
     CUSTOM_CHAMPIONS: {
-        // Format: name: { name: "Player Name", team: [{speciesId, level, moves}, ...] }
+        nsilver: {
+            name: "NSilver",
+            team: [
+                { speciesId: 'feraligatr', level: 75, moves: ['waterfall', 'crunch', 'icepunch', 'dragondance'] },
+                { speciesId: 'gengar', level: 75, moves: ['shadowball', 'sludgebomb', 'thunderbolt', 'focusblast'] },
+                { speciesId: 'whimsicott', level: 75, moves: ['gigadrain', 'hurricane', 'leechseed', 'substitute'] },
+                { speciesId: 'gliscor', level: 75, moves: ['earthquake', 'stoneedge', 'knockoff', 'roost'] },
+                { speciesId: 'scizor', level: 75, moves: ['bulletpunch', 'uturn', 'superpower', 'roost'] },
+                { speciesId: 'umbreon', level: 75, moves: ['foulplay', 'wish', 'protect', 'toxic'] }
+            ]
+        },
+        nib: {
+            name: "Nib",
+            team: [
+                { speciesId: 'alakazam', level: 75, moves: ['psychic', 'shadowball', 'focusblast', 'calmmind'] },
+                { speciesId: 'starmie', level: 75, moves: ['surf', 'thunderbolt', 'icebeam', 'recover'] },
+                { speciesId: 'tyranitar', level: 75, moves: ['stoneedge', 'crunch', 'earthquake', 'dragondance'] },
+                { speciesId: 'flygon', level: 75, moves: ['earthquake', 'outrage', 'fireblast', 'uturn'] },
+                { speciesId: 'heracross', level: 75, moves: ['closecombat', 'megahorn', 'stoneedge', 'facade'] },
+                { speciesId: 'jolteon', level: 75, moves: ['thunderbolt', 'voltswitch', 'shadowball', 'hiddenpower'] }
+            ]
+        },
+        snib: {
+            name: "Snib",
+            team: [
+                { speciesId: 'blaziken', level: 75, moves: ['flareblitz', 'closecombat', 'stoneedge', 'protect'] },
+                { speciesId: 'metagross', level: 75, moves: ['meteormash', 'earthquake', 'bulletpunch', 'zenheadbutt'] },
+                { speciesId: 'salamence', level: 75, moves: ['outrage', 'earthquake', 'fireblast', 'dragondance'] },
+                { speciesId: 'gardevoir', level: 75, moves: ['moonblast', 'psychic', 'shadowball', 'calmmind'] },
+                { speciesId: 'lucario', level: 75, moves: ['closecombat', 'meteormash', 'extremespeed', 'stoneedge'] },
+                { speciesId: 'garchomp', level: 75, moves: ['earthquake', 'outrage', 'stoneedge', 'swordsdance'] }
+            ]
+        },
+        ib: {
+            name: "Ib",
+            team: [
+                { speciesId: 'alakazam', level: 75, moves: ['psychic', 'focusblast', 'shadowball', 'calmmind'] },
+                { speciesId: 'metagross', level: 75, moves: ['meteormash', 'earthquake', 'zenheadbutt', 'bulletpunch'] },
+                { speciesId: 'porygonz', level: 75, moves: ['triattack', 'icebeam', 'thunderbolt', 'recover'] },
+                { speciesId: 'claydol', level: 75, moves: ['earthpower', 'psychic', 'icebeam', 'rapidspin'] },
+                { speciesId: 'bronzong', level: 75, moves: ['gyroball', 'earthquake', 'zenheadbutt', 'stealthrock'] },
+                { speciesId: 'chandelure', level: 75, moves: ['shadowball', 'fireblast', 'energyball', 'calmmind'] }
+            ]
+        }
     }
 };
 
