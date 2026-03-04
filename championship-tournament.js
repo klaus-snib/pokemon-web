@@ -63,10 +63,10 @@ const CHAMPIONSHIP_TOURNAMENT = {
             region: "Hoenn (Anime)",
             team: [
                 { speciesId: 'blaziken', level: 70, moves: ['blazekick', 'skyuppercut', 'quickattack', 'slash'] },
-                { speciesId: 'beautifly', level: 65, moves: ['silverwind', 'gigadrain', 'psychic', 'morningsun'] },
+                { speciesId: 'beautifly', level: 78, moves: ['silverwind', 'gigadrain', 'psychic', 'morningsun'] },
                 { speciesId: 'skitty', level: 82, moves: ['assist', 'doubleedge', 'sing', 'attract'] },
                 { speciesId: 'bulbasaur', level: 85, moves: ['solarbeam', 'vinewhip', 'leechseed', 'takedown'] },
-                { speciesId: 'munchlax', level: 65, moves: ['metronome', 'focuspunch', 'bodyslam', 'rest'] },
+                { speciesId: 'munchlax', level: 80, moves: ['metronome', 'focuspunch', 'bodyslam', 'rest'] },
                 { speciesId: 'squirtle', level: 82, moves: ['hydropump', 'skullbash', 'bite', 'protect'] }
             ]
         },
