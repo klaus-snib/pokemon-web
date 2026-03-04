@@ -23,14 +23,14 @@ const CHAMPIONSHIP_TOURNAMENT = {
             ]
         },
         {
-            name: "Lance",
-            region: "Kanto (Elite Four)",
+            name: "Silver",
+            region: "Johto (Rival)",
             team: [
-                { speciesId: 'gyarados', level: 70, moves: ['hydropump', 'dragonrage', 'bite'] },
-                { speciesId: 'dragonair', level: 70, moves: ['thunderwave', 'slam', 'agility', 'wrap'] },
-                { speciesId: 'dragonair', level: 70, moves: ['thunderwave', 'slam', 'agility', 'wrap'] },
-                { speciesId: 'aerodactyl', level: 70, moves: ['wingattack', 'hyperbeam', 'rockslide'] },
-                { speciesId: 'dragonite', level: 72, moves: ['hyperbeam', 'blizzard', 'thunder', 'fireblast'] }
+                { speciesId: 'sneasel', level: 68, moves: ['faintattack', 'metalclaw', 'iceshard', 'quickattack'] },
+                { speciesId: 'golbat', level: 68, moves: ['poisonfang', 'airslash', 'confuseray', 'bite'] },
+                { speciesId: 'magneton', level: 68, moves: ['thunderbolt', 'sonicboom', 'thunderwave', 'supersonic'] },
+                { speciesId: 'alakazam', level: 68, moves: ['psychic', 'recover', 'reflect', 'calmmind'] },
+                { speciesId: 'typhlosion', level: 70, moves: ['eruption', 'flamethrower', 'swift', 'smokescreen'] }
             ]
         },
         // Johto Champions
@@ -69,6 +69,17 @@ const CHAMPIONSHIP_TOURNAMENT = {
                 { speciesId: 'lucario', level: 76, moves: ['aurasphere', 'dragonpulse', 'psychic', 'earthquake'] },
                 { speciesId: 'milotic', level: 76, moves: ['surf', 'icebeam', 'mirrorcoat', 'aquaring'] },
                 { speciesId: 'garchomp', level: 78, moves: ['dragonrush', 'earthquake', 'brickbreak', 'gigaimpact'] }
+            ]
+        },
+        {
+            name: "Barry",
+            region: "Sinnoh (Rival)",
+            team: [
+                { speciesId: 'staraptor', level: 68, moves: ['bravebird', 'closecombat', 'quickattack', 'endeavor'] },
+                { speciesId: 'floatzel', level: 68, moves: ['aquajet', 'crunch', 'icefang', 'swift'] },
+                { speciesId: 'heracross', level: 68, moves: ['closecombat', 'megahorn', 'stoneedge', 'nightslash'] },
+                { speciesId: 'snorlax', level: 68, moves: ['bodyslam', 'crunch', 'earthquake', 'rest'] },
+                { speciesId: 'infernape', level: 70, moves: ['closecombat', 'flareblitz', 'machpunch', 'uturn'] }
             ]
         },
         // Unova Champions
