@@ -60,22 +60,26 @@ const CHAMPIONSHIP_TOURNAMENT = {
         },
         {
             name: "May",
-            region: "Hoenn (Rival)",
+            region: "Hoenn (Anime)",
             team: [
-                { speciesId: 'swellow', level: 59, moves: ['aerialace', 'quickattack', 'doubleteam', 'endeavor'] },
-                { speciesId: 'wailord', level: 61, moves: ['waterpulse', 'raindance', 'bodyslam', 'rest'] },
-                { speciesId: 'magnezone', level: 61, moves: ['thunderbolt', 'supersonic', 'thunderwave', 'screech'] },
-                { speciesId: 'blaziken', level: 63, moves: ['blazekick', 'skyuppercut', 'quickattack', 'slash'] }
+                { speciesId: 'blaziken', level: 70, moves: ['blazekick', 'skyuppercut', 'quickattack', 'slash'] },
+                { speciesId: 'beautifly', level: 65, moves: ['silverwind', 'gigadrain', 'psychic', 'morning sun'] },
+                { speciesId: 'skitty', level: 63, moves: ['assist', 'doubleedge', 'sing', 'attract'] },
+                { speciesId: 'bulbasaur', level: 65, moves: ['solarbeam', 'vinewhip', 'leechseed', 'takedown'] },
+                { speciesId: 'munchlax', level: 65, moves: ['metronome', 'focuspunch', 'bodyslam', 'rest'] },
+                { speciesId: 'squirtle', level: 65, moves: ['hydropump', 'skullbash', 'bite', 'protect'] }
             ]
         },
         {
             name: "Brendan",
-            region: "Hoenn (Rival)",
+            region: "Hoenn (Composite)",
             team: [
-                { speciesId: 'swellow', level: 59, moves: ['aerialace', 'quickattack', 'doubleteam', 'endeavor'] },
-                { speciesId: 'shiftry', level: 61, moves: ['leafblade', 'faintattack', 'swagger', 'extrasensory'] },
-                { speciesId: 'magneton', level: 61, moves: ['thunderbolt', 'supersonic', 'thunderwave', 'screech'] },
-                { speciesId: 'swampert', level: 63, moves: ['muddywater', 'earthquake', 'icebeam', 'protect'] }
+                { speciesId: 'sceptile', level: 70, moves: ['leafblade', 'dragonclaw', 'crunch', 'detect'] },
+                { speciesId: 'swellow', level: 65, moves: ['aerialace', 'quickattack', 'doubleteam', 'endeavor'] },
+                { speciesId: 'camerupt', level: 65, moves: ['earthquake', 'eruption', 'rockslide', 'amnesia'] },
+                { speciesId: 'wailord', level: 65, moves: ['waterpulse', 'raindance', 'bodyslam', 'rest'] },
+                { speciesId: 'tropius', level: 63, moves: ['solarbeam', 'aerialace', 'synthesis', 'stomp'] },
+                { speciesId: 'magcargo', level: 63, moves: ['flamethrower', 'rockslide', 'yawn', 'recover'] }
             ]
         },
         {
