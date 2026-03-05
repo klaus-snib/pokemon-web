@@ -20,14 +20,14 @@ class Pokemon {
         this.specialAttack = Math.floor(((this.species.spa || base.atk) * 2 * level) / 100) + 5;
         this.specialDefense = Math.floor(((this.species.spd_def || base.def) * 2 * level) / 100) + 5;
         this.speed = Math.floor((base.spd * 2 * level) / 100) + 5;
-        
+
         // Get canonical moves from learnset
         this.moves = this.generateStartingMoves();
-        
+
         // Status conditions
         this.status = null; // 'burn', 'poison', 'paralyze', 'sleep', 'freeze'
         this.statusTurns = 0; // For sleep/freeze duration
-        
+
         // Stat stages (-6 to +6, default 0)
         this.statStages = {
             attack: 0,
@@ -39,9 +39,9 @@ class Pokemon {
             evasion: 0
         };
     }
-    
+
     // Apply stat boosts from a move
-    applyStatBoosts(boosts) {
+    applyStatBoosts(boosts, clauseTracker, isPlayer) {
         if (!boosts) return [];
         const changes = [];
         const statNames = {
@@ -53,9 +53,18 @@ class Pokemon {
             accuracy: 'Acc',
             evasion: 'Eva'
         };
-        
+
         for (const [stat, change] of Object.entries(boosts)) {
             if (this.statStages[stat] !== undefined) {
+                // Check evasion clause
+                if (stat === 'evasion' && clauseTracker && change > 0) {
+                    if (!clauseTracker.canBoostEvasion(isPlayer)) {
+                        // Evasion clause would be violated - skip this boost
+                        continue;
+                    }
+                    clauseTracker.incrementClause(SMGON_CLAUSES.EVASION, isPlayer);
+                }
+
                 const oldStage = this.statStages[stat];
                 this.statStages[stat] = Math.max(-6, Math.min(6, this.statStages[stat] + change));
                 const actualChange = this.statStages[stat] - oldStage;
@@ -70,7 +79,7 @@ class Pokemon {
         }
         return changes;
     }
-    
+
     // Get modified stat with stage multiplier
     getStatWithStage(statName, baseValue) {
         const stage = this.statStages[statName] || 0;
@@ -79,11 +88,11 @@ class Pokemon {
         const multiplier = stage > 0 ? (2 + stage) / 2 : 2 / (2 - stage);
         return Math.floor(baseValue * multiplier);
     }
-    
+
     // Apply status damage (burn/poison) at end of turn
     applyStatusDamage() {
         if (!this.status || this.hp <= 0) return 0;
-        
+
         let damage = 0;
         if (this.status === 'poison') {
             damage = Math.floor(this.maxHp * 0.125); // 1/8 max HP
@@ -92,10 +101,10 @@ class Pokemon {
             damage = Math.floor(this.maxHp * 0.0625); // 1/16 max HP
             this.hp = Math.max(1, this.hp - damage);
         }
-        
+
         return damage;
     }
-    
+
     // Check if can move (paralysis, sleep, freeze)
     canMove() {
         if (this.status === 'sleep') {
@@ -106,7 +115,7 @@ class Pokemon {
             }
             return { canMove: false, message: `${this.displayName} is fast asleep!` };
         }
-        
+
         if (this.status === 'freeze') {
             // 20% chance to thaw
             if (Math.random() < 0.2) {
@@ -115,17 +124,17 @@ class Pokemon {
             }
             return { canMove: false, message: `${this.displayName} is frozen solid!` };
         }
-        
+
         if (this.status === 'paralyze') {
             // 25% chance to be fully paralyzed
             if (Math.random() < 0.25) {
                 return { canMove: false, message: `${this.displayName} is paralyzed! It can't move!` };
             }
         }
-        
+
         return { canMove: true };
     }
-    
+
     // Apply stat modifiers from status
     getModifiedAttack() {
         if (this.status === 'burn') {
@@ -133,14 +142,14 @@ class Pokemon {
         }
         return this.attack;
     }
-    
+
     getModifiedSpeed() {
         if (this.status === 'paralyze') {
             return Math.floor(this.speed * 0.25); // Paralysis quarters speed
         }
         return this.speed;
     }
-    
+
     // Generate starting moves from learnset (up to 4 moves available at current level)
     generateStartingMoves() {
         // Check if canonical learnset exists
@@ -150,11 +159,11 @@ class Pokemon {
             const availableMoves = learnset
                 .filter(entry => entry.level <= this.level)
                 .slice(-4); // Take last 4 (most recent)
-            
+
             // Map to move data
             return availableMoves.map(entry => {
-                const moveData = (typeof CANONICAL_MOVES !== 'undefined' && CANONICAL_MOVES[entry.move]) 
-                    ? CANONICAL_MOVES[entry.move] 
+                const moveData = (typeof CANONICAL_MOVES !== 'undefined' && CANONICAL_MOVES[entry.move])
+                    ? CANONICAL_MOVES[entry.move]
                     : null;
                 if (moveData) {
                     return {
@@ -183,7 +192,7 @@ class Pokemon {
                 };
             });
         }
-        
+
         // Fallback to old system if no learnset
         return getMovesForPokemon(this.type);
     }
@@ -218,12 +227,12 @@ class Pokemon {
     get specialAttack() {
         const base = this.species;
         // Try various property names for special attack
-        const spa = base.spa !== undefined ? base.spa : 
+        const spa = base.spa !== undefined ? base.spa :
                     base['special-attack'] !== undefined ? base['special-attack'] :
                     50; // Default fallback
         return Math.floor((spa * 2 * this.level) / 100) + 5;
     }
-    
+
     get specialDefense() {
         const base = this.species;
         // Try various property names for special defense
@@ -275,18 +284,18 @@ class Pokemon {
                 // These are handled by item use, not level-up
                 return null;
             }
-            
+
             // Level-based evolution with probability
             if (evo.level) {
                 const canonicalLevel = evo.level;
                 const rollStartLevel = canonicalLevel - 5;
-                
+
                 // Start rolling 5 levels before canonical
                 if (this.level >= rollStartLevel) {
                     // Base 20% chance, +1% per level above roll start
                     const levelsPastStart = this.level - rollStartLevel;
                     const evolutionChance = 20 + levelsPastStart;
-                    
+
                     // Roll for evolution
                     if (Math.random() * 100 < evolutionChance) {
                         return evo.into;
@@ -296,27 +305,27 @@ class Pokemon {
         }
         return null;
     }
-    
+
     // Check for new moves at current level and learn them
     checkAndLearnNewMoves() {
         if (typeof LEARNSETS === 'undefined' || !LEARNSETS[this.speciesId]) {
             return; // No learnset available
         }
-        
+
         const learnset = LEARNSETS[this.speciesId];
         const newMoves = learnset.filter(entry => entry.level === this.level);
-        
+
         for (const entry of newMoves) {
             // Check if already knows this move
             if (this.moves.some(m => m.id === entry.move)) {
                 continue;
             }
-            
+
             // Get move data
-            const moveData = (typeof CANONICAL_MOVES !== 'undefined' && CANONICAL_MOVES[entry.move]) 
-                ? CANONICAL_MOVES[entry.move] 
+            const moveData = (typeof CANONICAL_MOVES !== 'undefined' && CANONICAL_MOVES[entry.move])
+                ? CANONICAL_MOVES[entry.move]
                 : null;
-            
+
             const newMove = moveData ? {
                 id: entry.move,
                 name: moveData.name,
@@ -338,7 +347,7 @@ class Pokemon {
                 accuracy: 100,
                 category: 'physical'
             };
-            
+
             // If less than 4 moves, just add it
             if (this.moves.length < 4) {
                 this.moves.push(newMove);
@@ -483,109 +492,109 @@ class DragDropManager {
         this.dragThreshold = 10;
         this.longPressDelay = 200;
         this.longPressTimer = null;
-        
+
         this.init();
     }
-    
+
     init() {
         this.container.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
         this.container.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
         this.container.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: true });
         this.container.addEventListener('touchcancel', this.handleTouchEnd.bind(this), { passive: true });
-        
+
         // Mouse fallback for desktop testing
         this.container.addEventListener('mousedown', this.handleMouseDown.bind(this));
         document.addEventListener('mousemove', this.handleMouseMove.bind(this));
         document.addEventListener('mouseup', this.handleMouseUp.bind(this));
     }
-    
+
     getCardIndex(element) {
         const cards = Array.from(this.container.querySelectorAll('.team-card'));
         return cards.indexOf(element.closest('.team-card'));
     }
-    
+
     handleTouchStart(e) {
         const card = e.target.closest('.team-card');
         if (!card) return;
-        
+
         this.touchStartY = e.touches[0].clientY;
         this.startIndex = this.getCardIndex(card);
         this.currentIndex = this.startIndex;
         this.isDragging = false;
-        
+
         // Start long press timer
         this.longPressTimer = setTimeout(() => {
             this.startDrag(card, e.touches[0].clientY);
         }, this.longPressDelay);
     }
-    
+
     handleTouchMove(e) {
         if (this.startIndex === -1) return;
-        
+
         this.touchCurrentY = e.touches[0].clientY;
         const deltaY = Math.abs(this.touchCurrentY - this.touchStartY);
-        
+
         // If moved beyond threshold, cancel long press and start drag immediately
         if (deltaY > this.dragThreshold && !this.isDragging) {
             clearTimeout(this.longPressTimer);
             const card = this.container.querySelectorAll('.team-card')[this.startIndex];
             this.startDrag(card, this.touchCurrentY);
         }
-        
+
         if (this.isDragging) {
             e.preventDefault();
             this.updateGhostPosition(this.touchCurrentY);
             this.updateDropIndicator(this.touchCurrentY);
         }
     }
-    
+
     handleTouchEnd(e) {
         clearTimeout(this.longPressTimer);
-        
+
         if (!this.isDragging) {
             this.reset();
             return;
         }
-        
+
         if (this.currentIndex !== -1 && this.currentIndex !== this.startIndex) {
             this.onReorder(this.startIndex, this.currentIndex);
             if (navigator.vibrate) navigator.vibrate(10);
         }
-        
+
         this.endDrag();
     }
-    
+
     handleMouseDown(e) {
         const card = e.target.closest('.team-card');
         if (!card) return;
-        
+
         this.isMouse = true;
         this.startIndex = this.getCardIndex(card);
         this.currentIndex = this.startIndex;
         this.startDrag(card, e.clientY);
     }
-    
+
     handleMouseMove(e) {
         if (!this.isDragging || !this.isMouse) return;
         this.updateGhostPosition(e.clientY);
         this.updateDropIndicator(e.clientY);
     }
-    
+
     handleMouseUp(e) {
         if (!this.isDragging || !this.isMouse) return;
-        
+
         if (this.currentIndex !== -1 && this.currentIndex !== this.startIndex) {
             this.onReorder(this.startIndex, this.currentIndex);
         }
-        
+
         this.endDrag();
         this.isMouse = false;
     }
-    
+
     startDrag(card, y) {
         this.isDragging = true;
         this.draggedElement = card;
-        
+
         // Create ghost element
         this.ghostElement = card.cloneNode(true);
         this.ghostElement.classList.add('ghost');
@@ -594,64 +603,64 @@ class DragDropManager {
         this.ghostElement.style.zIndex = '1000';
         this.ghostElement.style.pointerEvents = 'none';
         document.body.appendChild(this.ghostElement);
-        
+
         // Add dragging class to original
         card.classList.add('dragging');
-        
+
         // Create drop indicators between cards
         this.createDropIndicators();
-        
+
         // Initial position
         this.updateGhostPosition(y);
     }
-    
+
     updateGhostPosition(y) {
         if (!this.ghostElement) return;
         const rect = this.draggedElement.getBoundingClientRect();
         this.ghostElement.style.top = `${y - rect.height / 2}px`;
         this.ghostElement.style.left = `${rect.left}px`;
     }
-    
+
     createDropIndicators() {
         const cards = this.container.querySelectorAll('.team-card');
         cards.forEach((card, i) => {
             if (i === this.startIndex) return;
-            
+
             const indicator = document.createElement('div');
             indicator.className = 'drop-indicator';
             indicator.dataset.index = i;
             card.parentNode.insertBefore(indicator, card);
         });
-        
+
         // Add final indicator
         const lastIndicator = document.createElement('div');
         lastIndicator.className = 'drop-indicator';
         lastIndicator.dataset.index = cards.length;
         this.container.appendChild(lastIndicator);
     }
-    
+
     updateDropIndicator(y) {
         const indicators = this.container.querySelectorAll('.drop-indicator');
         let closestIndex = -1;
         let closestDistance = Infinity;
-        
+
         indicators.forEach(indicator => {
             const rect = indicator.getBoundingClientRect();
             const distance = Math.abs(rect.top - y);
-            
+
             if (distance < closestDistance) {
                 closestDistance = distance;
                 closestIndex = parseInt(indicator.dataset.index);
             }
         });
-        
+
         // Adjust for the removed card
         if (closestIndex > this.startIndex) {
             closestIndex--;
         }
-        
+
         this.currentIndex = Math.max(0, Math.min(closestIndex, this.container.querySelectorAll('.team-card').length - 1));
-        
+
         // Visual feedback
         indicators.forEach(ind => ind.classList.remove('active'));
         const activeIndicator = Array.from(indicators).find(ind => {
@@ -661,14 +670,14 @@ class DragDropManager {
         });
         if (activeIndicator) activeIndicator.classList.add('active');
     }
-    
+
     endDrag() {
         this.draggedElement?.classList.remove('dragging');
         this.ghostElement?.remove();
         this.container.querySelectorAll('.drop-indicator').forEach(el => el.remove());
         this.reset();
     }
-    
+
     reset() {
         this.draggedElement = null;
         this.ghostElement = null;
@@ -677,7 +686,7 @@ class DragDropManager {
         this.currentIndex = -1;
         clearTimeout(this.longPressTimer);
     }
-    
+
     destroy() {
         // Remove ghost element from body if it exists
         if (this.ghostElement) {
@@ -744,7 +753,7 @@ class Game {
         this.e4Progress = 0; // 0-3 = E4 members, 4 = champion
         this.inE4 = false;
 
-        // Route environments — shuffled per run, rotate every 2 badges
+        // Route environments - shuffled per run, rotate every 2 badges
         this.routes = typeof shuffleRoutes === 'function' ? shuffleRoutes() : [];
         this.currentRouteIndex = 0;
 
@@ -852,7 +861,7 @@ class Game {
         return this.routes[this.currentRouteIndex % this.routes.length];
     }
 
-    // Get wild encounter pool — route-biased if route exists, else fallback to global
+    // Get wild encounter pool - route-biased if route exists, else fallback to global
     getWildPool(tier) {
         const route = this.getCurrentRoute();
         if (route && route[tier] && route[tier].length > 0) {
@@ -930,7 +939,7 @@ class Game {
         grid.innerHTML = '';
 
         // Get 3 random starters
-        const starterPool = typeof getRandomStarterPool === 'function' ? 
+        const starterPool = typeof getRandomStarterPool === 'function' ?
             getRandomStarterPool(3) : STARTERS.slice(0, 3);
 
         starterPool.forEach(id => {
@@ -1034,16 +1043,16 @@ class Game {
         const myData = POKEMON_DATA[this.selectedStarter];
         const myType = myData ? myData.type : 'Normal';
         const rivalType = advantage[myType] || 'Fire';
-        
+
         // Find rival options from all Pokemon with the advantage type
         const rivalOptions = Object.keys(POKEMON_DATA).filter(id => {
             const data = POKEMON_DATA[id];
             return data && data.type === rivalType && data.baseStats;
         });
-        
+
         // Pick random from options, fallback to charmander
-        this.rivalStarter = rivalOptions.length > 0 ? 
-            rivalOptions[Math.floor(Math.random() * rivalOptions.length)] : 
+        this.rivalStarter = rivalOptions.length > 0 ?
+            rivalOptions[Math.floor(Math.random() * rivalOptions.length)] :
             'charmander';
 
         // Create starter Pokemon
@@ -1057,7 +1066,7 @@ class Game {
         this.addMessage(`Your rival ${this.rivalName} chose ${POKEMON_DATA[this.rivalStarter].name}!`, 'warning');
         const startRoute = this.getCurrentRoute();
         if (startRoute) {
-            this.addMessage(`${startRoute.icon} ${startRoute.name} — ${startRoute.desc}`, 'success');
+            this.addMessage(`${startRoute.icon} ${startRoute.name} - ${startRoute.desc}`, 'success');
         }
         this.generateChoices();
         this.saveGame();
@@ -1162,7 +1171,7 @@ class Game {
         const outOfEvents = this.maxEvents && this.eventsExplored >= this.maxEvents;
 
         if (outOfEvents) {
-            this.addMessage('No more time to explore — gym battles only!', 'warning');
+            this.addMessage('No more time to explore - gym battles only!', 'warning');
         }
 
         // Wild battle (not available if out of events)
@@ -1208,7 +1217,7 @@ class Game {
             choices.push({
                 icon: '🏛️',
                 text: `Challenge ${gym.name}${regionTag}`,
-                desc: `${gym.type} type - Lv.${gym.level} — ${gym.badge}`,
+                desc: `${gym.type} type - Lv.${gym.level} - ${gym.badge}`,
                 action: () => this.gymBattle()
             });
         }
@@ -1267,12 +1276,12 @@ class Game {
 
         // Pick 1-2 random events (always allow healing even when out of events)
         if (outOfEvents) {
-            // Heal + train when out of exploration events (free — don't block gym progression)
+            // Heal + train when out of exploration events (free - don't block gym progression)
             choices.push({ icon: '🏥', text: 'Pokemon Center', desc: 'Heal your team', action: () => this.healTeam() });
             choices.push({ icon: '🏕️', text: 'Campsite', desc: 'Rest, train, or forage', action: () => this.campsite() });
             choices.push({ icon: '🌿', text: 'Grind Wild Pokemon', desc: 'Train for the next gym', action: () => this.wildBattle() });
         } else {
-            // Weighted random selection — rarer events actually appear less often
+            // Weighted random selection - rarer events actually appear less often
             const numEvents = Math.random() < 0.4 ? 2 : 1;
             const pool = [...eventPool];
             for (let i = 0; i < numEvents && pool.length > 0; i++) {
@@ -1312,9 +1321,9 @@ class Game {
                 // Warn when events running low
                 if (this.maxEvents && !outOfEvts) {
                     const left = this.maxEvents - this.eventsExplored;
-                    if (left === 10) this.showEventResult('⚠️ 10 events remaining — choose wisely!', 'info');
+                    if (left === 10) this.showEventResult('⚠️ 10 events remaining - choose wisely!', 'info');
                     else if (left === 5) this.showEventResult('⚠️ Only 5 events left!', 'danger');
-                    else if (left === 0) this.showEventResult('🏁 No more exploration — gym battles only!', 'danger');
+                    else if (left === 0) this.showEventResult('🏁 No more exploration - gym battles only!', 'danger');
                 }
                 choice.action();
             });
@@ -1438,7 +1447,7 @@ class Game {
     // ===== GYM BATTLES =====
     gymBattle() {
         const gym = GYM_LEADERS[this.currentGym];
-        
+
         // Cash payout for unused events
         if (this.maxEvents && this.eventsExplored < this.maxEvents) {
             const remainingEvents = this.maxEvents - this.eventsExplored;
@@ -1446,8 +1455,8 @@ class Game {
             this.money += payout;
             this.showEventResult(`💰 Skipped ${remainingEvents} events! Bonus: $${payout}!`, 'success');
         }
-        
-        // Pick team based on tier — early gyms (0-3) use pre-evos, late (4-7) use evolved
+
+        // Pick team based on tier - early gyms (0-3) use pre-evos, late (4-7) use evolved
         const isLate = this.currentGym >= 4;
         const team = isLate ? (gym.lateTeam || gym.pokemon || [this.getGymPokemonFallback(gym)])
                             : (gym.earlyTeam || gym.pokemon || [this.getGymPokemonFallback(gym)]);
@@ -1941,7 +1950,7 @@ class Game {
         const modal = document.getElementById('modal');
         const body = document.getElementById('modal-body');
         body.innerHTML = `
-            <h3>🏠 Daycare — $${cost}</h3>
+            <h3>🏠 Daycare - $${cost}</h3>
             <p>Leave a Pokemon for intensive training. It gains XP equal to 2 wild battles.</p>
             <div class="daycare-choices"></div>
         `;
@@ -2002,7 +2011,7 @@ class Game {
             const btn = document.createElement('button');
             btn.className = 'choice-btn';
             const canAfford = this.money >= item.price;
-            btn.innerHTML = `<span class="choice-text">${item.name} — $${item.price}</span>`;
+            btn.innerHTML = `<span class="choice-text">${item.name} - $${item.price}</span>`;
             btn.disabled = !canAfford;
             btn.style.opacity = canAfford ? 1 : 0.5;
             btn.onclick = () => {
@@ -2037,10 +2046,10 @@ class Game {
         `;
         const container = body.querySelector('.game-corner-options');
 
-        // Slot machine — $200 per spin
+        // Slot machine - $200 per spin
         const slotBtn = document.createElement('button');
         slotBtn.className = 'choice-btn';
-        slotBtn.innerHTML = '<span class="choice-text">🎰 Slots — $200</span><div class="choice-desc">Win big or lose it all!</div>';
+        slotBtn.innerHTML = '<span class="choice-text">🎰 Slots - $200</span><div class="choice-desc">Win big or lose it all!</div>';
         slotBtn.onclick = () => {
             if (this.money < 200) { this.addMessage("Not enough money!", 'danger'); return; }
             this.money -= 200;
@@ -2061,10 +2070,10 @@ class Game {
         };
         container.appendChild(slotBtn);
 
-        // Prize exchange — spend $1000 for a random good item
+        // Prize exchange - spend $1000 for a random good item
         const prizeBtn = document.createElement('button');
         prizeBtn.className = 'choice-btn';
-        prizeBtn.innerHTML = '<span class="choice-text">🎁 Prize Exchange — $1000</span><div class="choice-desc">Random rare prize</div>';
+        prizeBtn.innerHTML = '<span class="choice-text">🎁 Prize Exchange - $1000</span><div class="choice-desc">Random rare prize</div>';
         prizeBtn.onclick = () => {
             if (this.money < 1000) { this.addMessage("Not enough money!", 'danger'); return; }
             this.money -= 1000;
@@ -2158,10 +2167,10 @@ class Game {
 
         // Milestone flavor text
         const fight = this.towerWins + 1;
-        if (fight === 1) this.addMessage('Battle Tower — Floor 1! How far can you go?', 'warning');
-        else if (fight % 10 === 0) this.addMessage(`Battle Tower — Floor ${fight}! The crowd roars!`, 'warning');
-        else if (fight % 5 === 0) this.addMessage(`Battle Tower — Floor ${fight}! Getting serious now.`, 'warning');
-        else this.addMessage(`Battle Tower — Floor ${fight}!`, 'warning');
+        if (fight === 1) this.addMessage('Battle Tower - Floor 1! How far can you go?', 'warning');
+        else if (fight % 10 === 0) this.addMessage(`Battle Tower - Floor ${fight}! The crowd roars!`, 'warning');
+        else if (fight % 5 === 0) this.addMessage(`Battle Tower - Floor ${fight}! Getting serious now.`, 'warning');
+        else this.addMessage(`Battle Tower - Floor ${fight}!`, 'warning');
 
         this.startBattle();
     }
@@ -2266,7 +2275,7 @@ class Game {
             <span class="type-badge type-bg-${enemy.type.toLowerCase()}">${enemy.type}</span>
             ${statStagesEnemy}
         `;
-        
+
         // Speed indicator
         const speedIndicator = document.getElementById('enemy-speed');
         if (speedIndicator) {
@@ -2283,7 +2292,7 @@ class Game {
                 speedIndicator.className = 'speed-indicator speed-even';
             }
         }
-        
+
         const enemyHpText = document.getElementById('enemy-hp-text');
         if (enemyHpText) enemyHpText.textContent = `${enemy.hp}/${enemy.maxHp}`;
 
@@ -2341,14 +2350,14 @@ class Game {
         if (move && (move.category === 'status' || move.power === 0)) {
             return { damage: 0, effectiveness: 1, crit: false, moveName: move.name };
         }
-        
+
         // Move power scales damage (default 60 for enemies without moves)
         const movePower = move ? move.power : 60;
-        
+
         // Physical/Special split - use appropriate stats
         const category = move ? move.category : 'physical';
         let attackStat, defenseStat;
-        
+
         if (category === 'special') {
             // Special moves use special attack / special defense
             attackStat = attacker.specialAttack;
@@ -2358,13 +2367,13 @@ class Game {
             attackStat = attacker.getModifiedAttack ? attacker.getModifiedAttack() : attacker.attack;
             defenseStat = defender.defense;
         }
-        
+
         // Ensure minimum defense of 1 to prevent division by zero
         defenseStat = Math.max(1, defenseStat);
         const base = Math.floor(((2 * attacker.level / 5 + 2) * movePower * attackStat / defenseStat) / 50) + 2;
         const variance = 0.85 + Math.random() * 0.15;
 
-        // Type effectiveness — use move type if provided, else attacker type
+        // Type effectiveness - use move type if provided, else attacker type
         const attackType = move ? move.type : attacker.type.toLowerCase();
         const defenseType = defender.type.toLowerCase();
         let effectiveness = 1;
@@ -2393,14 +2402,14 @@ class Game {
     applyEndOfTurnStatusDamage() {
         const player = this.team[this.activePokemonIndex];
         const enemy = this.battleEnemy;
-        
+
         // Player status damage
         if (player && player.status) {
             const damage = player.applyStatusDamage();
             if (damage > 0) {
                 const statusName = player.status === 'poison' ? 'Poison' : 'Burn';
                 this.addBattleLog(`${player.displayName} is hurt by ${statusName}! ${damage} damage!`, 'warning');
-                
+
                 // Check if player fainted from status
                 if (player.hp <= 0) {
                     setTimeout(() => this.playerPokemonFainted(), 600);
@@ -2408,14 +2417,14 @@ class Game {
                 }
             }
         }
-        
+
         // Enemy status damage
         if (enemy && enemy.status) {
             const damage = enemy.applyStatusDamage();
             if (damage > 0) {
                 const statusName = enemy.status === 'poison' ? 'Poison' : 'Burn';
                 this.addBattleLog(`${enemy.name} is hurt by ${statusName}! ${damage} damage!`, 'warning');
-                
+
                 // Check if enemy fainted from status
                 if (enemy.hp <= 0) {
                     setTimeout(() => this.enemyFainted(), 600);
@@ -2423,7 +2432,7 @@ class Game {
                 }
             }
         }
-        
+
         this.updateBattleUI();
     }
 
@@ -2435,7 +2444,7 @@ class Game {
 
         // Check if all moves have 0 PP
         const allMovesExhausted = player.moves.every(m => m.pp !== undefined && m.pp <= 0);
-        
+
         if (allMovesExhausted) {
             // Show Struggle button
             const struggleBtn = document.createElement('button');
@@ -2487,7 +2496,7 @@ class Game {
     restoreBattleActions() {
         const actions = document.getElementById('battle-actions');
         const player = this.team[this.activePokemonIndex];
-        
+
         // Show moves directly (no Fight button needed)
         let movesHtml = '';
         player.moves.forEach((move, i) => {
@@ -2500,7 +2509,7 @@ class Game {
                 </button>
             `;
         });
-        
+
         actions.innerHTML = `
             ${movesHtml}
             <button class="action-btn" data-action="catch">🔴 Catch</button>
@@ -2508,28 +2517,28 @@ class Game {
             <button class="action-btn" data-action="item">💊 Item</button>
             <button class="action-btn" data-action="run">🏃 Run</button>
         `;
-        
+
         // Add event listeners with long-press for move details
         actions.querySelectorAll('.move-btn').forEach((btn, i) => {
             let pressTimer;
             const move = player.moves[i];
-            
+
             const showTooltip = () => {
                 const tooltip = document.createElement('div');
                 tooltip.className = 'move-tooltip';
                 tooltip.innerHTML = `
                     <div class="type">${move.type}</div>
-                    <div>Power: <span class="power">${move.power || '—'}</span></div>
+                    <div>Power: <span class="power">${move.power || '-'}</span></div>
                     <div>Acc: <span class="accuracy">${move.accuracy}%</span></div>
                 `;
                 btn.appendChild(tooltip);
             };
-            
+
             const hideTooltip = () => {
                 const tooltip = btn.querySelector('.move-tooltip');
                 if (tooltip) tooltip.remove();
             };
-            
+
             btn.addEventListener('mousedown', () => { pressTimer = setTimeout(showTooltip, 500); });
             btn.addEventListener('mouseup', () => { clearTimeout(pressTimer); hideTooltip(); });
             btn.addEventListener('mouseleave', () => { clearTimeout(pressTimer); hideTooltip(); });
@@ -2537,12 +2546,12 @@ class Game {
             btn.addEventListener('touchend', () => { clearTimeout(pressTimer); hideTooltip(); });
             btn.addEventListener('click', () => { clearTimeout(pressTimer); hideTooltip(); this.doBattleRound(i); });
         });
-        
+
         // Non-move buttons
         actions.querySelectorAll('.action-btn:not(.move-btn)').forEach(btn => {
             btn.addEventListener('click', () => this.handleBattleAction(btn.dataset.action));
         });
-        
+
         this.updateBattleButtons();
     }
 
@@ -2567,18 +2576,18 @@ class Game {
                 this.updateBattleUI();
                 return false;
             }
-            
+
             const move = isPlayer ? playerMove : enemyMove;
-            
+
             // Decrement PP for player moves
             if (isPlayer && move && move.pp !== undefined) {
                 move.pp = Math.max(0, move.pp - 1);
             }
-            
+
             // Accuracy check (default 100 if not specified)
             const accuracy = move && move.accuracy !== undefined ? move.accuracy : 100;
             const hitRoll = Math.random() * 100;
-            
+
             if (hitRoll > accuracy) {
                 // Miss
                 this.addBattleLog(`${attacker.displayName} used ${move ? move.name : 'Attack'}! It missed!`);
@@ -2586,11 +2595,11 @@ class Game {
                 this.updateBattleUI();
                 return false; // Didn't faint
             }
-            
+
             // Handle status moves (no damage, just effects)
             if (move && move.category === 'status') {
                 this.addBattleLog(`${attacker.displayName} used ${move.name}!`);
-                
+
                 // Apply stat boosts
                 if (move.boosts) {
                     const changes = defender.applyStatBoosts(move.boosts);
@@ -2599,16 +2608,16 @@ class Game {
                         this.addBattleLog(`${defender.displayName}'s ${changeText}!`);
                     }
                 }
-                
+
                 // Apply secondary status effects
                 if (move.secondary) {
                     applyMoveStatusEffect(move, defender);
                 }
-                
+
                 this.updateBattleUI();
                 return false; // Status moves don't faint
             }
-            
+
             const result = this.calculateDamage(attacker, defender, move);
             const fainted = defender.takeDamage(result.damage);
 
@@ -2649,12 +2658,12 @@ class Game {
 
             // Apply status effects from move secondary
             if (!fainted && move && move.secondary) {
-                applyMoveStatusEffect(move, defender);
+                applyMoveStatusEffect(move, defender, this.clauseTracker, isPlayer);
             }
 
             // Apply stat boosts from move
             if (!fainted && move && move.boosts) {
-                const changes = defender.applyStatBoosts(move.boosts);
+                const changes = defender.applyStatBoosts(move.boosts, this.clauseTracker, isPlayer);
                 if (changes.length > 0) {
                     const changeText = changes.map(c => `${c.stat} ${c.change > 0 ? '↑' : '↓'}`).join(', ');
                     this.addBattleLog(`${defender.displayName}'s ${changeText}!`);
@@ -2690,12 +2699,12 @@ class Game {
                 // Apply status if target doesn't have one
                 if (!target.status) {
                     target.status = status;
-                    
+
                     // Set status duration for sleep (1-3 turns)
                     if (status === 'sleep') {
                         target.statusTurns = Math.floor(Math.random() * 3) + 1;
                     }
-                    
+
                     const statusName = status.charAt(0).toUpperCase() + status.slice(1);
                     this.addBattleLog(`${target.displayName || target.name} was ${status === 'paralyze' ? 'paralyzed' : status + 'ed'}!`, 'warning');
                 }
@@ -2723,12 +2732,12 @@ class Game {
                     }
                     return;
                 }
-                
+
                 // Apply status damage (burn/poison) after both attacks
                 setTimeout(() => {
                     this.applyEndOfTurnStatusDamage();
                 }, 300);
-                
+
                 this.battleTurnInProgress = false;
             }, 700);
         };
@@ -2752,11 +2761,11 @@ class Game {
         // Battle is won - set flag to prevent player fainting
         this.battleWon = true;
 
-        // Give EXP — active Pokemon gets full, team gets 40%
+        // Give EXP - active Pokemon gets full, team gets 40%
         const expGain = Math.floor(enemy.level * 25 + 40);
         const active = this.team[this.activePokemonIndex];
         this.giveExp(expGain, active);
-        // Team-wide XP share (roguelike pacing — keeps backline viable)
+        // Team-wide XP share (roguelike pacing - keeps backline viable)
         this.team.forEach((p, i) => {
             if (i !== this.activePokemonIndex && p.isAlive) {
                 this.giveExp(Math.floor(expGain * 0.4), p);
@@ -2771,7 +2780,7 @@ class Game {
 
         if (this.battleType === 'gym') {
             this.badges++;
-            
+
             // Award TM for gym victory
             if (typeof GYM_TM_REWARDS !== 'undefined' && GYM_TM_REWARDS[this.currentGym]) {
                 const tmId = GYM_TM_REWARDS[this.currentGym];
@@ -2783,16 +2792,16 @@ class Game {
                     }
                 }
             }
-            
+
             this.currentGym++;
             this.addMessage(`You defeated the Gym Leader and earned a badge!`, 'success');
             this.addBattleLog('Badge earned!', 'success');
             gameAudio.badgeEarned();
-            // Big XP reward for gym victory — whole team benefits
+            // Big XP reward for gym victory - whole team benefits
             const gymXp = Math.floor(enemy.level * 30 + 50);
             this.team.forEach(p => { if (p.isAlive) this.giveExp(gymXp, p); });
 
-            // Replenish event budget — each badge unlocks a new exploration phase
+            // Replenish event budget - each badge unlocks a new exploration phase
             const eventsPerPhase = Math.floor(this.maxEvents / this.badgesNeeded);
             this.eventsExplored = Math.max(0, this.eventsExplored - eventsPerPhase);
             this.addMessage(`New area unlocked! +${eventsPerPhase} exploration events!`, 'success');
@@ -2859,7 +2868,7 @@ class Game {
             this.addMessage(`You defeated Champion ${this.champion.name}!`, 'success');
             this.inE4 = false;
             setTimeout(() => this.victory(), 1500);
-            return; // Don't continue to normal flow — victory handles it
+            return; // Don't continue to normal flow - victory handles it
         }
 
         // Fishing catch tracking
@@ -2882,7 +2891,7 @@ class Game {
     playerPokemonFainted() {
         // If battle was already won, don't process player fainting
         if (this.battleWon) return;
-        
+
         const player = this.team[this.activePokemonIndex];
         this.addBattleLog(`${player.displayName} fainted!`, 'danger');
 
@@ -2900,7 +2909,7 @@ class Game {
             return;
         }
 
-        // All fainted — team wipe
+        // All fainted - team wipe
         this.strikes--;
         this.addMessage('All your Pokemon fainted!', 'danger');
         this.addMessage(`You lost a life! ${this.strikes} remaining. Your team has been healed.`, 'warning');
@@ -2952,7 +2961,7 @@ class Game {
     }
 
     getLevelCap() {
-        // Level cap based on badges + difficulty — prevents grinding past the next gym
+        // Level cap based on badges + difficulty - prevents grinding past the next gym
         // Bonus varies by difficulty: Easy +3, Normal +1, Hard/Nightmare +0
         const nextGymIndex = this.currentGym;
         if (nextGymIndex >= GYM_LEADERS.length) return 100; // No cap after all badges
@@ -2966,7 +2975,7 @@ class Game {
         // Check level cap before giving XP
         const levelCap = this.getLevelCap();
         if (pokemon.level >= levelCap) {
-            this.addMessage(`${pokemon.displayName} is at the level cap (${levelCap}) — beat the next gym to raise it!`, 'warning');
+            this.addMessage(`${pokemon.displayName} is at the level cap (${levelCap}) - beat the next gym to raise it!`, 'warning');
             return;
         }
 
@@ -3403,7 +3412,7 @@ class Game {
                         }
                     }
                 }
-                
+
                 // For Link Cable, show trade evolution compatibility
                 if (id === 'link_cable' && typeof TRADE_EVOLUTIONS !== 'undefined') {
                     const compat = this.team.filter(p => TRADE_EVOLUTIONS[p.speciesId]).map(p => {
@@ -3529,10 +3538,10 @@ class Game {
     getEvolutionPathHTML(pokemon) {
         const species = POKEMON_DATA[pokemon.speciesId];
         if (!species || !species.evolves) return '';
-        
+
         let evoText = '';
         const evo = species.evolves;
-        
+
         if (evo.level) {
             evoText = `Evolves at Lv.${evo.level}`;
         } else if (evo.stone) {
@@ -3541,7 +3550,7 @@ class Game {
         } else if (evo.condition) {
             evoText = `Evolves: ${evo.condition}`;
         }
-        
+
         if (evoText) {
             const evoTarget = POKEMON_DATA[evo.into];
             const targetName = evoTarget ? evoTarget.name : evo.into;
@@ -3605,7 +3614,7 @@ class Game {
                 </div>
                 <!-- Evolution path info -->
                 ${this.getEvolutionPathHTML(poke)}
-                
+
                 <div class="team-card-actions">
                     <button class="team-action-btn nickname-btn" title="Nickname">✏️</button>
                     ${this.team.length > 1 ? '<button class="team-action-btn release-btn" title="Release">🔓</button>' : ''}
@@ -3801,7 +3810,7 @@ class Game {
         // Build gym leader lineup display
         const gymHtml = GYM_LEADERS.map((g, i) => {
             const defeated = i < this.currentGym;
-            return `<span class="gym-tag ${defeated ? 'gym-defeated' : 'gym-undefeated'}" title="${g.badge} — ${g.region}">${g.name} (${g.type})</span>`;
+            return `<span class="gym-tag ${defeated ? 'gym-defeated' : 'gym-undefeated'}" title="${g.badge} - ${g.region}">${g.name} (${g.type})</span>`;
         }).join(' ');
 
         // E4 lineup
@@ -3898,7 +3907,7 @@ class Game {
         document.getElementById('gameover-message').textContent = 'You ran out of strikes!';
         const goGymHtml = GYM_LEADERS.map((g, i) => {
             const defeated = i < this.currentGym;
-            return `<span class="gym-tag ${defeated ? 'gym-defeated' : 'gym-undefeated'}" title="${g.badge} — ${g.region}">${g.name} (${g.type})</span>`;
+            return `<span class="gym-tag ${defeated ? 'gym-defeated' : 'gym-undefeated'}" title="${g.badge} - ${g.region}">${g.name} (${g.type})</span>`;
         }).join(' ');
 
         document.getElementById('run-stats').innerHTML = `
@@ -3945,35 +3954,35 @@ class Game {
     showTMTeach(tmId) {
         const tm = TMS[tmId];
         if (!tm) return;
-        
+
         const modal = document.getElementById('modal');
         const body = document.getElementById('modal-body');
-        
+
         body.innerHTML = `<h3>📀 Teach ${tm.name}</h3>
-            <p><strong>Type:</strong> ${tm.type} · <strong>Power:</strong> ${tm.power || '—'} · <strong>Accuracy:</strong> ${tm.accuracy}%</p>
+            <p><strong>Type:</strong> ${tm.type} · <strong>Power:</strong> ${tm.power || '-'} · <strong>Accuracy:</strong> ${tm.accuracy}%</p>
             <p>${tm.description}</p>
             <hr>
             <h4>Select Pokemon to teach:</h4>
         `;
-        
+
         this.team.forEach((poke, i) => {
             const isCompatible = typeof canLearnTM === "function" ? canLearnTM(poke.speciesId, tmId) : true;
             const alreadyKnows = poke.moves.some(m => m.id === tm.move);
-            
+
             const btn = document.createElement('button');
             btn.className = 'choice-btn';
             btn.disabled = !isCompatible || alreadyKnows;
             btn.style.opacity = (!isCompatible || alreadyKnows) ? '0.5' : '1';
-            
+
             let status = '';
             if (alreadyKnows) status = ' (already knows)';
             else if (!isCompatible) status = ' (incompatible)';
-            
+
             btn.innerHTML = `
                 <img src="${getSpriteUrl(poke.speciesId)}" style="width:32px;height:32px;image-rendering:pixelated;vertical-align:middle;margin-right:8px;">
                 ${poke.displayName} Lv.${poke.level}${status}
             `;
-            
+
             btn.onclick = () => {
                 if (poke.moves.length >= 4) {
                     this.showMoveReplacementPrompt(tmId, i);
@@ -3982,35 +3991,35 @@ class Game {
                     modal.classList.add('hidden');
                 }
             };
-            
+
             body.appendChild(btn);
         });
-        
+
         const cancelBtn = document.createElement('button');
         cancelBtn.className = 'choice-btn';
         cancelBtn.textContent = 'Cancel';
         cancelBtn.onclick = () => this.showBag();
         body.appendChild(cancelBtn);
-        
+
         modal.classList.remove('hidden');
     }
 
     showMoveReplacementPrompt(tmId, pokemonIndex) {
         const tm = TMS[tmId];
         const pokemon = this.team[pokemonIndex];
-        
+
         const modal = document.getElementById('modal');
         const body = document.getElementById('modal-body');
-        
+
         body.innerHTML = `
             <h3>📀 ${pokemon.displayName} wants to learn ${tm.name}</h3>
             <p>${tm.description}</p>
-            <p><strong>Type:</strong> ${tm.type} · <strong>Power:</strong> ${tm.power || '—'} · <strong>PP:</strong> ${tm.pp}</p>
+            <p><strong>Type:</strong> ${tm.type} · <strong>Power:</strong> ${tm.power || '-'} · <strong>PP:</strong> ${tm.pp}</p>
             <hr>
             <h4>But ${pokemon.displayName} already knows 4 moves.</h4>
             <p>Which move should be forgotten?</p>
         `;
-        
+
         pokemon.moves.forEach((move, index) => {
             const moveBtn = document.createElement('button');
             moveBtn.className = 'choice-btn';
@@ -4022,29 +4031,29 @@ class Game {
             moveBtn.onclick = () => this.confirmMoveReplace(tmId, pokemonIndex, index);
             body.appendChild(moveBtn);
         });
-        
+
         const cancelBtn = document.createElement('button');
         cancelBtn.className = 'choice-btn';
         cancelBtn.textContent = 'Cancel';
         cancelBtn.onclick = () => this.showBag();
         body.appendChild(cancelBtn);
-        
+
         modal.classList.remove('hidden');
     }
 
     confirmMoveReplace(tmId, pokemonIndex, moveIndex) {
         const tm = TMS[tmId];
         const pokemon = this.team[pokemonIndex];
-        
+
         // Bounds check to prevent crash on invalid move index
         if (moveIndex < 0 || moveIndex >= pokemon.moves.length) {
             console.error('Invalid move index:', moveIndex, 'for pokemon', pokemon.displayName);
             this.addMessage('Error: Invalid move selection.', 'danger');
             return;
         }
-        
+
         const oldMoveName = pokemon.moves[moveIndex].name;
-        
+
         pokemon.moves[moveIndex] = {
             id: tm.move,
             name: tm.name.replace('TM: ', ''),
@@ -4055,7 +4064,7 @@ class Game {
             accuracy: tm.accuracy,
             category: tm.category
         };
-        
+
         this.addMessage(`${pokemon.displayName} learned ${tm.name}! Forgot ${oldMoveName}.`, 'success');
         this.saveGame();
         this.updateUI();
@@ -4065,7 +4074,7 @@ class Game {
     teachMoveToPokemon(tmId, pokemonIndex) {
         const tm = TMS[tmId];
         const pokemon = this.team[pokemonIndex];
-        
+
         pokemon.moves.push({
             id: tm.move,
             name: tm.name.replace('TM: ', ''),
@@ -4076,7 +4085,7 @@ class Game {
             accuracy: tm.accuracy,
             category: tm.category
         });
-        
+
         this.addMessage(`${pokemon.displayName} learned ${tm.name}!`, 'success');
         this.saveGame();
         this.updateUI();
