@@ -793,7 +793,16 @@ class Game {
         return true;
     }
 
-    // ===== SAVE/LOAD =====
+    // Helper to generate type badge HTML (supports dual typing)
+    getTypeBadges(pokemon) {
+        const types = [pokemon.type];
+        if (pokemon.species && pokemon.species.type2) {
+            types.push(pokemon.species.type2);
+        }
+        return types.map(t => 
+            `<span class="type-badge type-bg-${t.toLowerCase()}">${t}</span>`
+        ).join('');
+    }
     saveGame() {
         if (this.state === 'start' || this.state === 'gameover') return;
         const data = {
@@ -1134,10 +1143,13 @@ class Game {
             const div = document.createElement('div');
             div.className = 'starter-option';
             div.dataset.pokemon = id;
+            const typeBadges = pokemon.type2 ? 
+                `<span class="type-badge type-bg-${pokemon.type.toLowerCase()}">${pokemon.type}</span><span class="type-badge type-bg-${pokemon.type2.toLowerCase()}">${pokemon.type2}</span>` :
+                `<span class="type-badge type-bg-${pokemon.type.toLowerCase()}">${pokemon.type}</span>`;
             div.innerHTML = `
                 <img src="${getSpriteUrl(id)}" alt="${pokemon.name}">
                 <span class="name">${pokemon.name}</span>
-                <span class="type-badge type-bg-${pokemon.type.toLowerCase()}">${pokemon.type}</span>
+                ${typeBadges}
             `;
             div.addEventListener('click', () => this.selectStarter(id));
             grid.appendChild(div);
@@ -2585,9 +2597,16 @@ class Game {
         playerSprite.src = getBackSpriteUrl(player.speciesId);
         const statusIconPlayer = player.status ? this.getStatusIcon(player.status) : '';
         const statStagesPlayer = this.formatStatStages(player.statStages);
+        const playerTypes = [player.type];
+        if (player.species && player.species.type2) {
+            playerTypes.push(player.species.type2);
+        }
+        const playerTypeBadges = playerTypes.map(t =>
+            `<span class="type-badge type-bg-${t.toLowerCase()}">${t}</span>`
+        ).join('');
         document.getElementById('player-name').innerHTML = `
             ${player.displayName} Lv.${player.level}${statusIconPlayer}
-            <span class="type-badge type-bg-${player.type.toLowerCase()}">${player.type}</span>
+            ${playerTypeBadges}
             ${statStagesPlayer}
         `;
         const playerHpText = document.getElementById('player-hp-text');
@@ -2605,9 +2624,16 @@ class Game {
         enemySprite.src = getSpriteUrl(enemy.speciesId);
         const statusIconEnemy = enemy.status ? this.getStatusIcon(enemy.status) : '';
         const statStagesEnemy = this.formatStatStages(enemy.statStages);
+        const enemyTypes = [enemy.type];
+        if (enemy.species && enemy.species.type2) {
+            enemyTypes.push(enemy.species.type2);
+        }
+        const enemyTypeBadges = enemyTypes.map(t =>
+            `<span class="type-badge type-bg-${t.toLowerCase()}">${t}</span>`
+        ).join('');
         document.getElementById('enemy-name').innerHTML = `
             ${enemy.name} Lv.${enemy.level}${statusIconEnemy}
-            <span class="type-badge type-bg-${enemy.type.toLowerCase()}">${enemy.type}</span>
+            ${enemyTypeBadges}
             ${statStagesEnemy}
         `;
 
@@ -2710,14 +2736,32 @@ class Game {
 
         // Type effectiveness - use move type if provided, else attacker type
         const attackType = move ? move.type : attacker.type.toLowerCase();
-        const defenseType = defender.type.toLowerCase();
+        
+        // Get defender types (dual typing support)
+        const defenseTypes = [defender.type.toLowerCase()];
+        if (defender.species && defender.species.type2) {
+            defenseTypes.push(defender.species.type2.toLowerCase());
+        }
+        
+        // Calculate effectiveness against all defender types
         let effectiveness = 1;
-        if (TYPE_EFFECTIVENESS[attackType] && TYPE_EFFECTIVENESS[attackType][defenseType] !== undefined) {
-            effectiveness = TYPE_EFFECTIVENESS[attackType][defenseType];
+        for (const defenseType of defenseTypes) {
+            if (TYPE_EFFECTIVENESS[attackType] && TYPE_EFFECTIVENESS[attackType][defenseType] !== undefined) {
+                effectiveness *= TYPE_EFFECTIVENESS[attackType][defenseType];
+            }
         }
 
-        // STAB bonus (1.5x if move type matches attacker type)
-        const stab = (move && move.type === attacker.type.toLowerCase()) ? 1.5 : 1;
+        // STAB bonus (1.5x if move type matches either attacker type)
+        let stab = 1;
+        if (move) {
+            const attackerTypes = [attacker.type.toLowerCase()];
+            if (attacker.species && attacker.species.type2) {
+                attackerTypes.push(attacker.species.type2.toLowerCase());
+            }
+            if (attackerTypes.includes(move.type)) {
+                stab = 1.5;
+            }
+        }
 
         // Critical hit (6.25% chance)
         let crit = 1;
@@ -3639,10 +3683,17 @@ class Game {
             btn.className = 'choice-btn';
             btn.disabled = !poke.isAlive;
             btn.style.opacity = poke.isAlive ? '1' : '0.5';
+            const pokeTypes = [poke.type];
+            if (poke.species && poke.species.type2) {
+                pokeTypes.push(poke.species.type2);
+            }
+            const typeBadges = pokeTypes.map(t =>
+                `<span class="type-badge type-bg-${t.toLowerCase()}">${t}</span>`
+            ).join('');
             btn.innerHTML = `
                 <img src="${getSpriteUrl(poke.speciesId)}" style="width:32px;height:32px;image-rendering:pixelated;vertical-align:middle;margin-right:8px;">
                 ${poke.displayName} Lv.${poke.level} (${poke.hp}/${poke.maxHp} HP)
-                <span class="type-badge type-bg-${poke.type.toLowerCase()}">${poke.type}</span>
+                ${typeBadges}
             `;
             btn.onclick = () => {
                 this.activePokemonIndex = i;
@@ -3991,6 +4042,13 @@ class Game {
         this.team.forEach((poke, i) => {
             const card = document.createElement('div');
             card.className = `team-card ${!poke.isAlive ? 'fainted' : ''}`;
+            const pokeTypes = [poke.type];
+            if (poke.species && poke.species.type2) {
+                pokeTypes.push(poke.species.type2);
+            }
+            const typeBadges = pokeTypes.map(t =>
+                `<span class="type-badge type-bg-${t.toLowerCase()}">${t}</span>`
+            ).join('');
             card.innerHTML = `
                 <div class="drag-handle" aria-label="Drag to reorder">⋮⋮</div>
                 <div class="team-card-header">
@@ -3998,7 +4056,7 @@ class Game {
                     <div class="team-card-info">
                         <div class="team-card-name">
                             ${poke.displayName}
-                            <span class="type-badge type-bg-${poke.type.toLowerCase()}">${poke.type}</span>
+                            ${typeBadges}
                         </div>
                         <div class="team-card-level">Lv.${poke.level} (XP: ${poke.xp}/${poke.xpToNext})</div>
                         <div class="team-card-hp">
