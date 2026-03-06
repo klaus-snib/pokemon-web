@@ -1573,3 +1573,79 @@ letter-spacing: 0.5px;
     margin-left: 0.5rem;
     font-weight: bold;
 }
+
+/* Evolution Chain Modal */
+.evolution-chain {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 0;
+}
+
+.evo-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 12px;
+    background: var(--bg-dark);
+    min-width: 120px;
+}
+
+.evo-stage.current {
+    background: var(--accent);
+    box-shadow: 0 0 20px rgba(233, 69, 96, 0.4);
+}
+
+.evo-stage.final {
+    background: var(--bg-light);
+    opacity: 0.7;
+}
+
+.evo-sprite {
+    width: 64px;
+    height: 64px;
+    image-rendering: pixelated;
+}
+
+.evo-name {
+    font-weight: bold;
+    margin-top: 0.25rem;
+}
+
+.evo-arrow {
+    font-size: 1.5rem;
+    color: var(--accent-light);
+    margin: 0.25rem 0;
+}
+
+.evo-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.evo-condition {
+    font-size: 0.8rem;
+    color: var(--success);
+    margin-top: 0.25rem;
+}
+
+.evo-stats {
+    text-align: center;
+    padding: 1rem;
+    background: var(--bg-dark);
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+/* Make team card header clickable for evolution view */
+.team-card-header {
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.team-card-header:hover {
+    opacity: 0.8;
+}

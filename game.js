@@ -3534,36 +3534,95 @@ class Game {
         modal.classList.remove('hidden');
     }
 
-    // ===== EVOLUTION PATH HELPER =====
-    getEvolutionPathHTML(pokemon) {
-        const species = POKEMON_DATA[pokemon.speciesId];
-        if (!species || !species.evolves) return '';
+    // ===== TEAM MANAGEMENT =====
+    // Build evolution chain for a Pokemon
+    getEvolutionChain(speciesId) {
+        const chain = [];
+        const species = POKEMON_DATA[speciesId];
+        if (!species) return chain;
 
-        let evoText = '';
-        const evo = species.evolves;
-
-        if (evo.level) {
-            evoText = `Evolves at Lv.${evo.level}`;
-        } else if (evo.stone) {
-            const stoneItem = ITEMS[evo.stone];
-            evoText = `Evolves with ${stoneItem ? stoneItem.name : evo.stone}`;
-        } else if (evo.condition) {
-            evoText = `Evolves: ${evo.condition}`;
+        // Find pre-evolution (if any)
+        let preEvo = null;
+        for (const [id, data] of Object.entries(POKEMON_DATA)) {
+            if (data.evolves && data.evolves.into === speciesId) {
+                preEvo = { id, ...data };
+                break;
+            }
         }
 
-        if (evoText) {
-            const evoTarget = POKEMON_DATA[evo.into];
-            const targetName = evoTarget ? evoTarget.name : evo.into;
-            return `
-                <div class="evo-path" style="font-size:0.85em;color:#4CAF50;margin-top:8px;padding:4px 8px;background:rgba(76,175,80,0.1);border-radius:4px;">
-                    🧬 ${evoText} → ${targetName}
+        // Find next evolution (if any)
+        let nextEvo = null;
+        if (species.evolves) {
+            const nextData = POKEMON_DATA[species.evolves.into];
+            if (nextData) {
+                nextEvo = { id: species.evolves.into, ...nextData, level: species.evolves.level };
+            }
+        }
+
+        return { preEvo, current: { id: speciesId, ...species }, nextEvo };
+    }
+
+    // Show evolution path modal
+    showEvolutionPath(pokemon) {
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modal-body');
+        const chain = this.getEvolutionChain(pokemon.speciesId);
+
+        let evolutionHTML = '';
+        
+        if (chain.preEvo) {
+            evolutionHTML += `
+                <div class="evo-stage">
+                    <img src="${getSpriteUrl(chain.preEvo.id)}" class="evo-sprite" alt="${chain.preEvo.name}">
+                    <div class="evo-name">${chain.preEvo.name}</div>
+                    <div class="evo-arrow">↑</div>
                 </div>
             `;
         }
-        return '';
+
+        evolutionHTML += `
+            <div class="evo-stage current">
+                <img src="${getSpriteUrl(chain.current.id)}" class="evo-sprite" alt="${chain.current.name}">
+                <div class="evo-name">${chain.current.name}</div>
+                <div class="evo-label">Current</div>
+            </div>
+        `;
+
+        if (chain.nextEvo) {
+            const isLevelEvo = chain.nextEvo.level !== undefined;
+            const condition = isLevelEvo ? `Lv.${chain.nextEvo.level}` : 'Stone/Trade';
+            evolutionHTML += `
+                <div class="evo-stage">
+                    <div class="evo-arrow">↓</div>
+                    <img src="${getSpriteUrl(chain.nextEvo.id)}" class="evo-sprite" alt="${chain.nextEvo.name}">
+                    <div class="evo-name">${chain.nextEvo.name}</div>
+                    <div class="evo-condition">${condition}</div>
+                </div>
+            `;
+        } else {
+            evolutionHTML += `
+                <div class="evo-stage final">
+                    <div class="evo-arrow">↓</div>
+                    <div class="evo-label">Fully Evolved</div>
+                </div>
+            `;
+        }
+
+        body.innerHTML = `
+            <h3>🧬 Evolution Path</h3>
+            <div class="evolution-chain">
+                ${evolutionHTML}
+            </div>
+            <div class="evo-stats">
+                <p><strong>${pokemon.displayName}</strong> — Lv.${pokemon.level}</p>
+                ${chain.nextEvo && chain.nextEvo.level ? `<p>Evolution at: Lv.${chain.nextEvo.level}</p>` : ''}
+            </div>
+            <button class="btn btn-primary" onclick="game.showTeamManagement()">← Back to Team</button>
+        `;
+
+        modal.classList.remove('hidden');
     }
 
-    // ===== TEAM MANAGEMENT =====
     showTeamManagement() {
         const modal = document.getElementById('modal');
         const body = document.getElementById('modal-body');
@@ -3612,8 +3671,6 @@ class Game {
                 <div class="team-card-moves">
                     ${poke.moves.map(m => `<span class="move-tag type-bg-${m.type}">${m.name}${m.power > 0 ? ` (${m.power})` : ''}</span>`).join(' ')}
                 </div>
-                <!-- Evolution path info -->
-                ${this.getEvolutionPathHTML(poke)}
 
                 <div class="team-card-actions">
                     <button class="team-action-btn nickname-btn" title="Nickname">✏️</button>
@@ -3630,6 +3687,13 @@ class Game {
                     this.updateUI();
                     this.saveGame();
                 }
+            };
+
+            // Evolution path — click on sprite or header
+            card.querySelector('.team-card-header').onclick = (e) => {
+                // Don't trigger if clicking buttons
+                if (e.target.closest('.team-action-btn')) return;
+                this.showEvolutionPath(poke);
             };
 
             // Release
