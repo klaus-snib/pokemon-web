@@ -10,6 +10,35 @@
 // - AI respects clauses - won't spam evasion or sleep when clause is active
 //
 
+// Validate all tournament teams for Species Clause compliance
+function validateTournamentTeams() {
+    const allTrainers = [
+        ...CHAMPIONSHIP_TOURNAMENT.REGIONAL_CHAMPIONS,
+        ...CHAMPIONSHIP_TOURNAMENT.CUSTOM_CHAMPIONS
+    ];
+    
+    const violations = [];
+    
+    for (const trainer of allTrainers) {
+        const speciesIds = trainer.team.map(p => p.speciesId);
+        const duplicates = speciesIds.filter((item, index) => speciesIds.indexOf(item) !== index);
+        
+        if (duplicates.length > 0) {
+            const uniqueDups = [...new Set(duplicates)];
+            violations.push(`${trainer.name} (${trainer.region}): duplicate ${uniqueDups.join(', ')}`);
+        }
+    }
+    
+    if (violations.length > 0) {
+        console.warn('Species Clause violations in tournament teams:');
+        violations.forEach(v => console.warn('  - ' + v));
+        return false;
+    }
+    
+    console.log('✓ All tournament teams pass Species Clause validation');
+    return true;
+}
+
 const CHAMPIONSHIP_TOURNAMENT = {
     // Tournament format: 2 groups of 5, top 2 advance to knockouts
     GROUP_SIZE: 5,

@@ -760,6 +760,39 @@ class Game {
         this.init();
     }
 
+    // ===== SPECIES CLAUSE VALIDATION =====
+    // Check if a species can be added to the team (Species Clause enforcement)
+    canAddSpeciesToTeam(speciesId) {
+        // Species Clause: No duplicate species per team
+        return !this.team.some(p => p.speciesId === speciesId);
+    }
+
+    // Get list of duplicate species in a team array (for validation)
+    getDuplicateSpecies(teamArray) {
+        const seen = new Set();
+        const duplicates = [];
+        for (const pokemon of teamArray) {
+            const id = pokemon.speciesId || pokemon;
+            if (seen.has(id)) {
+                duplicates.push(id);
+            } else {
+                seen.add(id);
+            }
+        }
+        return duplicates;
+    }
+
+    // Validate team against Species Clause (for tournament teams)
+    validateTeamSpeciesClause(teamArray, teamName = 'Team') {
+        const duplicates = this.getDuplicateSpecies(teamArray);
+        if (duplicates.length > 0) {
+            const uniqueDups = [...new Set(duplicates)];
+            console.warn(`${teamName} violates Species Clause: duplicate ${uniqueDups.join(', ')}`);
+            return false;
+        }
+        return true;
+    }
+
     // ===== SAVE/LOAD =====
     saveGame() {
         if (this.state === 'start' || this.state === 'gameover') return;
@@ -1698,6 +1731,12 @@ class Game {
                     if (this.team.length < 6) {
                         const pool = [...WILD_POKEMON.uncommon, ...WILD_POKEMON.rare];
                         const id = pool[Math.floor(Math.random() * pool.length)];
+                        // Species Clause check
+                        if (!this.canAddSpeciesToTeam(id)) {
+                            this.money += 400;
+                            this.showEventResult('💰 A friendly Pokemon showed you its treasure stash! Found $400!', 'success');
+                            return;
+                        }
                         const level = Math.max(5, Math.floor(avgLevel));
                         const pokemon = new Pokemon(id, level);
                         this.team.push(pokemon);
@@ -1724,6 +1763,12 @@ class Game {
                     if (this.team.length < 6) {
                         const fossils = ['omanyte', 'kabuto', 'aerodactyl'];
                         const id = fossils[Math.floor(Math.random() * fossils.length)];
+                        // Species Clause check
+                        if (!this.canAddSpeciesToTeam(id)) {
+                            this.money += 800;
+                            this.showEventResult('💰 You found a rare fossil and sold it for $800!', 'success');
+                            return;
+                        }
                         const level = Math.max(10, Math.floor(avgLevel));
                         const pokemon = new Pokemon(id, level);
                         this.team.push(pokemon);
@@ -1891,6 +1936,12 @@ class Game {
             throwBtn.onclick = () => {
                 ballsLeft--;
                 if (Math.random() < 0.40 && this.team.length < 6) {
+                    // Species Clause check
+                    if (!this.canAddSpeciesToTeam(speciesId)) {
+                        this.addMessage(`${species.name} was caught but released due to Species Clause!`, 'warning');
+                        throwBall();
+                        return;
+                    }
                     const pokemon = new Pokemon(speciesId, level);
                     this.team.push(pokemon);
                     this.catches++;
@@ -3095,6 +3146,20 @@ class Game {
 
         if (Math.random() < catchRate) {
             if (this.team.length < 6) {
+                // Species Clause check
+                if (!this.canAddSpeciesToTeam(enemy.speciesId)) {
+                    this.addBattleLog(`${enemy.name} was caught!`, 'success');
+                    this.addBattleLog('But Species Clause prevents duplicates! Released.');
+                    this.catches++;
+                    this.battleTurnInProgress = false;
+                    // Continue battle or end
+                    if (this.battleEnemyTeam.length > 0) {
+                        setTimeout(() => this.nextEnemyPokemon(), 1500);
+                    } else {
+                        this.winBattle();
+                    }
+                    return;
+                }
                 this.team.push(enemy);
                 this.catches++;
                 if (this.battleReward && this.battleReward.fishing) this.fishCatches++;
