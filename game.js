@@ -1540,7 +1540,12 @@ class Game {
         // Tighter level range early game (0-1 badges), wider later
         const spread = this.badges <= 1 ? 4 : 6;
         const offset = this.badges <= 1 ? -2 : -3;
-        const level = Math.max(2, Math.floor(avgLevel + (Math.random() * spread) + offset));
+        let level = Math.max(2, Math.floor(avgLevel + (Math.random() * spread) + offset));
+        
+        // Hardcore early game relief: reduce wild levels by 2 until first badge
+        if (this.difficulty === 'hard' && this.badges < 1) {
+            level = Math.max(2, level - 2);
+        }
 
         this.battleEnemy = new Pokemon(speciesId, level);
         this.battleEnemyTeam = [];
@@ -1882,9 +1887,10 @@ class Game {
 
         // Good outcomes (50%)
         if (roll < 0.50) {
+            const rewardMult = DIFFICULTY_SETTINGS[this.difficulty]?.eventRewardMult || 1.0;
             const goodEvents = [
                 () => { // Treasure
-                    const amount = Math.floor(Math.random() * 500) + 200;
+                    const amount = Math.floor((Math.floor(Math.random() * 500) + 200) * rewardMult);
                     this.money += amount;
                     this.showEventResult(`💰 You found a treasure chest with $${amount}!`, 'success');
                 },
@@ -1898,8 +1904,8 @@ class Game {
                         const id = pool[Math.floor(Math.random() * pool.length)];
                         // Species Clause check
                         if (!this.canAddSpeciesToTeam(id)) {
-                            this.money += 400;
-                            this.showEventResult('💰 A friendly Pokemon showed you its treasure stash! Found $400!', 'success');
+                            this.money += Math.floor(400 * rewardMult);
+                            this.showEventResult('💰 A friendly Pokemon showed you its treasure stash! Found $' + Math.floor(400 * rewardMult) + '!', 'success');
                             return;
                         }
                         const level = Math.max(5, Math.floor(avgLevel));
@@ -1908,8 +1914,8 @@ class Game {
                         this.catches++;
                         this.showEventResult(`🎉 A wild ${pokemon.name} decided to join you!`, 'success');
                     } else {
-                        this.money += 400;
-                        this.showEventResult('💰 A friendly Pokemon showed you its treasure stash! Found $400!', 'success');
+                        this.money += Math.floor(400 * rewardMult);
+                        this.showEventResult('💰 A friendly Pokemon showed you its treasure stash! Found $' + Math.floor(400 * rewardMult) + '!', 'success');
                     }
                 },
                 () => { // Level boost
@@ -1930,8 +1936,8 @@ class Game {
                         const id = fossils[Math.floor(Math.random() * fossils.length)];
                         // Species Clause check
                         if (!this.canAddSpeciesToTeam(id)) {
-                            this.money += 800;
-                            this.showEventResult('💰 You found a rare fossil and sold it for $800!', 'success');
+                            this.money += Math.floor(800 * rewardMult);
+                            this.showEventResult('💰 You found a rare fossil and sold it for $' + Math.floor(800 * rewardMult) + '!', 'success');
                             return;
                         }
                         const level = Math.max(10, Math.floor(avgLevel));
@@ -1941,8 +1947,8 @@ class Game {
                         this.unlockAchievement('fossil_hunter');
                         this.showEventResult(`🦴 You revived a fossil! ${pokemon.name} joined your team!`, 'success');
                     } else {
-                        this.money += 800;
-                        this.showEventResult('💰 You found a rare fossil and sold it for $800!', 'success');
+                        this.money += Math.floor(800 * rewardMult);
+                        this.showEventResult('💰 You found a rare fossil and sold it for $' + Math.floor(800 * rewardMult) + '!', 'success');
                     }
                 },
                 () => { // Move tutor (stat boost)
@@ -1969,8 +1975,8 @@ class Game {
                         const speciesId = eggSpecies[Math.floor(Math.random() * eggSpecies.length)];
                         // Species Clause check
                         if (!this.canAddSpeciesToTeam(speciesId)) {
-                            this.money += 300;
-                            this.showEventResult('💰 You found a rare egg and sold it for $300!', 'success');
+                            this.money += Math.floor(300 * rewardMult);
+                            this.showEventResult('💰 You found a rare egg and sold it for $' + Math.floor(300 * rewardMult) + '!', 'success');
                             return;
                         }
                         const pokemon = new Pokemon(speciesId, 5);
@@ -1979,12 +1985,12 @@ class Game {
                         this.catches++;
                         this.showEventResult(`🥚 A mysterious egg hatched into ${pokemon.name}!`, 'success');
                     } else {
-                        this.money += 300;
-                        this.showEventResult('💰 You found a rare egg and sold it for $300!', 'success');
+                        this.money += Math.floor(300 * rewardMult);
+                        this.showEventResult('💰 You found a rare egg and sold it for $' + Math.floor(300 * rewardMult) + '!', 'success');
                     }
                 },
                 () => { // Treasure map
-                        const mapReward = Math.floor(Math.random() * 1000) + 500;
+                        const mapReward = Math.floor((Math.floor(Math.random() * 1000) + 500) * rewardMult);
                         this.money += mapReward;
                         this.showEventResult(`🗺️ You followed an ancient map to hidden treasure! +$${mapReward}!`, 'success');
                 },
@@ -2029,6 +2035,7 @@ class Game {
         }
         // Neutral outcomes (20%)
         else if (roll < 0.70) {
+            const rewardMult = DIFFICULTY_SETTINGS[this.difficulty]?.eventRewardMult || 1.0;
             const neutralEvents = [
                 () => { // Trade offer
                     if (this.team.length >= 2) {
@@ -2041,8 +2048,8 @@ class Game {
                     }
                 },
                 () => { // Lost hiker
-                    this.money += 300;
-                    this.addMessage('You helped a lost hiker find the exit! Reward: $300!', 'success');
+                    this.money += Math.floor(300 * rewardMult);
+                    this.addMessage('You helped a lost hiker find the exit! Reward: $' + Math.floor(300 * rewardMult) + '!', 'success');
                 },
                 () => { // Gambler
                     if (this.money >= 500) {
