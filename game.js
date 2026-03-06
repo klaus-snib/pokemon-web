@@ -965,6 +965,159 @@ class Game {
                 this.handleBattleAction(action);
             });
         });
+
+        // Dev menu initialization
+        this.initDevMenu();
+    }
+
+    // ===== DEV MENU =====
+    initDevMenu() {
+        // Check for ?dev in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const isDevMode = urlParams.has('dev');
+        
+        if (isDevMode) {
+            const devBtn = document.getElementById('dev-menu-btn');
+            if (devBtn) {
+                devBtn.classList.remove('hidden');
+                devBtn.addEventListener('click', () => this.showDevMenu());
+            }
+            
+            // Populate route select
+            const routeSelect = document.getElementById('dev-route-select');
+            if (routeSelect) {
+                for (let i = 0; i < 20; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = `Route ${i + 1}`;
+                    routeSelect.appendChild(option);
+                }
+            }
+            
+            // Bind dev menu buttons
+            this.bindDevMenuButtons();
+        }
+    }
+
+    bindDevMenuButtons() {
+        // Close button
+        document.getElementById('dev-close-btn')?.addEventListener('click', () => {
+            document.getElementById('dev-modal').classList.add('hidden');
+        });
+        
+        document.getElementById('dev-modal')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('dev-modal')) {
+                document.getElementById('dev-modal').classList.add('hidden');
+            }
+        });
+
+        // Route teleport
+        document.getElementById('dev-teleport-route')?.addEventListener('click', () => {
+            const routeIndex = parseInt(document.getElementById('dev-route-select').value);
+            this.currentRouteIndex = routeIndex;
+            this.updateRouteDisplay();
+            this.addMessage(`[DEV] Teleported to Route ${routeIndex + 1}`, 'info');
+            document.getElementById('dev-modal').classList.add('hidden');
+        });
+
+        // Event triggers
+        document.getElementById('dev-trigger-safari')?.addEventListener('click', () => {
+            document.getElementById('dev-modal').classList.add('hidden');
+            this.safariZone();
+        });
+
+        document.getElementById('dev-trigger-cave')?.addEventListener('click', () => {
+            document.getElementById('dev-modal').classList.add('hidden');
+            this.mysteryCave();
+        });
+
+        document.getElementById('dev-trigger-shop')?.addEventListener('click', () => {
+            document.getElementById('dev-modal').classList.add('hidden');
+            this.pokemonMart();
+        });
+
+        document.getElementById('dev-trigger-heal')?.addEventListener('click', () => {
+            document.getElementById('dev-modal').classList.add('hidden');
+            this.pokemonCenter();
+        });
+
+        // Battle triggers
+        document.getElementById('dev-trigger-wild')?.addEventListener('click', () => {
+            document.getElementById('dev-modal').classList.add('hidden');
+            this.wildBattle();
+        });
+
+        document.getElementById('dev-trigger-trainer')?.addEventListener('click', () => {
+            document.getElementById('dev-modal').classList.add('hidden');
+            this.trainerBattle();
+        });
+
+        document.getElementById('dev-trigger-gym')?.addEventListener('click', () => {
+            document.getElementById('dev-modal').classList.add('hidden');
+            this.gymBattle();
+        });
+
+        document.getElementById('dev-trigger-e4')?.addEventListener('click', () => {
+            document.getElementById('dev-modal').classList.add('hidden');
+            this.e4Battle();
+        });
+
+        // Cheats
+        document.getElementById('dev-cheat-money')?.addEventListener('click', () => {
+            this.money += 5000;
+            this.addMessage('[DEV] Added $5000', 'success');
+            this.updateUI();
+        });
+
+        document.getElementById('dev-cheat-candy')?.addEventListener('click', () => {
+            this.bag['rare_candy'] = (this.bag['rare_candy'] || 0) + 10;
+            this.addMessage('[DEV] Added 10 Rare Candies', 'success');
+        });
+
+        document.getElementById('dev-cheat-balls')?.addEventListener('click', () => {
+            this.bag['poke_ball'] = (this.bag['poke_ball'] || 0) + 50;
+            this.addMessage('[DEV] Added 50 Poke Balls', 'success');
+        });
+
+        document.getElementById('dev-cheat-level')?.addEventListener('click', () => {
+            this.team.forEach(p => {
+                p.level = Math.min(100, p.level + 5);
+                p.recalculateStats?.() || this.recalcStats(p);
+            });
+            this.addMessage('[DEV] Team leveled up +5', 'success');
+            this.updateUI();
+        });
+
+        // Progress
+        document.getElementById('dev-unlock-badges')?.addEventListener('click', () => {
+            this.badges = this.badgesNeeded;
+            this.addMessage('[DEV] All badges unlocked', 'success');
+            this.updateUI();
+        });
+
+        document.getElementById('dev-enable-postgame')?.addEventListener('click', () => {
+            this.postGame = true;
+            this.badges = this.badgesNeeded;
+            this.addMessage('[DEV] Post-game enabled', 'success');
+            this.updateUI();
+        });
+    }
+
+    showDevMenu() {
+        document.getElementById('dev-modal').classList.remove('hidden');
+    }
+
+    recalcStats(pokemon) {
+        // Recalculate stats based on new level
+        const base = pokemon.species.baseStats;
+        const level = pokemon.level;
+        pokemon.maxHp = Math.floor((base.hp * 2 * level) / 100) + level + 10;
+        pokemon.attack = Math.floor((base.atk * 2 * level) / 100) + 5;
+        pokemon.defense = Math.floor((base.def * 2 * level) / 100) + 5;
+        pokemon.specialAttack = Math.floor(((pokemon.species.spa || base.atk) * 2 * level) / 100) + 5;
+        pokemon.specialDefense = Math.floor(((pokemon.species.spd_def || base.def) * 2 * level) / 100) + 5;
+        pokemon.speed = Math.floor((base.spd * 2 * level) / 100) + 5;
+        pokemon.hp = pokemon.maxHp;
     }
 
     renderStartScreen() {
