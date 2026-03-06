@@ -1944,6 +1944,73 @@ class Game {
                 () => { // Shrine blessing
                     this.team.forEach(p => { p.hp = p.maxHp; });
                     this.addMessage('A shrine blessed your team! All Pokemon fully healed!', 'success');
+                },
+                () => { // Ancient TM cache
+                    const tms = ['tm_thunderbolt', 'tm_icebeam', 'tm_flamethrower', 'tm_shadowball', 'tm_sludgebomb'];
+                    const tm = tms[Math.floor(Math.random() * tms.length)];
+                    this.tmBag.push({ id: tm, ...TM_DATA[tm] });
+                    this.addMessage(`📀 You discovered an ancient cache! Found ${TM_DATA[tm].name}!`, 'success');
+                },
+                () => { // Pokemon egg
+                    if (this.team.length < 6) {
+                        const eggSpecies = ['pichu', 'cleffa', 'igglybuff', 'togepi', 'magby', 'elekid', 'smoochum'];
+                        const speciesId = eggSpecies[Math.floor(Math.random() * eggSpecies.length)];
+                        // Species Clause check
+                        if (!this.canAddSpeciesToTeam(speciesId)) {
+                            this.money += 300;
+                            this.showEventResult('💰 You found a rare egg and sold it for $300!', 'success');
+                            return;
+                        }
+                        const pokemon = new Pokemon(speciesId, 5);
+                        pokemon.hp = pokemon.maxHp;
+                        this.team.push(pokemon);
+                        this.catches++;
+                        this.showEventResult(`🥚 A mysterious egg hatched into ${pokemon.name}!`, 'success');
+                    } else {
+                        this.money += 300;
+                        this.showEventResult('💰 You found a rare egg and sold it for $300!', 'success');
+                    }
+                },
+                () => { // Treasure map
+                        const mapReward = Math.floor(Math.random() * 1000) + 500;
+                        this.money += mapReward;
+                        this.showEventResult(`🗺️ You followed an ancient map to hidden treasure! +$${mapReward}!`, 'success');
+                },
+                () => { // PP Up find
+                    const ppUps = ['pp_up', 'pp_max'];
+                    const item = ppUps[Math.floor(Math.random() * ppUps.length)];
+                    this.bag[item] = (this.bag[item] || 0) + 1;
+                    const itemName = ITEMS[item]?.name || (item === 'pp_up' ? 'PP Up' : 'PP Max');
+                    this.addMessage(`You found a ${itemName}! It restores move PP!`, 'success');
+                },
+                () => { // Eviolite discovery
+                    this.bag['eviolite'] = (this.bag['eviolite'] || 0) + 1;
+                    this.addMessage('You found a shimmering Eviolite! Boosts unevolved Pokemon defenses!', 'success');
+                },
+                () => { // Move relearner
+                    const eligible = this.team.filter(p => p.moves.length >= 2);
+                    if (eligible.length > 0) {
+                        const pokemon = eligible[Math.floor(Math.random() * eligible.length)];
+                        const moveToReplace = pokemon.moves[Math.floor(Math.random() * pokemon.moves.length)];
+                        const availableMoves = Object.keys(CANONICAL_MOVES).filter(m => 
+                            !pokemon.moves.some(pm => pm.id === m) &&
+                            CANONICAL_MOVES[m].type
+                        );
+                        if (availableMoves.length > 0) {
+                            const newMoveId = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+                            const newMove = CANONICAL_MOVES[newMoveId];
+                            const oldMoveName = moveToReplace.name;
+                            moveToReplace.id = newMoveId;
+                            moveToReplace.name = newMove.name;
+                            moveToReplace.type = newMove.type;
+                            moveToReplace.power = newMove.power || 0;
+                            moveToReplace.pp = newMove.pp;
+                            moveToReplace.maxPp = newMove.pp;
+                            moveToReplace.accuracy = newMove.accuracy;
+                            moveToReplace.category = newMove.category;
+                            this.addMessage(`A sage taught ${pokemon.displayName} ${newMove.name} (replacing ${oldMoveName})!`, 'success');
+                        }
+                    }
                 }
             ];
             goodEvents[Math.floor(Math.random() * goodEvents.length)]();
@@ -1985,6 +2052,36 @@ class Game {
                     const stone = stones[Math.floor(Math.random() * stones.length)];
                     this.bag[stone] = (this.bag[stone] || 0) + 1;
                     this.addMessage(`You found a ${ITEMS[stone].name} in the cave!`, 'success');
+                },
+                () => { // Rest stop
+                    const healAmount = Math.floor(this.team[0].maxHp * 0.3);
+                    this.team.forEach(p => {
+                        if (p.isAlive) p.hp = Math.min(p.maxHp, p.hp + healAmount);
+                    });
+                    this.addMessage('You found a peaceful rest stop. Team recovered some HP.', 'info');
+                },
+                () => { // Quiz master
+                    const quizzes = [
+                        { q: 'What type is super effective against Water?', a: 'Electric', correct: true },
+                        { q: 'What level does Charmander evolve?', a: '16', correct: true },
+                        { q: 'Is Ice weak to Fire?', a: 'Yes', correct: true }
+                    ];
+                    const quiz = quizzes[Math.floor(Math.random() * quizzes.length)];
+                    this.money += 200;
+                    this.addMessage(`A quiz master asks: "${quiz.q}" You answer correctly! +$200!`, 'success');
+                },
+                () => { // Item merchant
+                    const discount = Math.random() < 0.5;
+                    if (discount) {
+                        this.bag['hyper_potion'] = (this.bag['hyper_potion'] || 0) + 1;
+                        this.addMessage('A traveling merchant gave you a Hyper Potion as thanks for directions!', 'success');
+                    } else {
+                        this.addMessage('You met a traveling merchant but had nothing to trade.');
+                    }
+                },
+                () => { // Type memory game
+                    this.money += 150;
+                    this.addMessage('You played a memory game with cave drawings! Won $150!', 'success');
                 }
             ];
             neutralEvents[Math.floor(Math.random() * neutralEvents.length)]();
@@ -2028,6 +2125,40 @@ class Game {
                     const loss = Math.floor(this.money * 0.15);
                     this.money = Math.max(0, this.money - loss);
                     this.showEventResult(`💀 A cursed shrine stole $${loss}!`, 'danger');
+                },
+                () => { // Pit trap
+                    const active = this.team.find(p => p.isAlive);
+                    if (active) {
+                        const damage = Math.floor(active.maxHp * 0.25);
+                        active.takeDamage(damage);
+                        this.showEventResult(`🕳️ ${active.displayName} fell into a pit trap!`, 'danger');
+                    }
+                },
+                () => { // Wild swarm
+                    const active = this.team.find(p => p.isAlive);
+                    if (active) {
+                        active.takeDamage(Math.floor(active.maxHp * 0.2));
+                        this.addMessage('A swarm of wild Pokemon attacked!', 'danger');
+                        this.addMessage(`${active.displayName} fought them off but took damage!`, 'warning');
+                    }
+                },
+                () => { // Equipment failure
+                    if (this.bag['poke_ball'] > 0) {
+                        const lost = Math.min(this.bag['poke_ball'], 5);
+                        this.bag['poke_ball'] -= lost;
+                        this.showEventResult(`💨 A gust of wind blew away ${lost} Poke Balls!`, 'danger');
+                    } else {
+                        this.money = Math.max(0, this.money - 100);
+                        this.showEventResult('💨 Strong winds scattered your belongings! Lost $100!', 'danger');
+                    }
+                },
+                () => { // Confusing mist
+                    const confused = this.team.filter(p => p.isAlive);
+                    if (confused.length > 0) {
+                        const target = confused[Math.floor(Math.random() * confused.length)];
+                        target.takeDamage(Math.floor(target.maxHp * 0.1));
+                        this.showEventResult('🌫️ Confusing mist caused ${target.displayName} to hurt itself!', 'danger');
+                    }
                 }
             ];
             const event = badEvents[Math.floor(Math.random() * badEvents.length)];
