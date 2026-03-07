@@ -2886,6 +2886,11 @@ class Game {
     }
 
     calculateDamage(attacker, defender, move = null) {
+        // Fixed-damage moves (Dragon Rage always 40, Sonic Boom always 20)
+        if (move && move.fixedDamage) {
+            return { damage: move.fixedDamage, effectiveness: 1, crit: false, moveName: move.name };
+        }
+
         // Status moves deal no damage
         if (move && (move.category === 'status' || move.power === 0)) {
             return { damage: 0, effectiveness: 1, crit: false, moveName: move.name };
