@@ -63,6 +63,16 @@ for (const s of canonical) {
 }
 if (errors === 0) ok('All canonical starters valid');
 
+// Check rival filter won't crash: all Pokemon with baseStats must have name + type
+const rivalCrashRisk = [];
+for (const [id, body] of Object.entries(pokemon)) {
+    if (body.includes('baseStats:') && !body.includes('name:')) {
+        rivalCrashRisk.push(id);
+    }
+}
+if (rivalCrashRisk.length > 0) error('Pokemon with baseStats but no name (rival filter crash risk): ' + rivalCrashRisk.join(', '));
+else ok('Rival filter crash check passed');
+
 // Check Pokemon count sanity
 if (ids.length < 400) error(`Too few Pokemon: ${ids.length} (expected 700+)`);
 else ok(`Pokemon count: ${ids.length}`);
