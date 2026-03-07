@@ -173,6 +173,7 @@ class Pokemon {
                         name: moveData.name,
                         type: moveData.type,
                         power: moveData.power,
+                        fixedDamage: moveData.fixedDamage,
                         pp: moveData.pp,
                         maxPp: moveData.pp,
                         accuracy: moveData.accuracy,
