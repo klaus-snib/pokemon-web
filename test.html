@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pokemon Web - Test Suite</title>
+    <style>
+        body { font-family: monospace; padding: 20px; }
+        .pass { color: green; }
+        .fail { color: red; }
+        .test { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>Pokemon Web - Automated Tests</h1>
+    <div id="results"></div>
+    
+    <script src="pokemon-data.js"></script>
+    <script src="moves-data.js"></script>
+    <script src="learnsets-data.js"></script>
+    
+    <script>
+        const results = document.getElementById('results');
+        
+        function test(name, condition) {
+            const div = document.createElement('div');
+            div.className = 'test';
+            div.innerHTML = `<span class="${condition ? 'pass' : 'fail'}">${condition ? '✓' : '✗'}</span> ${name}`;
+            results.appendChild(div);
+            return condition;
+        }
+        
+        function testSuite() {
+            let passed = 0;
+            let total = 0;
+            
+            // Test 1: MOVES is defined
+            total++;
+            if (test("MOVES is defined", typeof MOVES !== 'undefined')) passed++;
+            
+            // Test 2: CANONICAL_MOVES is defined
+            total++;
+            if (test("CANONICAL_MOVES is defined", typeof CANONICAL_MOVES !== 'undefined')) passed++;
+            
+            // Test 3: tackle move exists
+            total++;
+            if (test("tackle move exists", MOVES && MOVES.tackle && MOVES.tackle.power > 0)) passed++;
+            
+            // Test 4: Gen 1 starters have name field
+            total++;
+            const hasNames = POKEMON_DATA.bulbasaur.name && 
+                           POKEMON_DATA.charmander.name && 
+                           POKEMON_DATA.squirtle.name;
+            if (test("Gen 1 starters have names", hasNames)) passed++;
+            
+            // Test 5: Gen 1 starters have evolves field
+            total++;
+            const hasEvolves = POKEMON_DATA.bulbasaur.evolves && 
+                              POKEMON_DATA.charmander.evolves && 
+                              POKEMON_DATA.squirtle.evolves;
+            if (test("Gen 1 starters have evolves", hasEvolves)) passed++;
+            
+            // Test 6: Gen 4-5 starters have name field
+            total++;
+            const hasGen45Names = POKEMON_DATA.turtwig.name && 
+                                 POKEMON_DATA.chimchar.name && 
+                                 POKEMON_DATA.piplup.name;
+            if (test("Gen 4-5 starters have names", hasGen45Names)) passed++;
+            
+            // Test 7: Gen 4-5 starters have evolves field
+            total++;
+            const hasGen45Evolves = POKEMON_DATA.turtwig.evolves && 
+                                   POKEMON_DATA.chimchar.evolves && 
+                                   POKEMON_DATA.piplup.evolves;
+            if (test("Gen 4-5 starters have evolves", hasGen45Evolves)) passed++;
+            
+            // Test 8: getRandomStarterPool returns 3 starters
+            total++;
+            let starterPoolWorks = false;
+            try {
+                const pool = getRandomStarterPool(3);
+                starterPoolWorks = pool.length === 3;
+            } catch (e) {
+                console.error("getRandomStarterPool error:", e);
+            }
+            if (test("getRandomStarterPool returns 3 starters", starterPoolWorks)) passed++;
+            
+            // Test 9: Starter pool includes non-canonical Pokemon
+            total++;
+            let hasRandomStarters = false;
+            try {
+                const pool = getRandomStarterPool(3);
+                const canonical = ['bulbasaur', 'charmander', 'squirtle', 'chikorita', 'cyndaquil', 'totodile', 'pikachu', 'eevee', 'treecko', 'torchic', 'mudkip'];
+                hasRandomStarters = pool.some(id => !canonical.includes(id));
+            } catch (e) {}
+            if (test("Starter pool includes non-canonical", hasRandomStarters)) passed++;
+            
+            // Summary
+            const summary = document.createElement('div');
+            summary.style.marginTop = '20px';
+            summary.style.fontWeight = 'bold';
+            summary.innerHTML = `<hr>Passed: ${passed}/${total} (${Math.round(passed/total*100)}%)`;
+            results.appendChild(summary);
+        }
+        
+        window.onload = testSuite;
+    </script>
+</body>
+</html>
