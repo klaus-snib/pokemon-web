@@ -419,7 +419,7 @@ const POKEMON_DATA = {
     zubat: { name: "Zubat", type: "Poison", baseStats: { hp: 40, atk: 45, def: 35, spd: 55 }, spa: 30, spd_def: 40, type2: 'Flying' },
 };
 
-const STARTERS = ['bulbasaur', 'charmander', 'squirtle', 'chikorita', 'cyndaquil', 'totodile', 'pikachu', 'eevee', 'treecko', 'torchic', 'mudkip'];
+const STARTERS = ['bulbasaur', 'charmander', 'squirtle', 'chikorita', 'cyndaquil', 'totodile', 'pikachu', 'eevee', 'treecko', 'torchic', 'mudkip', 'turtwig', 'chimchar', 'piplup', 'snivy', 'tepig', 'oshawott'];
 
 // Get random starter pool: canonical starters + Stage 1 Pokemon with BST <= 320
 function getRandomStarterPool(count = 3) {
