@@ -2,15 +2,15 @@
 
 const POKEMON_DATA = {
     // Gen 1 Starters
-    bulbasaur: { ability: "overgrow", baseStats: { hp: 45, atk: 49, def: 49, spd: 45 }, spa: 65, spd_def: 65, evolves: { level: 16, into: "ivysaur" } },
+    bulbasaur: { name: "Bulbasaur", type: "Grass", type2: "Poison", ability: "overgrow", baseStats: { hp: 45, atk: 49, def: 49, spd: 45 }, spa: 65, spd_def: 65, evolves: { level: 16, into: "ivysaur" } },
     ivysaur: { ability: "overgrow", name: "Ivysaur", type: "Grass", type2: 'Poison', baseStats: { hp: 60, atk: 62, def: 63, spd: 60 }, spa: 65, spd_def: 65, evolves: { level: 32, into: "venusaur" } },
     venusaur: { ability: "overgrow", name: "Venusaur", type: "Grass", type2: 'Poison', baseStats: { hp: 80, atk: 82, def: 83, spd: 80 }, spa: 80, spd_def: 80, evolves: null },
 
-    charmander: { ability: "blaze", baseStats: { hp: 39, atk: 52, def: 43, spd: 65 }, spa: 100, spd_def: 100, evolves: { level: 16, into: "charmeleon" } },
+    charmander: { name: "Charmander", type: "Fire", ability: "blaze", baseStats: { hp: 39, atk: 52, def: 43, spd: 65 }, spa: 100, spd_def: 100, evolves: { level: 16, into: "charmeleon" } },
     charmeleon: { ability: "blaze", name: "Charmeleon", type: "Fire", baseStats: { hp: 58, atk: 64, def: 58, spd: 80 }, spa: 60, spd_def: 50, evolves: { level: 36, into: "charizard" } },
     charizard: { ability: "blaze", name: "Charizard", type: "Fire", type2: 'Flying', baseStats: { hp: 78, atk: 84, def: 78, spd: 100 }, spa: 80, spd_def: 65, evolves: null },
 
-    squirtle: { ability: "torrent", baseStats: { hp: 44, atk: 48, def: 65, spd: 43 }, spa: 109, spd_def: 85, evolves: { level: 16, into: "wartortle" } },
+    squirtle: { name: "Squirtle", type: "Water", ability: "torrent", baseStats: { hp: 44, atk: 48, def: 65, spd: 43 }, spa: 109, spd_def: 85, evolves: { level: 16, into: "wartortle" } },
     wartortle: { ability: "torrent", name: "Wartortle", type: "Water", baseStats: { hp: 59, atk: 63, def: 80, spd: 58 }, spa: 50, spd_def: 64, evolves: { level: 36, into: "blastoise" } },
     blastoise: { ability: "torrent", name: "Blastoise", type: "Water", baseStats: { hp: 79, atk: 83, def: 100, spd: 78 }, spa: 65, spd_def: 80, evolves: null },
 
@@ -28,7 +28,7 @@ const POKEMON_DATA = {
     feraligatr: { ability: "torrent", name: "Feraligatr", type: "Water", baseStats: { hp: 85, atk: 105, def: 100, spd: 78 }, spa: 59, spd_def: 63, evolves: null },
 
     // Special Starters
-    pikachu: { ability: "static", baseStats: { hp: 35, atk: 55, def: 40, spd: 90 }, spa: 79, spd_def: 83, evolves: null },
+    pikachu: { name: "Pikachu", type: "Electric", ability: "static", baseStats: { hp: 35, atk: 55, def: 40, spd: 90 }, spa: 79, spd_def: 83, evolves: null },
     eevee: { name: "Eevee", type: "Normal", baseStats: { hp: 55, atk: 55, def: 50, spd: 55 }, spa: 50, spd_def: 50, evolves: null },
 
     // Eevee Evolutions (stone-based)
