@@ -2721,6 +2721,23 @@ class Game {
         if (this.battleEnemyTeam.length > 0) {
             this.addBattleLog(`Opponent has ${this.battleEnemyTeam.length + 1} Pokemon!`, 'warning');
         }
+
+        // Ability: Intimidate — lower player's active Pokémon Attack on battle start
+        if (enemy.ability === 'intimidate') {
+            const player = this.team[this.activePokemonIndex];
+            if (player && player.statStages) {
+                player.statStages.attack = Math.max(-6, (player.statStages.attack || 0) - 1);
+                this.addBattleLog(`${enemy.name}'s Intimidate lowered ${player.displayName}'s Attack!`, 'warning');
+            }
+        }
+        // Ability: Intimidate — lower enemy Attack if player has it
+        const playerPoke = this.team[this.activePokemonIndex];
+        if (playerPoke && playerPoke.ability === 'intimidate') {
+            if (enemy.statStages) {
+                enemy.statStages.attack = Math.max(-6, (enemy.statStages.attack || 0) - 1);
+                this.addBattleLog(`${playerPoke.displayName}'s Intimidate lowered ${enemy.name}'s Attack!`, 'warning');
+            }
+        }
     }
 
     // Get status icon for UI
@@ -2929,8 +2946,40 @@ class Game {
             crit = 1.5;
         }
 
+        // Ability hooks in damage calc
+        // Levitate: Ground immunity
+        if (move && move.type === 'ground' && defender.ability === 'levitate') {
+            this.addBattleLog(`${defender.displayName} floats above the attack! (Levitate)`, 'info');
+            return { damage: 0, effectiveness: 0, crit: false, moveName: move ? move.name : 'Attack' };
+        }
+
+        // Blaze/Overgrow/Torrent: Low HP STAB boost for attacker
+        let abilityMult = 1;
+        if (attacker.ability === 'blaze' && move && move.type === 'fire' && attacker.hp <= attacker.maxHp * 0.33) {
+            abilityMult = 1.5;
+            this.addBattleLog(`${attacker.displayName}'s Blaze flares up!`, 'success');
+        } else if (attacker.ability === 'overgrow' && move && move.type === 'grass' && attacker.hp <= attacker.maxHp * 0.33) {
+            abilityMult = 1.5;
+            this.addBattleLog(`${attacker.displayName}'s Overgrow surges!`, 'success');
+        } else if (attacker.ability === 'torrent' && move && move.type === 'water' && attacker.hp <= attacker.maxHp * 0.33) {
+            abilityMult = 1.5;
+            this.addBattleLog(`${attacker.displayName}'s Torrent rages!`, 'success');
+        }
+
+        // Guts: 1.5x physical damage when statused
+        if (attacker.ability === 'guts' && attacker.status && move && move.category === 'physical') {
+            abilityMult *= 1.5;
+        }
+
+        // Sturdy: Survive OHKO at full HP
+        let finalDamage = Math.max(1, Math.floor(base * variance * effectiveness * stab * crit * abilityMult));
+        if (defender.ability === 'sturdy' && defender.hp === defender.maxHp && finalDamage >= defender.hp) {
+            finalDamage = defender.hp - 1;
+            this.addBattleLog(`${defender.displayName} hung on with Sturdy!`, 'success');
+        }
+
         return {
-            damage: Math.max(1, Math.floor(base * variance * effectiveness * stab * crit)),
+            damage: finalDamage,
             effectiveness,
             crit: crit > 1,
             moveName: move ? move.name : 'Attack'
@@ -4752,132 +4801,3 @@ class Game {
 
 // Start the game
 const game = new Game();
-// ===== ABILITY SYSTEM =====
-// Passive abilities that trigger during battle
-const ABILITY_EFFECTS = {
-    intimidate: {
-        name: "Intimidate",
-        desc: "Lowers foe's Attack on switch-in",
-        trigger: 'switchIn',
-        effect: (user, foe, battle) => {
-            if (foe && foe.statStages) {
-                foe.statStages.attack = Math.max(-6, foe.statStages.attack - 1);
-                battle.addBattleLog(`${foe.displayName}'s Attack fell!`, 'warning');
-                return true;
-            }
-            return false;
-        }
-    },
-    levitate: {
-        name: "Levitate",
-        desc: "Immune to Ground-type moves",
-        trigger: 'damageCalc',
-        effect: (user, attacker, move, battle) => {
-            if (move && move.type === 'ground') {
-                battle.addBattleLog(`${user.displayName} levitated away!`, 'info');
-                return 0;
-            }
-            return null;
-        }
-    },
-    blaze: {
-        name: "Blaze",
-        desc: "Boosts Fire moves when HP is low",
-        trigger: 'damageCalc',
-        effect: (user, attacker, move, battle) => {
-            if (move && move.type === 'fire' && user.hp <= user.maxHp * 0.33) {
-                battle.addBattleLog(`${user.displayName}'s Blaze boosted the attack!`, 'success');
-                return 1.5;
-            }
-            return null;
-        }
-    },
-    overgrow: {
-        name: "Overgrow",
-        desc: "Boosts Grass moves when HP is low",
-        trigger: 'damageCalc',
-        effect: (user, attacker, move, battle) => {
-            if (move && move.type === 'grass' && user.hp <= user.maxHp * 0.33) {
-                battle.addBattleLog(`${user.displayName}'s Overgrow boosted the attack!`, 'success');
-                return 1.5;
-            }
-            return null;
-        }
-    },
-    torrent: {
-        name: "Torrent",
-        desc: "Boosts Water moves when HP is low",
-        trigger: 'damageCalc',
-        effect: (user, attacker, move, battle) => {
-            if (move && move.type === 'water' && user.hp <= user.maxHp * 0.33) {
-                battle.addBattleLog(`${user.displayName}'s Torrent boosted the attack!`, 'success');
-                return 1.5;
-            }
-            return null;
-        }
-    },
-    static: {
-        name: "Static",
-        desc: "May paralyze on contact",
-        trigger: 'onHit',
-        effect: (user, attacker, move, battle) => {
-            if (move && move.category === 'physical' && Math.random() < 0.3) {
-                if (!attacker.status) {
-                    attacker.status = 'paralyze';
-                    battle.addBattleLog(`${attacker.displayName} was paralyzed by Static!`, 'warning');
-                    return true;
-                }
-            }
-            return false;
-        }
-    },
-    guts: {
-        name: "Guts",
-        desc: "Boosts Attack when statused",
-        trigger: 'damageCalc',
-        effect: (user, attacker, move, battle) => {
-            if (user.status && move && move.category === 'physical') {
-                return 1.5;
-            }
-            return null;
-        }
-    },
-    swiftswim: {
-        name: "Swift Swim",
-        desc: "Doubles Speed",
-        trigger: 'speedCalc',
-        effect: (user) => {
-            return 2.0;
-        }
-    },
-    clearbody: {
-        name: "Clear Body",
-        desc: "Prevents stat drops",
-        trigger: 'statDrop',
-        effect: (user, stat, battle) => {
-            battle.addBattleLog(`${user.displayName}'s Clear Body prevented stat drop!`, 'info');
-            return false;
-        }
-    },
-    sturdy: {
-        name: "Sturdy",
-        desc: "Survives 1HKO with 1 HP",
-        trigger: 'onDamage',
-        effect: (user, damage, battle) => {
-            if (user.hp === user.maxHp && damage >= user.hp) {
-                battle.addBattleLog(`${user.displayName} hung on with Sturdy!`, 'success');
-                return user.hp - 1;
-            }
-            return damage;
-        }
-    }
-};
-
-// Helper to check and apply abilities
-function checkAbility(abilityName, trigger, ...args) {
-    const ability = ABILITY_EFFECTS[abilityName];
-    if (ability && ability.trigger === trigger) {
-        return ability.effect(...args);
-    }
-    return null;
-}
