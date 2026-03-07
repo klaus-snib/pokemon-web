@@ -481,10 +481,10 @@ function getRandomStarterPool(count = 3) {
 const LEGENDARY_POKEMON = ['articuno', 'zapdos', 'moltres', 'mewtwo'];
 
 const WILD_POKEMON = {
-    common: ['rattata', 'pidgey', 'caterpie', 'weedle', 'oddish', 'sentret', 'hoothoot', 'spinarak', 'hoppip', 'mareep', 'zigzagoon', 'lotad', 'seedot', 'shroomish', 'ledyba', 'venonat', 'paras', 'bellsprout', 'dunsparce'],
-    uncommon: ['nidoran_m', 'geodude', 'machop', 'abra', 'gastly', 'growlithe', 'vulpix', 'clefairy', 'wooper', 'snubbull', 'teddiursa', 'swinub', 'houndour', 'murkrow', 'misdreavus', 'electrike', 'aron', 'swablu', 'trapinch', 'phanpy', 'girafarig', 'jigglypuff', 'ekans', 'sandshrew', 'zubat'],
-    rare: ['pikachu', 'eevee', 'larvitar', 'ralts', 'bagon', 'beldum', 'absol', 'sneasel', 'miltank', 'chansey', 'heracross', 'doduo', 'ponyta', 'shellder', 'kangaskhan', 'pinsir', 'scyther', 'onix'],
-    fishing: ['magikarp', 'goldeen', 'psyduck', 'tentacool', 'staryu', 'poliwag', 'wooper', 'lotad', 'carvanha', 'corphish', 'barboach', 'feebas', 'horsea', 'krabby', 'surskit']
+    common: ['rattata', 'pidgey', 'caterpie', 'weedle', 'oddish', 'sentret', 'hoothoot', 'spinarak', 'hoppip', 'mareep', 'zigzagoon', 'lotad', 'seedot', 'shroomish', 'ledyba', 'venonat', 'paras', 'bellsprout', 'dunsparce', 'starly', 'bidoof', 'kricketot', 'shinx', 'budew', 'burmy', 'cherubi', 'shellos', 'patrat', 'lillipup', 'purrloin', 'pansage', 'pansear', 'panpour', 'blitzle', 'roggenrola', 'woobat', 'audino'],
+    uncommon: ['nidoran_m', 'geodude', 'machop', 'abra', 'gastly', 'growlithe', 'vulpix', 'clefairy', 'wooper', 'snubbull', 'teddiursa', 'swinub', 'houndour', 'murkrow', 'misdreavus', 'electrike', 'aron', 'swablu', 'trapinch', 'phanpy', 'girafarig', 'jigglypuff', 'ekans', 'sandshrew', 'zubat', 'turtwig', 'chimchar', 'piplup', 'buneary', 'glameow', 'stunky', 'bronzor', 'mime_jr', 'happiny', 'munchlax', 'riolu', 'hippopotas', 'snivy', 'tepig', 'oshawott', 'lilligant', 'darmanitan', 'maractus', 'scraggy', 'yamask', 'tirtouga', 'archen', 'trubbish', 'zorua', 'minccino', 'deerling', 'foongus', 'ferroseed', 'klink', 'tympole', 'swanna'],
+    rare: ['pikachu', 'eevee', 'larvitar', 'ralts', 'bagon', 'beldum', 'absol', 'sneasel', 'miltank', 'chansey', 'heracross', 'doduo', 'ponyta', 'shellder', 'kangaskhan', 'pinsir', 'scyther', 'onix', 'cranidos', 'shieldon', 'combee', 'buizel', 'cherubi', 'drifloon', 'buneary', 'glameow', 'chatot', 'spiritomb', 'gible', 'munchlax', 'riolu', 'hippopotas', 'carnivine', 'snover', 'rotom', 'oshawott', 'whimsicott', 'sigilyph', 'tirtouga', 'archen', 'zorua', 'emolga', 'ferroseed', 'klink', 'elgyem', 'litwick', 'axew', 'cubchoo', 'shelmet', 'stunfisk', 'druddigon', 'golett', 'pawniard', 'bouffalant', 'rufflet', 'vullaby', 'heatmor', 'durant', 'deino'],
+    fishing: ['magikarp', 'goldeen', 'psyduck', 'tentacool', 'staryu', 'poliwag', 'wooper', 'lotad', 'carvanha', 'corphish', 'barboach', 'feebas', 'horsea', 'krabby', 'surskit', 'finneon', 'mantyke', 'basculin', 'alomomola', 'tynamo']
 };
 
 // Route environments — shuffled per run, rotate every 2 badges
@@ -520,44 +520,44 @@ const ROUTE_ENVIRONMENTS = [
     },
     {
         name: "Safari Grasslands", icon: "🦒", desc: "Wide open plains teeming with Pokemon",
-        common: ['sentret', 'pidgey', 'oddish', 'mareep', 'hoppip', 'zigzagoon', 'doduo', 'phanpy'],
-        uncommon: ['nidoran_m', 'teddiursa', 'snubbull', 'wooper', 'swablu', 'girafarig'],
-        rare: ['pikachu', 'eevee', 'kangaskhan', 'tauros'],
+        common: ['sentret', 'pidgey', 'oddish', 'mareep', 'hoppip', 'zigzagoon', 'doduo', 'phanpy', 'starly', 'bidoof', 'kricketot'],
+        uncommon: ['nidoran_m', 'teddiursa', 'snubbull', 'wooper', 'swablu', 'girafarig', 'shinx', 'budew', 'burmy'],
+        rare: ['pikachu', 'eevee', 'kangaskhan', 'tauros', 'buneary', 'glameow', 'stunky'],
         fishing: ['poliwag', 'magikarp', 'wooper', 'psyduck']
     },
     {
         name: "Volcanic Path", icon: "🌋", desc: "The ground radiates intense heat",
         common: ['growlithe', 'geodude', 'machop', 'houndour', 'trapinch', 'numel'],
-        uncommon: ['vulpix', 'nidoran_m', 'gastly', 'aron', 'slugma'],
-        rare: ['larvitar', 'bagon', 'torkoal'],
+        uncommon: ['vulpix', 'nidoran_m', 'gastly', 'aron', 'slugma', 'torkoal'],
+        rare: ['larvitar', 'bagon', 'torkoal', 'gible', 'carnivine'],
         fishing: ['magikarp', 'goldeen', 'tentacool']
     },
     {
         name: "Frosty Cavern", icon: "❄️", desc: "Icicles glitter in the dim light",
-        common: ['swinub', 'geodude', 'rattata', 'hoothoot', 'snorunt', 'smoochum'],
-        uncommon: ['clefairy', 'misdreavus', 'snubbull', 'aron', 'sneasel'],
-        rare: ['absol', 'lapras'],
+        common: ['swinub', 'geodude', 'rattata', 'hoothoot', 'snorunt', 'smoochum', 'snover'],
+        uncommon: ['clefairy', 'misdreavus', 'snubbull', 'aron', 'sneasel', 'snorunt'],
+        rare: ['absol', 'lapras', 'sneasel', 'mamoswine'],
         fishing: ['magikarp', 'psyduck', 'poliwag', 'feebas']
     },
     {
         name: "Power Plant", icon: "⚡", desc: "Sparks fly from rusted machinery",
-        common: ['mareep', 'rattata', 'geodude', 'machop', 'electrike', 'magnemite'],
-        uncommon: ['pikachu', 'abra', 'gastly', 'beldum', 'voltorb'],
-        rare: ['eevee', 'electabuzz', 'magmar'],
+        common: ['mareep', 'rattata', 'geodude', 'machop', 'electrike', 'magnemite', 'shinx'],
+        uncommon: ['pikachu', 'abra', 'gastly', 'beldum', 'voltorb', 'blitzle'],
+        rare: ['eevee', 'electabuzz', 'magmar', 'rotom', 'zorua'],
         fishing: ['magikarp', 'goldeen', 'tentacool', 'chinchou']
     },
     {
         name: "Dark Forest", icon: "🌑", desc: "Shadows move between ancient trees",
-        common: ['murkrow', 'spinarak', 'hoothoot', 'oddish', 'seedot', 'shuppet'],
-        uncommon: ['misdreavus', 'houndour', 'gastly', 'teddiursa', 'absol', 'sableye'],
-        rare: ['larvitar', 'dunsparce'],
+        common: ['murkrow', 'spinarak', 'hoothoot', 'oddish', 'seedot', 'shuppet', 'stunky'],
+        uncommon: ['misdreavus', 'houndour', 'gastly', 'teddiursa', 'absol', 'sableye', 'drifloon'],
+        rare: ['larvitar', 'dunsparce', 'spiritomb', 'zorua'],
         fishing: ['poliwag', 'wooper', 'magikarp']
     },
     {
         name: "Meadow Fields", icon: "🌻", desc: "Flowers sway in a gentle breeze",
-        common: ['oddish', 'hoppip', 'sentret', 'pidgey', 'zigzagoon', 'shroomish', 'marill'],
-        uncommon: ['clefairy', 'vulpix', 'mareep', 'snubbull', 'ralts', 'jigglypuff'],
-        rare: ['pikachu', 'eevee', 'chansey', 'miltank'],
+        common: ['oddish', 'hoppip', 'sentret', 'pidgey', 'zigzagoon', 'shroomish', 'marill', 'cherubi', 'budew'],
+        uncommon: ['clefairy', 'vulpix', 'mareep', 'snubbull', 'ralts', 'jigglypuff', 'buizel'],
+        rare: ['pikachu', 'eevee', 'chansey', 'miltank', 'buneary', 'glameow'],
         fishing: ['goldeen', 'poliwag', 'magikarp', 'marill']
     }
 ];
