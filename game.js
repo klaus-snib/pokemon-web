@@ -1460,6 +1460,15 @@ class Game {
             // Legendary (gold border)
             ...(this.badges >= 5 ? [{ icon: '🔮', text: 'Move Tutor', desc: 'Teach a powerful new move', action: () => this.moveTutor(), weight: 2, rarity: 'legendary' }] : []),
             ...(this.badges >= 6 && Math.random() < 0.3 ? [{ icon: '💎', text: 'Master Ball!', desc: 'Guaranteed catch on any Pokemon', action: () => this.findMasterBall(), weight: 1, rarity: 'legendary' }] : []),
+            // Ghost Rival - encounter past champions (requires saved ghost rivals)
+            ...(this.badges >= 5 && typeof getGhostRivals === 'function' && getGhostRivals().length > 0 ? [{ 
+                icon: '👻', 
+                text: 'Ghost Rival', 
+                desc: 'Battle a shadow from your past...', 
+                action: () => this.ghostRivalBattle(), 
+                weight: 3, 
+                rarity: 'legendary' 
+            }] : []),
         ];
 
         // Battle Tower in post-game
@@ -2496,6 +2505,31 @@ class Game {
         this.updateUI();
         this.generateChoices();
         this.saveGame();
+    }
+
+    // ===== GHOST RIVAL BATTLE =====
+    ghostRivalBattle() {
+        const rivals = typeof getGhostRivals === "function" ? getGhostRivals() : [];
+        if (!rivals || rivals.length === 0) {
+            this.log("No ghost rivals found. Win a Championship to create one!");
+            return;
+        }
+        const rival = rivals[Math.floor(Math.random() * Math.min(rivals.length, 5))];
+        const team = (rival.team || []).map(p => ({
+            ...p,
+            hp: p.maxHp || p.hp,
+            status: null
+        }));
+        if (!team.length) {
+            this.log("The ghost slips away...");
+            return;
+        }
+        this.log(`👻 A ghost appears — the Champion ${rival.name || "Unknown"}!`);
+        this.battleType = "ghost";
+        this.battleEnemy = { name: `👻 ${rival.name || "Ghost Champion"}`, team };
+        this.battleEnemyTeam = [...team];
+        this.battleReward = { gold: 500 + (rival.badges || 8) * 100, message: "Ghost defeated! Their memory fades..." };
+        this.startBattle();
     }
 
     // ===== BATTLE TOWER (Post-game) =====
@@ -4292,6 +4326,12 @@ class Game {
             return (diffOrder[a.difficulty] || 2) - (diffOrder[b.difficulty] || 2);
         });
         this.saveHallOfFame();
+
+        // Save ghost rival for future encounters
+        if (typeof saveGhostRival === 'function') {
+            saveGhostRival(this.team, this.playerName);
+            this.addMessage('👻 Your team has been recorded in the Ghost Rival Hall of Fame!', 'success');
+        }
 
         this.showScreen('gameover-screen');
         document.getElementById('gameover-title').textContent = '🎉 Victory!';
