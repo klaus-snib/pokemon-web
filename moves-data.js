@@ -889,3 +889,40 @@ const CANONICAL_MOVES = {
     zingzap: { name: "Zing Zap", type: "electric", power: 80, accuracy: 100, pp: 10, category: "physical", priority: 0 },
     zippyzap: { name: "Zippy Zap", type: "electric", power: 80, accuracy: 100, pp: 10, category: "physical", priority: 2 },
 };
+
+// Gen 4-5 Moves (added 2026-03-07)
+const GEN4_5_MOVES = {
+    dragonpulse: { name: "Dragon Pulse", type: "dragon", power: 85, accuracy: 100, pp: 10, category: "special", priority: 0 },
+    dracometeor: { name: "Draco Meteor", type: "dragon", power: 130, accuracy: 90, pp: 5, category: "special", priority: 0 },
+    darkpulse: { name: "Dark Pulse", type: "dark", power: 80, accuracy: 100, pp: 15, category: "special", priority: 0 },
+    nastyplot: { name: "Nasty Plot", type: "dark", power: 0, accuracy: 100, pp: 20, category: "status", priority: 0, boosts: {specialAttack: 2} },
+    flashcannon: { name: "Flash Cannon", type: "steel", power: 80, accuracy: 100, pp: 10, category: "special", priority: 0 },
+    ironhead: { name: "Iron Head", type: "steel", power: 80, accuracy: 100, pp: 15, category: "physical", priority: 0 },
+    bugbuzz: { name: "Bug Buzz", type: "bug", power: 90, accuracy: 100, pp: 10, category: "special", priority: 0 },
+    energyball: { name: "Energy Ball", type: "grass", power: 90, accuracy: 100, pp: 10, category: "special", priority: 0 },
+    earthpower: { name: "Earth Power", type: "ground", power: 90, accuracy: 100, pp: 10, category: "special", priority: 0 },
+    aquajet: { name: "Aqua Jet", type: "water", power: 40, accuracy: 100, pp: 20, category: "physical", priority: 1 },
+    suckerpunch: { name: "Sucker Punch", type: "dark", power: 70, accuracy: 100, pp: 5, category: "physical", priority: 1 },
+    psychocut: { name: "Psycho Cut", type: "psychic", power: 70, accuracy: 100, pp: 20, category: "physical", priority: 0 },
+    xscissor: { name: "X-Scissor", type: "bug", power: 80, accuracy: 100, pp: 15, category: "physical", priority: 0 },
+    gunkshot: { name: "Gunk Shot", type: "poison", power: 120, accuracy: 80, pp: 5, category: "physical", priority: 0 },
+    bravebird: { name: "Brave Bird", type: "flying", power: 120, accuracy: 100, pp: 15, category: "physical", priority: 0 },
+    flareblitz: { name: "Flare Blitz", type: "fire", power: 120, accuracy: 100, pp: 15, category: "physical", priority: 0 },
+    closecombat: { name: "Close Combat", type: "fighting", power: 120, accuracy: 100, pp: 5, category: "physical", priority: 0 },
+    icefang: { name: "Ice Fang", type: "ice", power: 65, accuracy: 95, pp: 15, category: "physical", priority: 0 },
+    firefang: { name: "Fire Fang", type: "fire", power: 65, accuracy: 95, pp: 15, category: "physical", priority: 0 },
+    thunderfang: { name: "Thunder Fang", type: "electric", power: 65, accuracy: 95, pp: 15, category: "physical", priority: 0 },
+    zenheadbutt: { name: "Zen Headbutt", type: "psychic", power: 80, accuracy: 90, pp: 15, category: "physical", priority: 0 },
+    seedbomb: { name: "Seed Bomb", type: "grass", power: 80, accuracy: 100, pp: 15, category: "physical", priority: 0 },
+    gigadrain: { name: "Giga Drain", type: "grass", power: 75, accuracy: 100, pp: 10, category: "special", priority: 0 },
+    stealthrock: { name: "Stealth Rock", type: "rock", power: 0, accuracy: 100, pp: 20, category: "status", priority: 0 },
+    stoneedge: { name: "Stone Edge", type: "rock", power: 100, accuracy: 80, pp: 5, category: "physical", priority: 0 },
+    airslash: { name: "Air Slash", type: "flying", power: 75, accuracy: 95, pp: 15, category: "special", priority: 0 },
+    dragonrush: { name: "Dragon Rush", type: "dragon", power: 100, accuracy: 75, pp: 10, category: "physical", priority: 0 },
+    drainpunch: { name: "Drain Punch", type: "fighting", power: 75, accuracy: 100, pp: 10, category: "physical", priority: 0 },
+    uturn: { name: "U-turn", type: "bug", power: 70, accuracy: 100, pp: 20, category: "physical", priority: 0 },
+    voltswitch: { name: "Volt Switch", type: "electric", power: 70, accuracy: 100, pp: 20, category: "special", priority: 0 }
+};
+
+// Merge Gen 4-5 moves into CANONICAL_MOVES
+Object.assign(CANONICAL_MOVES, GEN4_5_MOVES);
