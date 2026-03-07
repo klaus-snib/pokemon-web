@@ -38,6 +38,9 @@ class Pokemon {
             accuracy: 0,
             evasion: 0
         };
+
+        // Ability
+        this.ability = this.species.ability || null;
     }
 
     // Apply stat boosts from a move
