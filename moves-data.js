@@ -926,6 +926,3 @@ const GEN4_5_MOVES = {
 
 // Merge Gen 4-5 moves into CANONICAL_MOVES
 Object.assign(CANONICAL_MOVES, GEN4_5_MOVES);
-
-// Alias for compatibility
-const MOVES = CANONICAL_MOVES;
