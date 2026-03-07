@@ -796,7 +796,7 @@ function getRandomStarterPool(count = 3) {
         
         // Check if any early move has power > 0
         for (const moveId of earlyMoves) {
-            const move = MOVES[moveId];
+            const move = (typeof CANONICAL_MOVES !== "undefined" ? CANONICAL_MOVES : MOVES)[moveId];
             if (move && move.power > 0) {
                 return true;
             }
