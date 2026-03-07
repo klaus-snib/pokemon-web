@@ -1368,7 +1368,7 @@ class Game {
         // Find rival options from all Pokemon with the advantage type
         const rivalOptions = Object.keys(POKEMON_DATA).filter(id => {
             const data = POKEMON_DATA[id];
-            return data && data.type === rivalType && data.baseStats;
+            return data && data.name && data.type === rivalType && data.baseStats;
         });
 
         // Pick random from options, fallback to charmander
