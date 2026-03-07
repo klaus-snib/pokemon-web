@@ -2757,4 +2757,3269 @@ const LEARNSETS = {
     yanma: [{ level: 1, move: 'foresight' }, { level: 1, move: 'tackle' }, { level: 6, move: 'quickattack' }, { level: 11, move: 'doubleteam' }, { level: 14, move: 'sonicboom' }, { level: 17, move: 'detect' }, { level: 22, move: 'supersonic' }, { level: 30, move: 'pursuit' }, { level: 33, move: 'ancientpower' }, { level: 38, move: 'hypnosis' }, { level: 43, move: 'wingattack' }, { level: 46, move: 'screech' }],
     zangoose: [{ level: 1, move: 'bellydrum' }, { level: 1, move: 'counter' }, { level: 1, move: 'disable' }, { level: 1, move: 'doublehit' }, { level: 1, move: 'doublekick' }, { level: 1, move: 'feint' }, { level: 1, move: 'finalgambit' }, { level: 1, move: 'flail' }, { level: 1, move: 'furyswipes' }, { level: 1, move: 'leer' }, { level: 1, move: 'nightslash' }, { level: 1, move: 'quickguard' }, { level: 1, move: 'scratch' }, { level: 5, move: 'quickattack' }, { level: 8, move: 'furycutter' }, { level: 12, move: 'pursuit' }, { level: 15, move: 'honeclaws' }, { level: 19, move: 'slash' }, { level: 22, move: 'powertrip' }, { level: 22, move: 'revenge' }, { level: 26, move: 'crushclaw' }, { level: 33, move: 'switcheroo' }, { level: 36, move: 'detect' }],
     zubat: [{ level: 1, move: 'absorb' }, { level: 1, move: 'supersonic' }, { level: 5, move: 'astonish' }, { level: 10, move: 'meanlook' }, { level: 15, move: 'poisonfang' }, { level: 20, move: 'quickguard' }, { level: 25, move: 'aircutter' }, { level: 30, move: 'bite' }, { level: 35, move: 'haze' }, { level: 45, move: 'confuseray' }],
+
+    // Gen 4-5 Learnsets
+    turtwig: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    grotle: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    torterra: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "sandattack" },
+        { level: 25, move: "mudslap" },
+        { level: 30, move: "earthquake" },
+        { level: 45, move: "leafblade" }
+    ],
+    chimchar: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    monferno: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    infernape: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    piplup: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    prinplup: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    empoleon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "waterfall" }
+    ],
+    starly: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    staravia: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    staraptor: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    staraptormega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "karatechop" },
+        { level: 10, move: "closecombat" },
+        { level: 15, move: "focusblast" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "dynamicpunch" }
+    ],
+    bidoof: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    bibarel: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "watergun" },
+        { level: 25, move: "surf" },
+        { level: 30, move: "hydropump" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    kricketot: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 45, move: "signalbeam" }
+    ],
+    kricketune: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 45, move: "signalbeam" }
+    ],
+    shinx: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 45, move: "spark" }
+    ],
+    luxio: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 45, move: "spark" }
+    ],
+    luxray: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 45, move: "spark" }
+    ],
+    budew: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "poisonsting" },
+        { level: 25, move: "sludge" },
+        { level: 30, move: "sludgebomb" },
+        { level: 45, move: "leafblade" }
+    ],
+    roserade: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "poisonsting" },
+        { level: 25, move: "sludge" },
+        { level: 30, move: "sludgebomb" },
+        { level: 45, move: "leafblade" }
+    ],
+    cranidos: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "rockthrow" },
+        { level: 10, move: "rockslide" },
+        { level: 15, move: "stoneedge" },
+        { level: 45, move: "rockblast" }
+    ],
+    rampardos: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "rockthrow" },
+        { level: 10, move: "rockslide" },
+        { level: 15, move: "stoneedge" },
+        { level: 45, move: "rockblast" }
+    ],
+    shieldon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "rockthrow" },
+        { level: 10, move: "rockslide" },
+        { level: 15, move: "stoneedge" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "rockblast" }
+    ],
+    bastiodon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "rockthrow" },
+        { level: 10, move: "rockslide" },
+        { level: 15, move: "stoneedge" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "rockblast" }
+    ],
+    burmy: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 45, move: "signalbeam" }
+    ],
+    burmysandy: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 45, move: "signalbeam" }
+    ],
+    burmytrash: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 45, move: "signalbeam" }
+    ],
+    wormadam: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "vinewhip" },
+        { level: 25, move: "razorleaf" },
+        { level: 30, move: "gigadrain" },
+        { level: 45, move: "signalbeam" }
+    ],
+    wormadamsandy: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "sandattack" },
+        { level: 25, move: "mudslap" },
+        { level: 30, move: "earthquake" },
+        { level: 45, move: "signalbeam" }
+    ],
+    wormadamtrash: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "signalbeam" }
+    ],
+    mothim: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "signalbeam" }
+    ],
+    combee: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "signalbeam" }
+    ],
+    vespiquen: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "signalbeam" }
+    ],
+    pachirisu: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 45, move: "spark" }
+    ],
+    buizel: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    floatzel: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    cherubi: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    cherrim: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    cherrimsunshine: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    shellos: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    shelloseast: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    gastrodon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "sandattack" },
+        { level: 25, move: "mudslap" },
+        { level: 30, move: "earthquake" },
+        { level: 45, move: "waterfall" }
+    ],
+    gastrodoneast: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "sandattack" },
+        { level: 25, move: "mudslap" },
+        { level: 30, move: "earthquake" },
+        { level: 45, move: "waterfall" }
+    ],
+    ambipom: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    drifloon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "hex" }
+    ],
+    drifblim: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "hex" }
+    ],
+    buneary: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    lopunny: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    lopunnymega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    mismagius: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 45, move: "hex" }
+    ],
+    honchkrow: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "foulplay" }
+    ],
+    glameow: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    purugly: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    chingling: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    stunky: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "poisonsting" },
+        { level: 10, move: "sludge" },
+        { level: 15, move: "sludgebomb" },
+        { level: 20, move: "bite" },
+        { level: 25, move: "crunch" },
+        { level: 30, move: "darkpulse" },
+        { level: 45, move: "gunkshot" }
+    ],
+    skuntank: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "poisonsting" },
+        { level: 10, move: "sludge" },
+        { level: 15, move: "sludgebomb" },
+        { level: 20, move: "bite" },
+        { level: 25, move: "crunch" },
+        { level: 30, move: "darkpulse" },
+        { level: 45, move: "gunkshot" }
+    ],
+    bronzor: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "metalclaw" },
+        { level: 10, move: "ironhead" },
+        { level: 15, move: "flashcannon" },
+        { level: 20, move: "confusion" },
+        { level: 25, move: "psychic" },
+        { level: 30, move: "psyshock" },
+        { level: 45, move: "steelwing" }
+    ],
+    bronzong: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "metalclaw" },
+        { level: 10, move: "ironhead" },
+        { level: 15, move: "flashcannon" },
+        { level: 20, move: "confusion" },
+        { level: 25, move: "psychic" },
+        { level: 30, move: "psyshock" },
+        { level: 45, move: "steelwing" }
+    ],
+    bonsly: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "rockthrow" },
+        { level: 10, move: "rockslide" },
+        { level: 15, move: "stoneedge" },
+        { level: 45, move: "rockblast" }
+    ],
+    mimejr: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 20, move: "fairywind" },
+        { level: 25, move: "dazzlinggleam" },
+        { level: 30, move: "moonblast" },
+        { level: 45, move: "psybeam" }
+    ],
+    happiny: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    chatot: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    spiritomb: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 20, move: "bite" },
+        { level: 25, move: "crunch" },
+        { level: 30, move: "darkpulse" },
+        { level: 45, move: "hex" }
+    ],
+    gible: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 20, move: "sandattack" },
+        { level: 25, move: "mudslap" },
+        { level: 30, move: "earthquake" },
+        { level: 45, move: "dracometeor" }
+    ],
+    gabite: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 20, move: "sandattack" },
+        { level: 25, move: "mudslap" },
+        { level: 30, move: "earthquake" },
+        { level: 45, move: "dracometeor" }
+    ],
+    garchomp: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 20, move: "sandattack" },
+        { level: 25, move: "mudslap" },
+        { level: 30, move: "earthquake" },
+        { level: 45, move: "dracometeor" }
+    ],
+    garchompmega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 20, move: "sandattack" },
+        { level: 25, move: "mudslap" },
+        { level: 30, move: "earthquake" },
+        { level: 45, move: "dracometeor" }
+    ],
+    garchompmegaz: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 45, move: "dracometeor" }
+    ],
+    munchlax: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    riolu: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "karatechop" },
+        { level: 10, move: "closecombat" },
+        { level: 15, move: "focusblast" },
+        { level: 45, move: "dynamicpunch" }
+    ],
+    lucario: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "karatechop" },
+        { level: 10, move: "closecombat" },
+        { level: 15, move: "focusblast" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "dynamicpunch" }
+    ],
+    lucariomega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "karatechop" },
+        { level: 10, move: "closecombat" },
+        { level: 15, move: "focusblast" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "dynamicpunch" }
+    ],
+    lucariomegaz: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "karatechop" },
+        { level: 10, move: "closecombat" },
+        { level: 15, move: "focusblast" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "dynamicpunch" }
+    ],
+    hippopotas: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 45, move: "dig" }
+    ],
+    hippowdon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 45, move: "dig" }
+    ],
+    skorupi: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "poisonsting" },
+        { level: 10, move: "sludge" },
+        { level: 15, move: "sludgebomb" },
+        { level: 20, move: "bugbite" },
+        { level: 25, move: "xscissor" },
+        { level: 30, move: "bugbuzz" },
+        { level: 45, move: "gunkshot" }
+    ],
+    drapion: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "poisonsting" },
+        { level: 10, move: "sludge" },
+        { level: 15, move: "sludgebomb" },
+        { level: 20, move: "bite" },
+        { level: 25, move: "crunch" },
+        { level: 30, move: "darkpulse" },
+        { level: 45, move: "gunkshot" }
+    ],
+    croagunk: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "poisonsting" },
+        { level: 10, move: "sludge" },
+        { level: 15, move: "sludgebomb" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "gunkshot" }
+    ],
+    toxicroak: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "poisonsting" },
+        { level: 10, move: "sludge" },
+        { level: 15, move: "sludgebomb" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "gunkshot" }
+    ],
+    carnivine: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    finneon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    lumineon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    mantyke: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "waterfall" }
+    ],
+    snover: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "icebeam" },
+        { level: 25, move: "blizzard" },
+        { level: 30, move: "icefang" },
+        { level: 45, move: "leafblade" }
+    ],
+    abomasnow: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "icebeam" },
+        { level: 25, move: "blizzard" },
+        { level: 30, move: "icefang" },
+        { level: 45, move: "leafblade" }
+    ],
+    abomasnowmega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "icebeam" },
+        { level: 25, move: "blizzard" },
+        { level: 30, move: "icefang" },
+        { level: 45, move: "leafblade" }
+    ],
+    weavile: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 20, move: "icebeam" },
+        { level: 25, move: "blizzard" },
+        { level: 30, move: "icefang" },
+        { level: 45, move: "foulplay" }
+    ],
+    magnezone: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "spark" }
+    ],
+    lickilicky: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    rhyperior: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "rockthrow" },
+        { level: 25, move: "rockslide" },
+        { level: 30, move: "stoneedge" },
+        { level: 45, move: "dig" }
+    ],
+    tangrowth: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    electivire: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 45, move: "spark" }
+    ],
+    magmortar: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    togekiss: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "fairywind" },
+        { level: 10, move: "dazzlinggleam" },
+        { level: 15, move: "moonblast" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "playrough" }
+    ],
+    yanmega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "signalbeam" }
+    ],
+    leafeon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    glaceon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 45, move: "iceshard" }
+    ],
+    gliscor: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "dig" }
+    ],
+    mamoswine: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 20, move: "sandattack" },
+        { level: 25, move: "mudslap" },
+        { level: 30, move: "earthquake" },
+        { level: 45, move: "iceshard" }
+    ],
+    porygonz: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    gallade: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "psybeam" }
+    ],
+    gallademega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "psybeam" }
+    ],
+    probopass: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "rockthrow" },
+        { level: 10, move: "rockslide" },
+        { level: 15, move: "stoneedge" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "rockblast" }
+    ],
+    dusknoir: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 45, move: "hex" }
+    ],
+    froslass: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 20, move: "shadowball" },
+        { level: 25, move: "shadowclaw" },
+        { level: 30, move: "shadowsneak" },
+        { level: 45, move: "iceshard" }
+    ],
+    froslassmega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 20, move: "shadowball" },
+        { level: 25, move: "shadowclaw" },
+        { level: 30, move: "shadowsneak" },
+        { level: 45, move: "iceshard" }
+    ],
+    rotom: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 20, move: "shadowball" },
+        { level: 25, move: "shadowclaw" },
+        { level: 30, move: "shadowsneak" },
+        { level: 45, move: "spark" }
+    ],
+    rotomheat: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 20, move: "ember" },
+        { level: 25, move: "flamethrower" },
+        { level: 30, move: "fireblast" },
+        { level: 45, move: "spark" }
+    ],
+    rotomwash: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 20, move: "watergun" },
+        { level: 25, move: "surf" },
+        { level: 30, move: "hydropump" },
+        { level: 45, move: "spark" }
+    ],
+    rotomfrost: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 20, move: "icebeam" },
+        { level: 25, move: "blizzard" },
+        { level: 30, move: "icefang" },
+        { level: 45, move: "spark" }
+    ],
+    rotomfan: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "spark" }
+    ],
+    rotommow: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 20, move: "vinewhip" },
+        { level: 25, move: "razorleaf" },
+        { level: 30, move: "gigadrain" },
+        { level: 45, move: "spark" }
+    ],
+    uxie: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    mesprit: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    azelf: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    dialga: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "metalclaw" },
+        { level: 10, move: "ironhead" },
+        { level: 15, move: "flashcannon" },
+        { level: 20, move: "dragonrage" },
+        { level: 25, move: "dragonbreath" },
+        { level: 30, move: "dragonpulse" },
+        { level: 45, move: "steelwing" }
+    ],
+    dialgaorigin: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "metalclaw" },
+        { level: 10, move: "ironhead" },
+        { level: 15, move: "flashcannon" },
+        { level: 20, move: "dragonrage" },
+        { level: 25, move: "dragonbreath" },
+        { level: 30, move: "dragonpulse" },
+        { level: 45, move: "steelwing" }
+    ],
+    palkia: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "dragonrage" },
+        { level: 25, move: "dragonbreath" },
+        { level: 30, move: "dragonpulse" },
+        { level: 45, move: "waterfall" }
+    ],
+    palkiaorigin: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "dragonrage" },
+        { level: 25, move: "dragonbreath" },
+        { level: 30, move: "dragonpulse" },
+        { level: 45, move: "waterfall" }
+    ],
+    heatran: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "flareblitz" }
+    ],
+    heatranmega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "flareblitz" }
+    ],
+    regigigas: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    giratina: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 20, move: "dragonrage" },
+        { level: 25, move: "dragonbreath" },
+        { level: 30, move: "dragonpulse" },
+        { level: 45, move: "hex" }
+    ],
+    giratinaorigin: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 20, move: "dragonrage" },
+        { level: 25, move: "dragonbreath" },
+        { level: 30, move: "dragonpulse" },
+        { level: 45, move: "hex" }
+    ],
+    cresselia: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    phione: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    manaphy: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    darkrai: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 45, move: "foulplay" }
+    ],
+    darkraimega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 45, move: "foulplay" }
+    ],
+    shaymin: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    shayminsky: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "leafblade" }
+    ],
+    arceus: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    arceusbug: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 45, move: "signalbeam" }
+    ],
+    arceusdark: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 45, move: "foulplay" }
+    ],
+    arceusdragon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 45, move: "dracometeor" }
+    ],
+    arceuselectric: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 45, move: "spark" }
+    ],
+    arceusfairy: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "fairywind" },
+        { level: 10, move: "dazzlinggleam" },
+        { level: 15, move: "moonblast" },
+        { level: 45, move: "playrough" }
+    ],
+    arceusfighting: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "karatechop" },
+        { level: 10, move: "closecombat" },
+        { level: 15, move: "focusblast" },
+        { level: 45, move: "dynamicpunch" }
+    ],
+    arceusfire: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    arceusflying: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "gust" },
+        { level: 10, move: "wingattack" },
+        { level: 15, move: "fly" },
+        { level: 45, move: "airslash" }
+    ],
+    arceusghost: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 45, move: "hex" }
+    ],
+    arceusgrass: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    arceusground: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 45, move: "dig" }
+    ],
+    arceusice: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 45, move: "iceshard" }
+    ],
+    arceuspoison: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "poisonsting" },
+        { level: 10, move: "sludge" },
+        { level: 15, move: "sludgebomb" },
+        { level: 45, move: "gunkshot" }
+    ],
+    arceuspsychic: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    arceusrock: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "rockthrow" },
+        { level: 10, move: "rockslide" },
+        { level: 15, move: "stoneedge" },
+        { level: 45, move: "rockblast" }
+    ],
+    arceussteel: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "metalclaw" },
+        { level: 10, move: "ironhead" },
+        { level: 15, move: "flashcannon" },
+        { level: 45, move: "steelwing" }
+    ],
+    arceuswater: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    victini: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 20, move: "ember" },
+        { level: 25, move: "flamethrower" },
+        { level: 30, move: "fireblast" },
+        { level: 45, move: "psybeam" }
+    ],
+    snivy: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    servine: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    serperior: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    tepig: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    pignite: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    emboar: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    emboarmega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    oshawott: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    dewott: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    samurott: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    samurotthisui: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "bite" },
+        { level: 25, move: "crunch" },
+        { level: 30, move: "darkpulse" },
+        { level: 45, move: "waterfall" }
+    ],
+    patrat: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    watchog: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    lillipup: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    herdier: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    stoutland: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    purrloin: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 45, move: "foulplay" }
+    ],
+    liepard: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 45, move: "foulplay" }
+    ],
+    pansage: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    simisage: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    pansear: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    simisear: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    panpour: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    simipour: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    munna: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    musharna: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    pidove: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    tranquill: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    unfezant: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    blitzle: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 45, move: "spark" }
+    ],
+    zebstrika: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 45, move: "spark" }
+    ],
+    roggenrola: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "rockthrow" },
+        { level: 10, move: "rockslide" },
+        { level: 15, move: "stoneedge" },
+        { level: 45, move: "rockblast" }
+    ],
+    boldore: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "rockthrow" },
+        { level: 10, move: "rockslide" },
+        { level: 15, move: "stoneedge" },
+        { level: 45, move: "rockblast" }
+    ],
+    gigalith: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "rockthrow" },
+        { level: 10, move: "rockslide" },
+        { level: 15, move: "stoneedge" },
+        { level: 45, move: "rockblast" }
+    ],
+    woobat: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "psybeam" }
+    ],
+    swoobat: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "psybeam" }
+    ],
+    drilbur: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 45, move: "dig" }
+    ],
+    excadrill: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "dig" }
+    ],
+    excadrillmega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "dig" }
+    ],
+    audino: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    audinomega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "fairywind" },
+        { level: 25, move: "dazzlinggleam" },
+        { level: 30, move: "moonblast" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    timburr: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "karatechop" },
+        { level: 10, move: "closecombat" },
+        { level: 15, move: "focusblast" },
+        { level: 45, move: "dynamicpunch" }
+    ],
+    gurdurr: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "karatechop" },
+        { level: 10, move: "closecombat" },
+        { level: 15, move: "focusblast" },
+        { level: 45, move: "dynamicpunch" }
+    ],
+    conkeldurr: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "karatechop" },
+        { level: 10, move: "closecombat" },
+        { level: 15, move: "focusblast" },
+        { level: 45, move: "dynamicpunch" }
+    ],
+    tympole: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    palpitoad: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "sandattack" },
+        { level: 25, move: "mudslap" },
+        { level: 30, move: "earthquake" },
+        { level: 45, move: "waterfall" }
+    ],
+    seismitoad: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "sandattack" },
+        { level: 25, move: "mudslap" },
+        { level: 30, move: "earthquake" },
+        { level: 45, move: "waterfall" }
+    ],
+    throh: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "karatechop" },
+        { level: 10, move: "closecombat" },
+        { level: 15, move: "focusblast" },
+        { level: 45, move: "dynamicpunch" }
+    ],
+    sawk: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "karatechop" },
+        { level: 10, move: "closecombat" },
+        { level: 15, move: "focusblast" },
+        { level: 45, move: "dynamicpunch" }
+    ],
+    sewaddle: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "vinewhip" },
+        { level: 25, move: "razorleaf" },
+        { level: 30, move: "gigadrain" },
+        { level: 45, move: "signalbeam" }
+    ],
+    swadloon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "vinewhip" },
+        { level: 25, move: "razorleaf" },
+        { level: 30, move: "gigadrain" },
+        { level: 45, move: "signalbeam" }
+    ],
+    leavanny: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "vinewhip" },
+        { level: 25, move: "razorleaf" },
+        { level: 30, move: "gigadrain" },
+        { level: 45, move: "signalbeam" }
+    ],
+    venipede: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "poisonsting" },
+        { level: 25, move: "sludge" },
+        { level: 30, move: "sludgebomb" },
+        { level: 45, move: "signalbeam" }
+    ],
+    whirlipede: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "poisonsting" },
+        { level: 25, move: "sludge" },
+        { level: 30, move: "sludgebomb" },
+        { level: 45, move: "signalbeam" }
+    ],
+    scolipede: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "poisonsting" },
+        { level: 25, move: "sludge" },
+        { level: 30, move: "sludgebomb" },
+        { level: 45, move: "signalbeam" }
+    ],
+    scolipedemega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "poisonsting" },
+        { level: 25, move: "sludge" },
+        { level: 30, move: "sludgebomb" },
+        { level: 45, move: "signalbeam" }
+    ],
+    cottonee: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "fairywind" },
+        { level: 25, move: "dazzlinggleam" },
+        { level: 30, move: "moonblast" },
+        { level: 45, move: "leafblade" }
+    ],
+    whimsicott: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "fairywind" },
+        { level: 25, move: "dazzlinggleam" },
+        { level: 30, move: "moonblast" },
+        { level: 45, move: "leafblade" }
+    ],
+    petilil: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    lilligant: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    lilliganthisui: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "leafblade" }
+    ],
+    basculin: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    basculinbluestriped: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    basculinwhitestriped: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    sandile: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "bite" },
+        { level: 25, move: "crunch" },
+        { level: 30, move: "darkpulse" },
+        { level: 45, move: "dig" }
+    ],
+    krokorok: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "bite" },
+        { level: 25, move: "crunch" },
+        { level: 30, move: "darkpulse" },
+        { level: 45, move: "dig" }
+    ],
+    krookodile: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "bite" },
+        { level: 25, move: "crunch" },
+        { level: 30, move: "darkpulse" },
+        { level: 45, move: "dig" }
+    ],
+    darumaka: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    darumakagalar: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 45, move: "iceshard" }
+    ],
+    darmanitan: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    darmanitanzen: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 20, move: "confusion" },
+        { level: 25, move: "psychic" },
+        { level: 30, move: "psyshock" },
+        { level: 45, move: "flareblitz" }
+    ],
+    darmanitangalar: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 45, move: "iceshard" }
+    ],
+    darmanitangalarzen: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 20, move: "ember" },
+        { level: 25, move: "flamethrower" },
+        { level: 30, move: "fireblast" },
+        { level: 45, move: "iceshard" }
+    ],
+    maractus: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 45, move: "leafblade" }
+    ],
+    dwebble: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "rockthrow" },
+        { level: 25, move: "rockslide" },
+        { level: 30, move: "stoneedge" },
+        { level: 45, move: "signalbeam" }
+    ],
+    crustle: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "rockthrow" },
+        { level: 25, move: "rockslide" },
+        { level: 30, move: "stoneedge" },
+        { level: 45, move: "signalbeam" }
+    ],
+    scraggy: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "foulplay" }
+    ],
+    scrafty: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "foulplay" }
+    ],
+    scraftymega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "foulplay" }
+    ],
+    sigilyph: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "psybeam" }
+    ],
+    yamask: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 45, move: "hex" }
+    ],
+    yamaskgalar: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "shadowball" },
+        { level: 25, move: "shadowclaw" },
+        { level: 30, move: "shadowsneak" },
+        { level: 45, move: "dig" }
+    ],
+    cofagrigus: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 45, move: "hex" }
+    ],
+    tirtouga: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "rockthrow" },
+        { level: 25, move: "rockslide" },
+        { level: 30, move: "stoneedge" },
+        { level: 45, move: "waterfall" }
+    ],
+    carracosta: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "rockthrow" },
+        { level: 25, move: "rockslide" },
+        { level: 30, move: "stoneedge" },
+        { level: 45, move: "waterfall" }
+    ],
+    archen: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "rockthrow" },
+        { level: 10, move: "rockslide" },
+        { level: 15, move: "stoneedge" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "rockblast" }
+    ],
+    archeops: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "rockthrow" },
+        { level: 10, move: "rockslide" },
+        { level: 15, move: "stoneedge" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "rockblast" }
+    ],
+    trubbish: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "poisonsting" },
+        { level: 10, move: "sludge" },
+        { level: 15, move: "sludgebomb" },
+        { level: 45, move: "gunkshot" }
+    ],
+    garbodor: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "poisonsting" },
+        { level: 10, move: "sludge" },
+        { level: 15, move: "sludgebomb" },
+        { level: 45, move: "gunkshot" }
+    ],
+    garbodorgmax: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "poisonsting" },
+        { level: 10, move: "sludge" },
+        { level: 15, move: "sludgebomb" },
+        { level: 45, move: "gunkshot" }
+    ],
+    zorua: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 45, move: "foulplay" }
+    ],
+    zoruahisui: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "shadowball" },
+        { level: 25, move: "shadowclaw" },
+        { level: 30, move: "shadowsneak" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    zoroark: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 45, move: "foulplay" }
+    ],
+    zoroarkhisui: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "shadowball" },
+        { level: 25, move: "shadowclaw" },
+        { level: 30, move: "shadowsneak" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    minccino: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    cinccino: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    gothita: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    gothorita: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    gothitelle: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    solosis: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    duosion: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    reuniclus: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    ducklett: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "waterfall" }
+    ],
+    swanna: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "waterfall" }
+    ],
+    vanillite: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 45, move: "iceshard" }
+    ],
+    vanillish: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 45, move: "iceshard" }
+    ],
+    vanilluxe: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 45, move: "iceshard" }
+    ],
+    deerling: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "vinewhip" },
+        { level: 25, move: "razorleaf" },
+        { level: 30, move: "gigadrain" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    deerlingsummer: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "vinewhip" },
+        { level: 25, move: "razorleaf" },
+        { level: 30, move: "gigadrain" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    deerlingautumn: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "vinewhip" },
+        { level: 25, move: "razorleaf" },
+        { level: 30, move: "gigadrain" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    deerlingwinter: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "vinewhip" },
+        { level: 25, move: "razorleaf" },
+        { level: 30, move: "gigadrain" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    sawsbuck: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "vinewhip" },
+        { level: 25, move: "razorleaf" },
+        { level: 30, move: "gigadrain" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    sawsbucksummer: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "vinewhip" },
+        { level: 25, move: "razorleaf" },
+        { level: 30, move: "gigadrain" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    sawsbuckautumn: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "vinewhip" },
+        { level: 25, move: "razorleaf" },
+        { level: 30, move: "gigadrain" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    sawsbuckwinter: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "vinewhip" },
+        { level: 25, move: "razorleaf" },
+        { level: 30, move: "gigadrain" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    emolga: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "spark" }
+    ],
+    karrablast: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 45, move: "signalbeam" }
+    ],
+    escavalier: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "signalbeam" }
+    ],
+    foongus: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "poisonsting" },
+        { level: 25, move: "sludge" },
+        { level: 30, move: "sludgebomb" },
+        { level: 45, move: "leafblade" }
+    ],
+    amoonguss: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "poisonsting" },
+        { level: 25, move: "sludge" },
+        { level: 30, move: "sludgebomb" },
+        { level: 45, move: "leafblade" }
+    ],
+    frillish: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "shadowball" },
+        { level: 25, move: "shadowclaw" },
+        { level: 30, move: "shadowsneak" },
+        { level: 45, move: "waterfall" }
+    ],
+    jellicent: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "shadowball" },
+        { level: 25, move: "shadowclaw" },
+        { level: 30, move: "shadowsneak" },
+        { level: 45, move: "waterfall" }
+    ],
+    alomomola: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 45, move: "waterfall" }
+    ],
+    joltik: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "thundershock" },
+        { level: 25, move: "thunderbolt" },
+        { level: 30, move: "thunder" },
+        { level: 45, move: "signalbeam" }
+    ],
+    galvantula: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "thundershock" },
+        { level: 25, move: "thunderbolt" },
+        { level: 30, move: "thunder" },
+        { level: 45, move: "signalbeam" }
+    ],
+    ferroseed: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "leafblade" }
+    ],
+    ferrothorn: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "leafblade" }
+    ],
+    klink: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "metalclaw" },
+        { level: 10, move: "ironhead" },
+        { level: 15, move: "flashcannon" },
+        { level: 45, move: "steelwing" }
+    ],
+    klang: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "metalclaw" },
+        { level: 10, move: "ironhead" },
+        { level: 15, move: "flashcannon" },
+        { level: 45, move: "steelwing" }
+    ],
+    klinklang: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "metalclaw" },
+        { level: 10, move: "ironhead" },
+        { level: 15, move: "flashcannon" },
+        { level: 45, move: "steelwing" }
+    ],
+    tynamo: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 45, move: "spark" }
+    ],
+    eelektrik: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 45, move: "spark" }
+    ],
+    eelektross: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 45, move: "spark" }
+    ],
+    eelektrossmega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 45, move: "spark" }
+    ],
+    elgyem: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    beheeyem: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 45, move: "psybeam" }
+    ],
+    litwick: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 20, move: "ember" },
+        { level: 25, move: "flamethrower" },
+        { level: 30, move: "fireblast" },
+        { level: 45, move: "hex" }
+    ],
+    lampent: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 20, move: "ember" },
+        { level: 25, move: "flamethrower" },
+        { level: 30, move: "fireblast" },
+        { level: 45, move: "hex" }
+    ],
+    chandelure: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 20, move: "ember" },
+        { level: 25, move: "flamethrower" },
+        { level: 30, move: "fireblast" },
+        { level: 45, move: "hex" }
+    ],
+    chandeluremega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "shadowball" },
+        { level: 10, move: "shadowclaw" },
+        { level: 15, move: "shadowsneak" },
+        { level: 20, move: "ember" },
+        { level: 25, move: "flamethrower" },
+        { level: 30, move: "fireblast" },
+        { level: 45, move: "hex" }
+    ],
+    axew: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 45, move: "dracometeor" }
+    ],
+    fraxure: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 45, move: "dracometeor" }
+    ],
+    haxorus: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 45, move: "dracometeor" }
+    ],
+    cubchoo: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 45, move: "iceshard" }
+    ],
+    beartic: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 45, move: "iceshard" }
+    ],
+    cryogonal: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "icebeam" },
+        { level: 10, move: "blizzard" },
+        { level: 15, move: "icefang" },
+        { level: 45, move: "iceshard" }
+    ],
+    shelmet: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 45, move: "signalbeam" }
+    ],
+    accelgor: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 45, move: "signalbeam" }
+    ],
+    stunfisk: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "thundershock" },
+        { level: 25, move: "thunderbolt" },
+        { level: 30, move: "thunder" },
+        { level: 45, move: "dig" }
+    ],
+    stunfiskgalar: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "dig" }
+    ],
+    mienfoo: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "karatechop" },
+        { level: 10, move: "closecombat" },
+        { level: 15, move: "focusblast" },
+        { level: 45, move: "dynamicpunch" }
+    ],
+    mienshao: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "karatechop" },
+        { level: 10, move: "closecombat" },
+        { level: 15, move: "focusblast" },
+        { level: 45, move: "dynamicpunch" }
+    ],
+    druddigon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 45, move: "dracometeor" }
+    ],
+    golett: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "shadowball" },
+        { level: 25, move: "shadowclaw" },
+        { level: 30, move: "shadowsneak" },
+        { level: 45, move: "dig" }
+    ],
+    golurk: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "shadowball" },
+        { level: 25, move: "shadowclaw" },
+        { level: 30, move: "shadowsneak" },
+        { level: 45, move: "dig" }
+    ],
+    golurkmega: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "shadowball" },
+        { level: 25, move: "shadowclaw" },
+        { level: 30, move: "shadowsneak" },
+        { level: 45, move: "dig" }
+    ],
+    pawniard: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "foulplay" }
+    ],
+    bisharp: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "foulplay" }
+    ],
+    bouffalant: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    rufflet: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    braviary: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    braviaryhisui: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "confusion" },
+        { level: 10, move: "psychic" },
+        { level: 15, move: "psyshock" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "psybeam" }
+    ],
+    vullaby: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "foulplay" }
+    ],
+    mandibuzz: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "foulplay" }
+    ],
+    heatmor: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "ember" },
+        { level: 10, move: "flamethrower" },
+        { level: 15, move: "fireblast" },
+        { level: 45, move: "flareblitz" }
+    ],
+    durant: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "signalbeam" }
+    ],
+    deino: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 20, move: "dragonrage" },
+        { level: 25, move: "dragonbreath" },
+        { level: 30, move: "dragonpulse" },
+        { level: 45, move: "foulplay" }
+    ],
+    zweilous: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 20, move: "dragonrage" },
+        { level: 25, move: "dragonbreath" },
+        { level: 30, move: "dragonpulse" },
+        { level: 45, move: "foulplay" }
+    ],
+    hydreigon: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bite" },
+        { level: 10, move: "crunch" },
+        { level: 15, move: "darkpulse" },
+        { level: 20, move: "dragonrage" },
+        { level: 25, move: "dragonbreath" },
+        { level: 30, move: "dragonpulse" },
+        { level: 45, move: "foulplay" }
+    ],
+    larvesta: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "ember" },
+        { level: 25, move: "flamethrower" },
+        { level: 30, move: "fireblast" },
+        { level: 45, move: "signalbeam" }
+    ],
+    volcarona: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "ember" },
+        { level: 25, move: "flamethrower" },
+        { level: 30, move: "fireblast" },
+        { level: 45, move: "signalbeam" }
+    ],
+    cobalion: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "metalclaw" },
+        { level: 10, move: "ironhead" },
+        { level: 15, move: "flashcannon" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "steelwing" }
+    ],
+    terrakion: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "rockthrow" },
+        { level: 10, move: "rockslide" },
+        { level: 15, move: "stoneedge" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "rockblast" }
+    ],
+    virizion: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "vinewhip" },
+        { level: 10, move: "razorleaf" },
+        { level: 15, move: "gigadrain" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "leafblade" }
+    ],
+    tornadus: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "gust" },
+        { level: 10, move: "wingattack" },
+        { level: 15, move: "fly" },
+        { level: 45, move: "airslash" }
+    ],
+    tornadustherian: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "gust" },
+        { level: 10, move: "wingattack" },
+        { level: 15, move: "fly" },
+        { level: 45, move: "airslash" }
+    ],
+    thundurus: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "spark" }
+    ],
+    thundurustherian: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "thundershock" },
+        { level: 10, move: "thunderbolt" },
+        { level: 15, move: "thunder" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "spark" }
+    ],
+    reshiram: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 20, move: "ember" },
+        { level: 25, move: "flamethrower" },
+        { level: 30, move: "fireblast" },
+        { level: 45, move: "dracometeor" }
+    ],
+    zekrom: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 20, move: "thundershock" },
+        { level: 25, move: "thunderbolt" },
+        { level: 30, move: "thunder" },
+        { level: 45, move: "dracometeor" }
+    ],
+    landorus: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "dig" }
+    ],
+    landorustherian: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "sandattack" },
+        { level: 10, move: "mudslap" },
+        { level: 15, move: "earthquake" },
+        { level: 20, move: "gust" },
+        { level: 25, move: "wingattack" },
+        { level: 30, move: "fly" },
+        { level: 45, move: "dig" }
+    ],
+    kyurem: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 20, move: "icebeam" },
+        { level: 25, move: "blizzard" },
+        { level: 30, move: "icefang" },
+        { level: 45, move: "dracometeor" }
+    ],
+    kyuremblack: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 20, move: "icebeam" },
+        { level: 25, move: "blizzard" },
+        { level: 30, move: "icefang" },
+        { level: 45, move: "dracometeor" }
+    ],
+    kyuremwhite: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "dragonrage" },
+        { level: 10, move: "dragonbreath" },
+        { level: 15, move: "dragonpulse" },
+        { level: 20, move: "icebeam" },
+        { level: 25, move: "blizzard" },
+        { level: 30, move: "icefang" },
+        { level: 45, move: "dracometeor" }
+    ],
+    keldeo: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "waterfall" }
+    ],
+    keldeoresolute: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "watergun" },
+        { level: 10, move: "surf" },
+        { level: 15, move: "hydropump" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "waterfall" }
+    ],
+    meloetta: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "confusion" },
+        { level: 25, move: "psychic" },
+        { level: 30, move: "psyshock" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    meloettapirouette: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 10, move: "quickattack" },
+        { level: 15, move: "bodyslam" },
+        { level: 20, move: "karatechop" },
+        { level: 25, move: "closecombat" },
+        { level: 30, move: "focusblast" },
+        { level: 45, move: "hyperbeam" }
+    ],
+    genesect: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "signalbeam" }
+    ],
+    genesectdouse: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "signalbeam" }
+    ],
+    genesectshock: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "signalbeam" }
+    ],
+    genesectburn: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "signalbeam" }
+    ],
+    genesectchill: [
+        { level: 1, move: "tackle" },
+        { level: 3, move: "growl" },
+        { level: 5, move: "bugbite" },
+        { level: 10, move: "xscissor" },
+        { level: 15, move: "bugbuzz" },
+        { level: 20, move: "metalclaw" },
+        { level: 25, move: "ironhead" },
+        { level: 30, move: "flashcannon" },
+        { level: 45, move: "signalbeam" }
+    ],
 };
