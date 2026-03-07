@@ -89,6 +89,32 @@ for (const f of jsFiles) {
     }
 }
 
+// Check known dual-type Pokemon have correct type2
+const knownTypes = {
+    aron: ['Rock', 'Steel'],
+    bulbasaur: ['Grass', 'Poison'],
+    geodude: ['Rock', 'Ground'],
+    magnemite: ['Electric', 'Steel'],
+};
+for (const [id, [t1, t2]] of Object.entries(knownTypes)) {
+    const body = pokemon[id];
+    if (!body) { warn('Known Pokemon missing from data: ' + id); continue; }
+    if (!body.includes("type: '" + t1 + "'") && !body.includes('type: "' + t1 + '"')) warn(id + ' expected type ' + t1);
+    if (t2 && !body.includes("type2: '" + t2 + "'") && !body.includes('type2: "' + t2 + '"')) error(id + ' has wrong type2 (expected ' + t2 + ')');
+}
+
+// Check fixed-damage moves have fixedDamage field (dragonrage, sonicboom, etc.)
+// Read moves-data.js
+const movesCode = fs.readFileSync(path.join(__dirname, 'moves-data.js'), 'utf8');
+const fixedDamageMoves = ['dragonrage', 'sonicboom'];
+for (const moveId of fixedDamageMoves) {
+    const movePattern = new RegExp(moveId + ':\s*\{[^}]+\}');
+    const m = movesCode.match(movePattern);
+    if (m && !m[0].includes('fixedDamage') && !m[0].includes('power: 40') && !m[0].includes('power: 20')) {
+        warn('Fixed-damage move ' + moveId + ' may not deal correct damage (check fixedDamage field)');
+    }
+}
+
 console.log('');
 console.log(`Result: ${errors} errors, ${warnings} warnings`);
 if (errors > 0) {
