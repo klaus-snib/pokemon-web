@@ -3,29 +3,29 @@
 const POKEMON_DATA = {
     // Gen 1 Starters
     bulbasaur: { ability: "overgrow", baseStats: { hp: 45, atk: 49, def: 49, spd: 45 }, spa: 65, spd_def: 65, evolves: { level: 16, into: "ivysaur" } },
-    ivysaur: { name: "Ivysaur", type: "Grass", type2: 'Poison', baseStats: { hp: 60, atk: 62, def: 63, spd: 60 }, spa: 65, spd_def: 65, evolves: { level: 32, into: "venusaur" } },
-    venusaur: { name: "Venusaur", type: "Grass", type2: 'Poison', baseStats: { hp: 80, atk: 82, def: 83, spd: 80 }, spa: 80, spd_def: 80, evolves: null },
+    ivysaur: { ability: "overgrow", name: "Ivysaur", type: "Grass", type2: 'Poison', baseStats: { hp: 60, atk: 62, def: 63, spd: 60 }, spa: 65, spd_def: 65, evolves: { level: 32, into: "venusaur" } },
+    venusaur: { ability: "overgrow", name: "Venusaur", type: "Grass", type2: 'Poison', baseStats: { hp: 80, atk: 82, def: 83, spd: 80 }, spa: 80, spd_def: 80, evolves: null },
 
     charmander: { ability: "blaze", baseStats: { hp: 39, atk: 52, def: 43, spd: 65 }, spa: 100, spd_def: 100, evolves: { level: 16, into: "charmeleon" } },
-    charmeleon: { name: "Charmeleon", type: "Fire", baseStats: { hp: 58, atk: 64, def: 58, spd: 80 }, spa: 60, spd_def: 50, evolves: { level: 36, into: "charizard" } },
-    charizard: { name: "Charizard", type: "Fire", type2: 'Flying', baseStats: { hp: 78, atk: 84, def: 78, spd: 100 }, spa: 80, spd_def: 65, evolves: null },
+    charmeleon: { ability: "blaze", name: "Charmeleon", type: "Fire", baseStats: { hp: 58, atk: 64, def: 58, spd: 80 }, spa: 60, spd_def: 50, evolves: { level: 36, into: "charizard" } },
+    charizard: { ability: "blaze", name: "Charizard", type: "Fire", type2: 'Flying', baseStats: { hp: 78, atk: 84, def: 78, spd: 100 }, spa: 80, spd_def: 65, evolves: null },
 
     squirtle: { ability: "torrent", baseStats: { hp: 44, atk: 48, def: 65, spd: 43 }, spa: 109, spd_def: 85, evolves: { level: 16, into: "wartortle" } },
-    wartortle: { name: "Wartortle", type: "Water", baseStats: { hp: 59, atk: 63, def: 80, spd: 58 }, spa: 50, spd_def: 64, evolves: { level: 36, into: "blastoise" } },
-    blastoise: { name: "Blastoise", type: "Water", baseStats: { hp: 79, atk: 83, def: 100, spd: 78 }, spa: 65, spd_def: 80, evolves: null },
+    wartortle: { ability: "torrent", name: "Wartortle", type: "Water", baseStats: { hp: 59, atk: 63, def: 80, spd: 58 }, spa: 50, spd_def: 64, evolves: { level: 36, into: "blastoise" } },
+    blastoise: { ability: "torrent", name: "Blastoise", type: "Water", baseStats: { hp: 79, atk: 83, def: 100, spd: 78 }, spa: 65, spd_def: 80, evolves: null },
 
     // Gen 2 Starters
-    chikorita: { name: "Chikorita", type: "Grass", baseStats: { hp: 45, atk: 49, def: 65, spd: 45 }, spa: 85, spd_def: 105, evolves: { level: 16, into: "bayleef" } },
-    bayleef: { name: "Bayleef", type: "Grass", baseStats: { hp: 60, atk: 62, def: 80, spd: 60 }, spa: 49, spd_def: 65, evolves: { level: 32, into: "meganium" } },
-    meganium: { name: "Meganium", type: "Grass", baseStats: { hp: 80, atk: 82, def: 100, spd: 80 }, spa: 63, spd_def: 80, evolves: null },
+    chikorita: { ability: "overgrow", name: "Chikorita", type: "Grass", baseStats: { hp: 45, atk: 49, def: 65, spd: 45 }, spa: 85, spd_def: 105, evolves: { level: 16, into: "bayleef" } },
+    bayleef: { ability: "overgrow", name: "Bayleef", type: "Grass", baseStats: { hp: 60, atk: 62, def: 80, spd: 60 }, spa: 49, spd_def: 65, evolves: { level: 32, into: "meganium" } },
+    meganium: { ability: "overgrow", name: "Meganium", type: "Grass", baseStats: { hp: 80, atk: 82, def: 100, spd: 80 }, spa: 63, spd_def: 80, evolves: null },
 
-    cyndaquil: { name: "Cyndaquil", type: "Fire", baseStats: { hp: 39, atk: 52, def: 43, spd: 65 }, spa: 83, spd_def: 100, evolves: { level: 14, into: "quilava" } },
-    quilava: { name: "Quilava", type: "Fire", baseStats: { hp: 58, atk: 64, def: 58, spd: 80 }, spa: 60, spd_def: 50, evolves: { level: 36, into: "typhlosion" } },
-    typhlosion: { name: "Typhlosion", type: "Fire", baseStats: { hp: 78, atk: 84, def: 78, spd: 100 }, spa: 80, spd_def: 65, evolves: null },
+    cyndaquil: { ability: "blaze", name: "Cyndaquil", type: "Fire", baseStats: { hp: 39, atk: 52, def: 43, spd: 65 }, spa: 83, spd_def: 100, evolves: { level: 14, into: "quilava" } },
+    quilava: { ability: "blaze", name: "Quilava", type: "Fire", baseStats: { hp: 58, atk: 64, def: 58, spd: 80 }, spa: 60, spd_def: 50, evolves: { level: 36, into: "typhlosion" } },
+    typhlosion: { ability: "blaze", name: "Typhlosion", type: "Fire", baseStats: { hp: 78, atk: 84, def: 78, spd: 100 }, spa: 80, spd_def: 65, evolves: null },
 
-    totodile: { name: "Totodile", type: "Water", baseStats: { hp: 50, atk: 65, def: 64, spd: 43 }, spa: 109, spd_def: 85, evolves: { level: 18, into: "croconaw" } },
-    croconaw: { name: "Croconaw", type: "Water", baseStats: { hp: 65, atk: 80, def: 80, spd: 58 }, spa: 44, spd_def: 48, evolves: { level: 30, into: "feraligatr" } },
-    feraligatr: { name: "Feraligatr", type: "Water", baseStats: { hp: 85, atk: 105, def: 100, spd: 78 }, spa: 59, spd_def: 63, evolves: null },
+    totodile: { ability: "torrent", name: "Totodile", type: "Water", baseStats: { hp: 50, atk: 65, def: 64, spd: 43 }, spa: 109, spd_def: 85, evolves: { level: 18, into: "croconaw" } },
+    croconaw: { ability: "torrent", name: "Croconaw", type: "Water", baseStats: { hp: 65, atk: 80, def: 80, spd: 58 }, spa: 44, spd_def: 48, evolves: { level: 30, into: "feraligatr" } },
+    feraligatr: { ability: "torrent", name: "Feraligatr", type: "Water", baseStats: { hp: 85, atk: 105, def: 100, spd: 78 }, spa: 59, spd_def: 63, evolves: null },
 
     // Special Starters
     pikachu: { ability: "static", baseStats: { hp: 35, atk: 55, def: 40, spd: 90 }, spa: 79, spd_def: 83, evolves: null },
@@ -33,12 +33,12 @@ const POKEMON_DATA = {
 
     // Eevee Evolutions (stone-based)
     vaporeon: { name: "Vaporeon", type: "Water", baseStats: { hp: 130, atk: 65, def: 60, spd: 65 }, spa: 45, spd_def: 65, evolves: null },
-    jolteon: { name: "Jolteon", type: "Electric", baseStats: { hp: 65, atk: 65, def: 60, spd: 130 }, spa: 110, spd_def: 95, evolves: null },
+    jolteon: { ability: "static", name: "Jolteon", type: "Electric", baseStats: { hp: 65, atk: 65, def: 60, spd: 130 }, spa: 110, spd_def: 95, evolves: null },
     flareon: { name: "Flareon", type: "Fire", baseStats: { hp: 65, atk: 130, def: 60, spd: 65 }, spa: 110, spd_def: 95, evolves: null },
 
     // Wild Pokemon - Common
-    rattata: { name: "Rattata", type: "Normal", baseStats: { hp: 30, atk: 56, def: 35, spd: 72 }, spa: 95, spd_def: 110, evolves: { level: 20, into: "raticate" } },
-    raticate: { name: "Raticate", type: "Normal", baseStats: { hp: 55, atk: 81, def: 60, spd: 97 }, spa: 25, spd_def: 35, evolves: null },
+    rattata: { ability: "guts", name: "Rattata", type: "Normal", baseStats: { hp: 30, atk: 56, def: 35, spd: 72 }, spa: 95, spd_def: 110, evolves: { level: 20, into: "raticate" } },
+    raticate: { ability: "guts", name: "Raticate", type: "Normal", baseStats: { hp: 55, atk: 81, def: 60, spd: 97 }, spa: 25, spd_def: 35, evolves: null },
     pidgey: { name: "Pidgey", type: "Flying", type2: 'Flying', baseStats: { hp: 40, atk: 45, def: 40, spd: 56 }, spa: 50, spd_def: 70, evolves: { level: 18, into: "pidgeotto" } },
     pidgeotto: { name: "Pidgeotto", type: "Flying", type2: 'Flying', baseStats: { hp: 63, atk: 60, def: 55, spd: 71 }, spa: 35, spd_def: 35, evolves: { level: 36, into: "pidgeot" } },
     pidgeot: { name: "Pidgeot", type: "Flying", type2: 'Flying', baseStats: { hp: 83, atk: 80, def: 75, spd: 101 }, spa: 50, spd_def: 50, evolves: null },
