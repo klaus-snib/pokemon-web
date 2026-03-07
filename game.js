@@ -699,6 +699,127 @@ class DragDropManager {
     }
 }
 
+// ===== ABILITY SYSTEM =====
+// Passive abilities that trigger during battle
+const ABILITY_EFFECTS = {
+    intimidate: {
+        name: "Intimidate",
+        desc: "Lowers foe's Attack on switch-in",
+        trigger: 'switchIn',
+        effect: (user, foe, battle) => {
+            if (foe && foe.statStages) {
+                foe.statStages.attack = Math.max(-6, foe.statStages.attack - 1);
+                battle.addBattleLog(`${foe.displayName}'s Attack fell!`, 'warning');
+                return true;
+            }
+            return false;
+        }
+    },
+    levitate: {
+        name: "Levitate",
+        desc: "Immune to Ground-type moves",
+        trigger: 'damageCalc',
+        effect: (user, attacker, move, battle) => {
+            if (move && move.type === 'ground') {
+                battle.addBattleLog(`${user.displayName} levitated away!`, 'info');
+                return 0; // No damage
+            }
+            return null; // Normal damage calc
+        }
+    },
+    blaze: {
+        name: "Blaze",
+        desc: "Boosts Fire moves when HP is low",
+        trigger: 'damageCalc',
+        effect: (user, attacker, move, battle) => {
+            if (move && move.type === 'fire' && user.hp <= user.maxHp * 0.33) {
+                battle.addBattleLog(`${user.displayName}'s Blaze boosted the attack!`, 'success');
+                return 1.5; // 1.5x multiplier
+            }
+            return null;
+        }
+    },
+    overgrow: {
+        name: "Overgrow",
+        desc: "Boosts Grass moves when HP is low",
+        trigger: 'damageCalc',
+        effect: (user, attacker, move, battle) => {
+            if (move && move.type === 'grass' && user.hp <= user.maxHp * 0.33) {
+                battle.addBattleLog(`${user.displayName}'s Overgrow boosted the attack!`, 'success');
+                return 1.5;
+            }
+            return null;
+        }
+    },
+    torrent: {
+        name: "Torrent",
+        desc: "Boosts Water moves when HP is low",
+        trigger: 'damageCalc',
+        effect: (user, attacker, move, battle) => {
+            if (move && move.type === 'water' && user.hp <= user.maxHp * 0.33) {
+                battle.addBattleLog(`${user.displayName}'s Torrent boosted the attack!`, 'success');
+                return 1.5;
+            }
+            return null;
+        }
+    },
+    static: {
+        name: "Static",
+        desc: "May paralyze on contact",
+        trigger: 'onHit',
+        effect: (user, attacker, move, battle) => {
+            if (move && move.category === 'physical' && Math.random() < 0.3) {
+                if (!attacker.status && battle.clauseTracker.canApplySleep(battle.team[0] === attacker)) {
+                    attacker.status = 'paralyze';
+                    battle.addBattleLog(`${attacker.displayName} was paralyzed by Static!`, 'warning');
+                    return true;
+                }
+            }
+            return false;
+        }
+    },
+    guts: {
+        name: "Guts",
+        desc: "Boosts Attack when statused",
+        trigger: 'damageCalc',
+        effect: (user, attacker, move, battle) => {
+            if (user.status && move && move.category === 'physical') {
+                return 1.5; // 1.5x physical damage when statused
+            }
+            return null;
+        }
+    },
+    swiftswim: {
+        name: "Swift Swim",
+        desc: "Doubles Speed in rain (simulated as always active for now)",
+        trigger: 'speedCalc',
+        effect: (user) => {
+            return 2.0; // 2x speed multiplier
+        }
+    },
+    clearbody: {
+        name: "Clear Body",
+        desc: "Prevents stat drops from foe moves",
+        trigger: 'statDrop',
+        effect: (user, stat, battle) => {
+            battle.addBattleLog(`${user.displayName}'s Clear Body prevented stat drop!`, 'info');
+            return false; // Prevent the drop
+        }
+    },
+    sturdy: {
+        name: "Sturdy",
+        desc: "Survives a 1HKO with 1 HP",
+        trigger: 'onDamage',
+        effect: (user, damage, battle) => {
+            if (user.hp === user.maxHp && damage >= user.hp) {
+                battle.addBattleLog(`${user.displayName} hung on with Sturdy!`, 'success');
+                return user.hp - 1; // Leave 1 HP
+            }
+            return damage;
+        }
+    }
+};
+
 class Game {
     constructor() {
         this.state = 'start';
@@ -4631,3 +4752,132 @@ class Game {
 
 // Start the game
 const game = new Game();
+// ===== ABILITY SYSTEM =====
+// Passive abilities that trigger during battle
+const ABILITY_EFFECTS = {
+    intimidate: {
+        name: "Intimidate",
+        desc: "Lowers foe's Attack on switch-in",
+        trigger: 'switchIn',
+        effect: (user, foe, battle) => {
+            if (foe && foe.statStages) {
+                foe.statStages.attack = Math.max(-6, foe.statStages.attack - 1);
+                battle.addBattleLog(`${foe.displayName}'s Attack fell!`, 'warning');
+                return true;
+            }
+            return false;
+        }
+    },
+    levitate: {
+        name: "Levitate",
+        desc: "Immune to Ground-type moves",
+        trigger: 'damageCalc',
+        effect: (user, attacker, move, battle) => {
+            if (move && move.type === 'ground') {
+                battle.addBattleLog(`${user.displayName} levitated away!`, 'info');
+                return 0;
+            }
+            return null;
+        }
+    },
+    blaze: {
+        name: "Blaze",
+        desc: "Boosts Fire moves when HP is low",
+        trigger: 'damageCalc',
+        effect: (user, attacker, move, battle) => {
+            if (move && move.type === 'fire' && user.hp <= user.maxHp * 0.33) {
+                battle.addBattleLog(`${user.displayName}'s Blaze boosted the attack!`, 'success');
+                return 1.5;
+            }
+            return null;
+        }
+    },
+    overgrow: {
+        name: "Overgrow",
+        desc: "Boosts Grass moves when HP is low",
+        trigger: 'damageCalc',
+        effect: (user, attacker, move, battle) => {
+            if (move && move.type === 'grass' && user.hp <= user.maxHp * 0.33) {
+                battle.addBattleLog(`${user.displayName}'s Overgrow boosted the attack!`, 'success');
+                return 1.5;
+            }
+            return null;
+        }
+    },
+    torrent: {
+        name: "Torrent",
+        desc: "Boosts Water moves when HP is low",
+        trigger: 'damageCalc',
+        effect: (user, attacker, move, battle) => {
+            if (move && move.type === 'water' && user.hp <= user.maxHp * 0.33) {
+                battle.addBattleLog(`${user.displayName}'s Torrent boosted the attack!`, 'success');
+                return 1.5;
+            }
+            return null;
+        }
+    },
+    static: {
+        name: "Static",
+        desc: "May paralyze on contact",
+        trigger: 'onHit',
+        effect: (user, attacker, move, battle) => {
+            if (move && move.category === 'physical' && Math.random() < 0.3) {
+                if (!attacker.status) {
+                    attacker.status = 'paralyze';
+                    battle.addBattleLog(`${attacker.displayName} was paralyzed by Static!`, 'warning');
+                    return true;
+                }
+            }
+            return false;
+        }
+    },
+    guts: {
+        name: "Guts",
+        desc: "Boosts Attack when statused",
+        trigger: 'damageCalc',
+        effect: (user, attacker, move, battle) => {
+            if (user.status && move && move.category === 'physical') {
+                return 1.5;
+            }
+            return null;
+        }
+    },
+    swiftswim: {
+        name: "Swift Swim",
+        desc: "Doubles Speed",
+        trigger: 'speedCalc',
+        effect: (user) => {
+            return 2.0;
+        }
+    },
+    clearbody: {
+        name: "Clear Body",
+        desc: "Prevents stat drops",
+        trigger: 'statDrop',
+        effect: (user, stat, battle) => {
+            battle.addBattleLog(`${user.displayName}'s Clear Body prevented stat drop!`, 'info');
+            return false;
+        }
+    },
+    sturdy: {
+        name: "Sturdy",
+        desc: "Survives 1HKO with 1 HP",
+        trigger: 'onDamage',
+        effect: (user, damage, battle) => {
+            if (user.hp === user.maxHp && damage >= user.hp) {
+                battle.addBattleLog(`${user.displayName} hung on with Sturdy!`, 'success');
+                return user.hp - 1;
+            }
+            return damage;
+        }
+    }
+};
+
+// Helper to check and apply abilities
+function checkAbility(abilityName, trigger, ...args) {
+    const ability = ABILITY_EFFECTS[abilityName];
+    if (ability && ability.trigger === trigger) {
+        return ability.effect(...args);
+    }
+    return null;
+}
