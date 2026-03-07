@@ -3198,10 +3198,13 @@ class Game {
 
                 // Apply stat boosts
                 if (move.boosts) {
-                    const changes = defender.applyStatBoosts(move.boosts);
+                    // Self-targeting boosts (all positive) go to attacker; debuffs go to defender
+                    const allPositive = Object.values(move.boosts).every(v => v > 0);
+                    const boostTarget = (move.target === 'self' || allPositive) ? attacker : defender;
+                    const changes = boostTarget.applyStatBoosts(move.boosts);
                     if (changes.length > 0) {
                         const changeText = changes.map(c => `${c.stat} ${c.change > 0 ? '↑' : '↓'}`).join(', ');
-                        this.addBattleLog(`${defender.displayName}'s ${changeText}!`);
+                        this.addBattleLog(`${boostTarget.displayName}'s ${changeText}!`);
                     }
                 }
 
@@ -3259,10 +3262,13 @@ class Game {
 
             // Apply stat boosts from move
             if (!fainted && move && move.boosts) {
-                const changes = defender.applyStatBoosts(move.boosts, this.clauseTracker, isPlayer);
+                // Self-targeting boosts (all positive) go to attacker; debuffs go to defender
+                const allPositive = Object.values(move.boosts).every(v => v > 0);
+                const boostTarget = (move.target === 'self' || allPositive) ? attacker : defender;
+                const changes = boostTarget.applyStatBoosts(move.boosts, this.clauseTracker, isPlayer);
                 if (changes.length > 0) {
                     const changeText = changes.map(c => `${c.stat} ${c.change > 0 ? '↑' : '↓'}`).join(', ');
-                    this.addBattleLog(`${defender.displayName}'s ${changeText}!`);
+                    this.addBattleLog(`${boostTarget.displayName}'s ${changeText}!`);
                 }
             }
 
