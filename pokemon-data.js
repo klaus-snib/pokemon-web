@@ -434,17 +434,17 @@ function getRandomStarterPool(count = 3) {
         }
     }
     
-    // Check if Pokemon has at least one level-1 damaging move
+    // Check if Pokemon has at least one damaging move by level 5
     function hasDamagingMoveAtLevel1(pokemonId) {
         const learnset = LEARNSETS[pokemonId];
         if (!learnset) return false;
         
-        // Get all level-1 moves
-        const level1Moves = learnset.filter(entry => entry.level === 1).map(entry => entry.move);
-        if (level1Moves.length === 0) return false;
+        // Get all moves learned by level 5
+        const earlyMoves = learnset.filter(entry => entry.level <= 5).map(entry => entry.move);
+        if (earlyMoves.length === 0) return false;
         
-        // Check if any level-1 move has power > 0
-        for (const moveId of level1Moves) {
+        // Check if any early move has power > 0
+        for (const moveId of earlyMoves) {
             const move = MOVES[moveId];
             if (move && move.power > 0) {
                 return true;
