@@ -1736,6 +1736,29 @@ class Game {
         this.startBattle();
     }
 
+    // ===== GHOST RIVAL BATTLES =====
+    ghostRivalBattle() {
+        const ghostRivals = typeof getGhostRivals === 'function' ? getGhostRivals() : [];
+        if (ghostRivals.length === 0) {
+            this.addMessage('No ghost rivals found...', 'warning');
+            return;
+        }
+        
+        // Pick a random ghost rival
+        const rival = ghostRivals[Math.floor(Math.random() * ghostRivals.length)];
+        const avgLevel = this.team.reduce((sum, p) => sum + p.level, 0) / this.team.length;
+        
+        // Scale rival team to current level
+        const level = Math.max(20, Math.floor(avgLevel));
+        this.battleEnemy = new Pokemon(rival.team[0].speciesId, level);
+        this.battleEnemyTeam = rival.team.slice(1).map(p => new Pokemon(p.speciesId, level - 2));
+        this.battleType = 'ghost_rival';
+        this.battleReward = { money: 5000, trainerName: rival.name };
+        this.addMessage('👻 Ghost Rival ' + rival.name + ' appears!', 'danger');
+        this.addMessage('The shadow of your past challenges you...', 'warning');
+        this.startBattle();
+    }
+
     // ===== TRAINER BATTLES =====
     trainerBattle() {
         const avgLevel = this.team.reduce((sum, p) => sum + p.level, 0) / this.team.length;
@@ -2505,31 +2528,6 @@ class Game {
         this.updateUI();
         this.generateChoices();
         this.saveGame();
-    }
-
-    // ===== GHOST RIVAL BATTLE =====
-    ghostRivalBattle() {
-        const rivals = typeof getGhostRivals === "function" ? getGhostRivals() : [];
-        if (!rivals || rivals.length === 0) {
-            this.log("No ghost rivals found. Win a Championship to create one!");
-            return;
-        }
-        const rival = rivals[Math.floor(Math.random() * Math.min(rivals.length, 5))];
-        const team = (rival.team || []).map(p => ({
-            ...p,
-            hp: p.maxHp || p.hp,
-            status: null
-        }));
-        if (!team.length) {
-            this.log("The ghost slips away...");
-            return;
-        }
-        this.log(`👻 A ghost appears — the Champion ${rival.name || "Unknown"}!`);
-        this.battleType = "ghost";
-        this.battleEnemy = { name: `👻 ${rival.name || "Ghost Champion"}`, team };
-        this.battleEnemyTeam = [...team];
-        this.battleReward = { gold: 500 + (rival.badges || 8) * 100, message: "Ghost defeated! Their memory fades..." };
-        this.startBattle();
     }
 
     // ===== BATTLE TOWER (Post-game) =====
