@@ -3631,6 +3631,25 @@ class Game {
             });
 
             modal.classList.remove('hidden');
+        } else if (item.effect === 'vitamin') {
+            // Permanent stat boost
+            const stat = item.stat;
+            const boost = item.value;
+            if (player.baseStats) {
+                player.baseStats[stat] = (player.baseStats[stat] || 0) + boost;
+                player.recalculateStats();
+            } else {
+                // Fallback: boost current stat directly
+                if (stat === 'hp') {
+                    player.maxHp += boost;
+                    player.hp += boost;
+                } else {
+                    player[stat] += boost;
+                }
+            }
+            this.bag[itemId]--;
+            this.addBattleLog(`${player.displayName} used ${item.name}! ${stat.toUpperCase()} increased by ${boost}!`, 'success');
+            this.updateBattleUI();
         }
     }
 
@@ -3744,6 +3763,8 @@ class Game {
 
         Object.entries(ITEMS).forEach(([id, item]) => {
             if (!item.price) return; // Skip non-purchasable items
+            // Check badge requirement
+            if (item.badgeReq && this.badges < item.badgeReq) return;
             const btn = document.createElement('button');
             btn.className = 'choice-btn shop-item';
             btn.innerHTML = `
