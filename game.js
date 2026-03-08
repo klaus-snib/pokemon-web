@@ -3072,10 +3072,12 @@ class Game {
                 btn.innerHTML = `${move.name}<br><small>${move.type.toUpperCase()} · ${move.power}${move.isStab ? ' · STAB' : ''}${ppText ? ' · ' + ppText : ''}</small>`;
                 btn.disabled = disabled;
                 if (!disabled) {
-                    btn.addEventListener('click', () => {
+                    const moveHandler = () => {
                         this.selectedMove = move;
                         this.doBattleRound(i);
-                    });
+                    };
+                    btn.addEventListener('click', moveHandler);
+                    btn.addEventListener('touchend', (e) => { e.preventDefault(); moveHandler(); });
                 }
                 actions.appendChild(btn);
             });

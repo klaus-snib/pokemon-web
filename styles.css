@@ -458,6 +458,7 @@ main {
     cursor: pointer;
     transition: all 0.2s;
     font-family: inherit;
+    touch-action: manipulation;
 }
 
 .action-btn:hover:not(:disabled) {
