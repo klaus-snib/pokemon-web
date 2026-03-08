@@ -3141,13 +3141,15 @@ class Game {
             btn.addEventListener('mouseup', () => { clearTimeout(pressTimer); hideTooltip(); });
             btn.addEventListener('mouseleave', () => { clearTimeout(pressTimer); hideTooltip(); });
             btn.addEventListener('touchstart', (e) => { e.preventDefault(); pressTimer = setTimeout(showTooltip, 500); });
-            btn.addEventListener('touchend', () => { clearTimeout(pressTimer); hideTooltip(); });
+            btn.addEventListener('touchend', (e) => { e.preventDefault(); clearTimeout(pressTimer); hideTooltip(); this.doBattleRound(i); });
             btn.addEventListener('click', () => { clearTimeout(pressTimer); hideTooltip(); this.doBattleRound(i); });
         });
 
         // Non-move buttons
         actions.querySelectorAll('.action-btn:not(.move-btn)').forEach(btn => {
-            btn.addEventListener('click', () => this.handleBattleAction(btn.dataset.action));
+            const action = btn.dataset.action;
+            btn.addEventListener('click', () => this.handleBattleAction(action));
+            btn.addEventListener('touchend', (e) => { e.preventDefault(); this.handleBattleAction(action); });
         });
 
         this.updateBattleButtons();
