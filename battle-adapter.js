@@ -37,6 +37,10 @@ export class BattleAdapter {
             p2: { name: 'Enemy', team: p2Team }
         });
 
+        // Send out lead Pokemon for each side (required to populate active slots)
+        this.battle.choose('p1', 'team 1');
+        this.battle.choose('p2', 'team 1');
+
         // Reset turn tracking
         this.turnInProgress = false;
         this.pendingPlayerMove = null;
