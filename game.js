@@ -3246,7 +3246,9 @@ class Game {
             }
             const fainted = defender.takeDamage(result.damage);
 
-            this.addBattleLog(`${attacker.displayName} used ${result.moveName}! ${result.damage} damage!`);
+            // Use move.name if available (from our game data), otherwise fall back to result.moveName
+            const displayMoveName = move?.name || result.moveName || 'Attack';
+            this.addBattleLog(`${attacker.displayName} used ${displayMoveName}! ${result.damage} damage!`);
             gameAudio.attack();
 
             if (result.crit) {
