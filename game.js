@@ -3443,7 +3443,12 @@ class Game {
                     this.inE4 = true;
                     this.e4Progress = 0;
                     this.addMessage('All badges collected! The Elite Four awaits!', 'success');
-                    setTimeout(() => this.generateChoices(), 1500);
+                    setTimeout(() => {
+                        this.state = 'playing';
+                        this.showScreen('game-screen');
+                        this.updateUI();
+                        this.generateChoices();
+                    }, 1500);
                     return;
                 }
                 setTimeout(() => this.victory(), 1500);
