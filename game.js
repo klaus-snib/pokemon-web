@@ -3168,7 +3168,7 @@ class Game {
         const player = this.team[this.activePokemonIndex];
         const enemy = this.battleEnemy;
         const playerMove = player.moves[moveIndex] || player.moves[0];
-        
+
         // Initialize BattleAdapter if available and not already initialized
         if (window.BattleAdapter && !this.battleAdapter) {
             this.battleAdapter = new window.BattleAdapter();
@@ -3181,6 +3181,19 @@ class Game {
         this.restoreBattleActions();
 
         const playerFirst = player.speed >= enemy.speed;
+
+        // Execute PS turn ONCE if BattleAdapter is available
+        let cachedPlayerResult = null;
+        let cachedEnemyResult = null;
+        if (this.battleAdapter && playerMove) {
+            try {
+                cachedPlayerResult = this.battleAdapter.executePlayerMove(playerMove.id);
+                cachedEnemyResult = this.battleAdapter.executeEnemyMove();
+            } catch (e) {
+                console.warn('BattleAdapter turn execution failed, falling back to calculateDamage:', e.message);
+                this.battleAdapter = null; // Disable adapter for this battle
+            }
+        }
 
         const doAttack = (attacker, defender, isPlayer) => {
             // Check if attacker can move (paralysis, sleep, freeze)
@@ -3235,13 +3248,13 @@ class Game {
                 return false; // Status moves don't faint
             }
 
-            // Use BattleAdapter if available, fall back to calculateDamage
+            // Use cached BattleAdapter result or fall back to calculateDamage
             let result;
             try {
-                if (this.battleAdapter && isPlayer) {
-                    result = this.battleAdapter.executePlayerMove(move.id);
-                } else if (this.battleAdapter && !isPlayer) {
-                    result = this.battleAdapter.executeEnemyMove();
+                if (this.battleAdapter && isPlayer && cachedPlayerResult) {
+                    result = cachedPlayerResult;
+                } else if (this.battleAdapter && !isPlayer && cachedEnemyResult) {
+                    result = cachedEnemyResult;
                 } else {
                     result = this.calculateDamage(attacker, defender, move);
                 }
@@ -3251,7 +3264,6 @@ class Game {
                 }
             } catch (e) {
                 console.warn('BattleAdapter failed, falling back to calculateDamage:', e.message);
-                this.battleAdapter = null; // Disable adapter for this battle
                 result = this.calculateDamage(attacker, defender, move);
             }
             const fainted = defender.takeDamage(result.damage);

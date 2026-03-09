@@ -177,86 +177,22 @@ export class BattleAdapter {
     /**
      * Execute enemy move - wrapper for game.js compatibility
      * Returns pending enemy result from previous executeTurn call
+     * MUST be called after executePlayerMove() which populates the cache
      * @returns {Object} Enemy's battle result
      */
     executeEnemyMove() {
         if (!this.battle) throw new Error('Battle not initialized');
         
-        // If we already executed this turn, return the pending enemy result
-        if (this.pendingEnemyMove) {
-            const result = this.pendingEnemyMove;
-            this.pendingEnemyMove = null; // Clear after use
-            this.pendingPlayerMove = null;
-            return result;
+        // MUST already have cached result from executePlayerMove()
+        if (!this.pendingEnemyMove) {
+            throw new Error('executeEnemyMove called without cached result. Call executePlayerMove() first.');
         }
         
-        // Fallback: execute a turn where player passes
-        const playerBefore = this.battle.p1.active[0]?.hp || 0;
-        
-        // Enemy chooses move - check if enemy exists (not null/fainted)
-        const enemy = this.battle.p2.active[0];
-        
-        // DEBUG: Log PS state for diagnosis
-        console.log('[BattleAdapter DEBUG] p2.active[0]:', JSON.stringify({
-            exists: !!enemy,
-            species: enemy?.species,
-            hp: enemy?.hp,
-            maxhp: enemy?.maxhp,
-            fainted: enemy?.fainted,
-            hasMoveSlots: !!enemy?.moveSlots,
-            moveSlotsLength: enemy?.moveSlots?.length,
-            moveSlotsKeys: enemy?.moveSlots ? Object.keys(enemy.moveSlots) : null
-        }));
-        
-        if (!enemy || !enemy.moveSlots) {
-            // Enemy has fainted in PS state or moveSlots unavailable
-            console.log('[BattleAdapter DEBUG] Fallback triggered: enemy=' + !!enemy + ', moveSlots=' + !!enemy?.moveSlots);
-            return {
-                damage: 0,
-                moveName: '',
-                effectiveness: 1,
-                crit: false,
-                flinched: false,
-                recoil: 0,
-                drain: 0,
-                statusApplied: null,
-                targetFainted: false
-            };
-        }
-        
-        const moveCount = enemy.moveSlots.filter(m => m.pp > 0).length;
-        if (moveCount === 0) {
-            // No moves available
-            return {
-                damage: 0,
-                moveName: 'Struggle',
-                effectiveness: 1,
-                crit: false,
-                flinched: false,
-                recoil: 0,
-                drain: 0,
-                statusApplied: null,
-                targetFainted: false
-            };
-        }
-        const randomSlot = Math.floor(Math.random() * moveCount) + 1;
-        
-        this.battle.choose('p2', `move ${randomSlot}`);
-        this.battle.choose('p1', 'pass'); // Player passes turn
-        
-        const playerAfter = this.battle.p1.active[0]?.hp || 0;
-        
-        return {
-            damage: playerBefore - playerAfter,
-            moveName: enemy.moveSlots[randomSlot - 1]?.move || 'Attack',
-            effectiveness: 1,
-            crit: false,
-            flinched: false,
-            recoil: 0,
-            drain: 0,
-            statusApplied: this.battle.p1.active[0]?.status,
-            targetFainted: playerAfter <= 0
-        };
+        // Return the cached enemy result
+        const result = this.pendingEnemyMove;
+        this.pendingEnemyMove = null; // Clear after use
+        this.pendingPlayerMove = null;
+        return result;
     }
 
     /**
