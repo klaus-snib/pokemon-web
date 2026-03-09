@@ -3279,7 +3279,16 @@ class Game {
 
             // Use move.name if available (from our game data), otherwise fall back to result.moveName
             const displayMoveName = move?.name || result.moveName || 'Attack';
-            this.addBattleLog(`${attacker.displayName} used ${displayMoveName}! ${result.damage} damage!`);
+
+            // Check if PS battleLog has move entry - if so, suppress duplicate manual log
+            const hasPSMoveLog = result.battleLog?.some(e => e.type === 'move');
+            if (!hasPSMoveLog) {
+                // No PS log for this move - use manual log
+                this.addBattleLog(`${attacker.displayName} used ${displayMoveName}! ${result.damage} damage!`);
+            } else {
+                // PS log covers the move - just log damage
+                this.addBattleLog(`${result.damage} damage!`);
+            }
             gameAudio.attack();
 
             if (result.crit) {
@@ -3291,16 +3300,19 @@ class Game {
                 setTimeout(() => field.classList.remove('screen-shake'), 400);
             }
 
-            if (result.effectiveness > 1) {
+            // Check if PS battleLog already has effectiveness message
+            const hasPSEffectivenessLog = result.battleLog?.some(e => e.type === 'effectiveness');
+            
+            if (result.effectiveness > 1 && !hasPSEffectivenessLog) {
                 this.addBattleLog("It's super effective!", 'success');
                 gameAudio.superEffective();
                 // Flash effect
                 const target = isPlayer ? 'enemy-pokemon' : 'player-pokemon';
                 document.getElementById(target).classList.add('super-effective-flash');
                 setTimeout(() => document.getElementById(target).classList.remove('super-effective-flash'), 400);
-            } else if (result.effectiveness < 1 && result.effectiveness > 0) {
+            } else if (result.effectiveness < 1 && result.effectiveness > 0 && !hasPSEffectivenessLog) {
                 this.addBattleLog("It's not very effective...", 'warning');
-            } else if (result.effectiveness === 0) {
+            } else if (result.effectiveness === 0 && !hasPSEffectivenessLog) {
                 this.addBattleLog("It had no effect!", 'danger');
             }
 
