@@ -10,6 +10,9 @@ import { toPSName } from './species-mapping.js';
 export class BattleAdapter {
     constructor() {
         this.battle = null;
+        this.turnInProgress = false;
+        this.pendingPlayerMove = null;
+        this.pendingEnemyMove = null;
     }
 
     /**
@@ -32,6 +35,11 @@ export class BattleAdapter {
 
         // Start the battle
         this.battle.start();
+        
+        // Reset turn tracking
+        this.turnInProgress = false;
+        this.pendingPlayerMove = null;
+        this.pendingEnemyMove = null;
         
         return this.battle;
     }
@@ -63,61 +71,93 @@ export class BattleAdapter {
     }
 
     /**
-     * Execute player move through PS engine
-     * @param {string} moveId - Move ID (e.g., 'tackle', 'ember')
-     * @returns {Object} Battle result with damage, effects, etc.
+     * Execute a full turn with both moves
+     * Call this once per turn from game.js, then apply results to both Pokemon
+     * @param {string} playerMoveId - Player's move ID
+     * @returns {Object} Turn results with both player and enemy damage
      */
-    executePlayerMove(moveId) {
+    executeTurn(playerMoveId) {
         if (!this.battle) throw new Error('Battle not initialized');
 
-        const moveSlot = this.findMoveSlot('p1', moveId);
-        
-        // Store HP before move for damage calculation
+        // Store HP before turn
         const enemyBefore = this.battle.p2.active[0]?.hp || 0;
         const playerBefore = this.battle.p1.active[0]?.hp || 0;
         
         // Execute player move
-        this.battle.choose('p1', `move ${moveSlot}`);
+        const playerSlot = this.findMoveSlot('p1', playerMoveId);
+        this.battle.choose('p1', `move ${playerSlot}`);
         
-        // Execute enemy move (random)
+        // Execute enemy move (random selection)
         const enemy = this.battle.p2.active[0];
         const moveCount = enemy.moveSlots.filter(m => m.pp > 0).length;
         const randomSlot = Math.floor(Math.random() * moveCount) + 1;
         this.battle.choose('p2', `move ${randomSlot}`);
         
-        // Commit the turn (synchronous)
-        
-        // Calculate results
+        // Calculate results after both moves resolve
         const enemyAfter = this.battle.p2.active[0]?.hp || 0;
         const playerAfter = this.battle.p1.active[0]?.hp || 0;
         
-        const damage = enemyBefore - enemyAfter;
-        const playerDamage = playerBefore - playerAfter;
+        const playerDexMove = Dex.moves.get(playerMoveId);
+        const enemyMoveName = enemy.moveSlots[randomSlot - 1]?.move || 'Attack';
         
-        const dexMove = Dex.moves.get(moveId);
-        
-        return {
-            damage: damage,
-            moveName: dexMove?.name || moveId,
-            effectiveness: this.calculateEffectiveness(dexMove?.type, this.battle.p2.active[0]),
-            crit: false, // Would need deeper log inspection
-            flinched: false,
-            recoil: 0,
-            drain: 0,
-            statusApplied: this.battle.p2.active[0]?.status,
-            targetFainted: enemyAfter <= 0,
-            playerDamage: playerDamage,
-            playerFainted: playerAfter <= 0
+        const results = {
+            player: {
+                damage: enemyBefore - enemyAfter,
+                moveName: playerDexMove?.name || playerMoveId,
+                effectiveness: this.calculateEffectiveness(playerDexMove?.type, this.battle.p2.active[0]),
+                crit: false,
+                flinched: false,
+                targetFainted: enemyAfter <= 0
+            },
+            enemy: {
+                damage: playerBefore - playerAfter,
+                moveName: enemyMoveName,
+                effectiveness: 1,
+                crit: false,
+                flinched: false,
+                targetFainted: playerAfter <= 0
+            }
         };
+        
+        this.lastTurnResults = results;
+        return results;
     }
 
     /**
-     * Execute enemy move (when player switches or uses item)
-     * @returns {Object} Battle result
+     * Execute player move - wrapper for game.js compatibility
+     * Executes full turn and returns player move result
+     * @param {string} moveId - Move ID (e.g., 'tackle', 'ember')
+     * @returns {Object} Player's battle result
+     */
+    executePlayerMove(moveId) {
+        if (!this.battle) throw new Error('Battle not initialized');
+        
+        // Execute full turn and store results
+        const results = this.executeTurn(moveId);
+        this.pendingPlayerMove = results.player;
+        this.pendingEnemyMove = results.enemy;
+        
+        // Return player move result for immediate application
+        return results.player;
+    }
+
+    /**
+     * Execute enemy move - wrapper for game.js compatibility
+     * Returns pending enemy result from previous executeTurn call
+     * @returns {Object} Enemy's battle result
      */
     executeEnemyMove() {
         if (!this.battle) throw new Error('Battle not initialized');
-
+        
+        // If we already executed this turn, return the pending enemy result
+        if (this.pendingEnemyMove) {
+            const result = this.pendingEnemyMove;
+            this.pendingEnemyMove = null; // Clear after use
+            this.pendingPlayerMove = null;
+            return result;
+        }
+        
+        // Fallback: execute a turn where player passes
         const playerBefore = this.battle.p1.active[0]?.hp || 0;
         
         // Enemy chooses move
@@ -181,27 +221,24 @@ export class BattleAdapter {
     }
 
     /**
-     * Update our Pokemon state from PS battle state
+     * Get current battle state for UI updates
      */
-    syncToOurPokemon(ourPokemon, side) {
-        if (!this.battle) return;
+    getBattleState() {
+        if (!this.battle) return null;
         
-        const psPokemon = side === 'p1' ? this.battle.p1.active[0] : this.battle.p2.active[0];
-        if (!psPokemon) return;
-        
-        ourPokemon.hp = psPokemon.hp;
-        ourPokemon.status = psPokemon.status;
-        
-        // Sync stat boosts
-        for (const [stat, boost] of Object.entries(psPokemon.boosts)) {
-            const ourStat = { 
-                atk: 'attack', def: 'defense', spa: 'specialAttack', 
-                spd: 'specialDefense', spe: 'speed', accuracy: 'accuracy', evasion: 'evasion'
-            }[stat];
-            if (ourStat) {
-                ourPokemon.statStages[ourStat] = boost;
-            }
-        }
+        return {
+            p1: {
+                hp: this.battle.p1.active[0]?.hp || 0,
+                maxHp: this.battle.p1.active[0]?.maxhp || 0,
+                status: this.battle.p1.active[0]?.status || null
+            },
+            p2: {
+                hp: this.battle.p2.active[0]?.hp || 0,
+                maxHp: this.battle.p2.active[0]?.maxhp || 0,
+                status: this.battle.p2.active[0]?.status || null
+            },
+            turn: this.battle.turn
+        };
     }
 
     /**
@@ -212,6 +249,9 @@ export class BattleAdapter {
             this.battle.destroy();
         }
         this.battle = null;
+        this.turnInProgress = false;
+        this.pendingPlayerMove = null;
+        this.pendingEnemyMove = null;
     }
 }
 
