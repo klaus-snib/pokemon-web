@@ -223,32 +223,51 @@ export class BattleAdapter {
         try {
             if (!attackType || !defender) return 1;
             const atkType = String(attackType);
+
+            // Get defender types from PS species object or fallback
             const rawSpecies = defender.species;
-            let speciesName;
-            if (typeof rawSpecies === 'string') {
-                speciesName = rawSpecies;
-            } else if (rawSpecies && typeof rawSpecies === 'object') {
-                speciesName = String(rawSpecies.name || rawSpecies.id || '');
+            let defTypes;
+            if (rawSpecies && typeof rawSpecies === 'object' && rawSpecies.types) {
+                defTypes = rawSpecies.types;
             } else {
-                speciesName = '';
+                return 1; // can't determine types, assume neutral
             }
-            // Use battle instance's dex (browser-compatible) instead of static Dex.data.TypeChart
-            // battle.dex.types.get(defType).damageTaken[atkType]: 0=1x, 1=2x, 2=0.5x, 3=0x
-            const battleDex = this.battle?.dex || Dex;
-            const species = battleDex.species.get(speciesName);
+
+            // Static Gen 1-5 type chart (damageTaken values: 1=2x, 2=0.5x, 3=0x, missing=1x)
+            // Generated from @pkmn/sim Dex.forGen(5).types.get(defType).damageTaken[atkType]
+            const TYPE_CHART = {
+                Normal:   {Rock:2,Ghost:3,Steel:2},
+                Fire:     {Fire:2,Water:2,Grass:1,Ice:1,Bug:1,Rock:2,Dragon:2,Steel:1},
+                Water:    {Fire:1,Water:2,Grass:2,Ground:1,Rock:1,Dragon:2},
+                Electric: {Water:1,Electric:2,Grass:2,Ground:3,Flying:1,Dragon:2},
+                Grass:    {Fire:2,Water:1,Grass:2,Poison:2,Ground:1,Flying:2,Bug:2,Rock:1,Dragon:2,Steel:2},
+                Ice:      {Fire:2,Water:2,Grass:1,Ice:2,Ground:1,Flying:1,Dragon:1,Steel:2},
+                Fighting: {Normal:1,Ice:1,Poison:2,Flying:2,Psychic:2,Bug:2,Rock:1,Ghost:3,Dark:1,Steel:1},
+                Poison:   {Grass:1,Poison:2,Ground:2,Rock:2,Ghost:2,Steel:3},
+                Ground:   {Fire:1,Electric:1,Grass:2,Poison:1,Flying:3,Bug:2,Rock:1,Steel:1},
+                Flying:   {Electric:2,Grass:1,Fighting:1,Bug:1,Rock:2,Steel:2},
+                Psychic:  {Fighting:1,Poison:1,Psychic:2,Dark:3,Steel:2},
+                Bug:      {Fire:2,Grass:1,Fighting:2,Poison:2,Flying:2,Psychic:1,Ghost:2,Dark:1,Steel:2},
+                Rock:     {Fire:1,Ice:1,Fighting:2,Ground:2,Flying:1,Bug:1,Steel:2},
+                Ghost:    {Normal:3,Psychic:1,Ghost:1,Dark:2,Steel:2},
+                Dragon:   {Dragon:1,Steel:2},
+                Dark:     {Fighting:2,Psychic:1,Ghost:1,Dark:2,Steel:2},
+                Steel:    {Fire:2,Water:2,Electric:2,Ice:1,Rock:1,Steel:2}
+            };
+            const multipliers = { 1: 2, 2: 0.5, 3: 0 };
+
             let effectiveness = 1;
-            const multipliers = { 0: 1, 1: 2, 2: 0.5, 3: 0 };
-            const types = [species?.types?.[0], species?.types?.[1]].filter(t => t && typeof t === 'string');
-            for (const defType of types) {
-                const typeEntry = battleDex.types?.get?.(defType);
-                const taken = typeEntry?.damageTaken?.[atkType];
-                if (taken !== undefined) { effectiveness *= (multipliers[taken] ?? 1); }
+            for (const defType of defTypes) {
+                if (!defType || typeof defType !== 'string') continue;
+                const taken = TYPE_CHART[atkType]?.[defType];
+                if (taken !== undefined) {
+                    effectiveness *= (multipliers[taken] ?? 1);
+                }
             }
             return effectiveness;
         } catch (e) {
             console.warn('[BattleAdapter] calculateEffectiveness failed:', e?.message,
-                'attackType:', typeof attackType, attackType,
-                'species:', typeof defender?.species, String(defender?.species?.name || defender?.species || ''));
+                'attackType:', typeof attackType, attackType);
             return 1;
         }
     }
