@@ -217,13 +217,18 @@ export class BattleAdapter {
     calculateEffectiveness(attackType, defender) {
         if (!attackType || !defender) return 1;
         
+        // PS stores species as an object — extract the name string
+        const speciesName = typeof defender.species === 'string' 
+            ? defender.species 
+            : (defender.species?.name || defender.species?.id || '');
+        
         const typeChart = Dex.data.TypeChart;
-        const species = Dex.species.get(defender.species);
+        const species = Dex.species.get(speciesName);
         
         let effectiveness = 1;
         
         // Check against both types
-        [species.types[0], species.types[1]].filter(Boolean).forEach(defType => {
+        [species?.types?.[0], species?.types?.[1]].filter(Boolean).forEach(defType => {
             if (typeChart[attackType]?.damageTaken?.[defType] !== undefined) {
                 effectiveness *= typeChart[attackType].damageTaken[defType];
             }
