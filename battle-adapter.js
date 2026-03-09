@@ -215,26 +215,33 @@ export class BattleAdapter {
      * Calculate type effectiveness
      */
     calculateEffectiveness(attackType, defender) {
-        if (!attackType || !defender) return 1;
-        
-        // PS stores species as an object — extract the name string
-        const speciesName = typeof defender.species === 'string' 
-            ? defender.species 
-            : (defender.species?.name || defender.species?.id || '');
-        
-        const typeChart = Dex.data.TypeChart;
-        const species = Dex.species.get(speciesName);
-        
-        let effectiveness = 1;
-        
-        // Check against both types
-        [species?.types?.[0], species?.types?.[1]].filter(Boolean).forEach(defType => {
-            if (typeChart[attackType]?.damageTaken?.[defType] !== undefined) {
-                effectiveness *= typeChart[attackType].damageTaken[defType];
+        try {
+            if (!attackType || !defender) return 1;
+            const atkType = String(attackType);
+            const rawSpecies = defender.species;
+            let speciesName;
+            if (typeof rawSpecies === 'string') {
+                speciesName = rawSpecies;
+            } else if (rawSpecies && typeof rawSpecies === 'object') {
+                speciesName = String(rawSpecies.name || rawSpecies.id || '');
+            } else {
+                speciesName = '';
             }
-        });
-        
-        return effectiveness;
+            const typeChart = Dex.data.TypeChart;
+            const species = Dex.species.get(speciesName);
+            let effectiveness = 1;
+            const types = [species?.types?.[0], species?.types?.[1]].filter(t => t && typeof t === 'string');
+            for (const defType of types) {
+                const taken = typeChart[atkType]?.damageTaken?.[defType];
+                if (taken !== undefined) { effectiveness *= taken; }
+            }
+            return effectiveness;
+        } catch (e) {
+            console.warn('[BattleAdapter] calculateEffectiveness failed:', e?.message,
+                'attackType:', typeof attackType, attackType,
+                'species:', typeof defender?.species, String(defender?.species?.name || defender?.species || ''));
+            return 1;
+        }
     }
 
     /**
