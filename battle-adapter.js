@@ -57,18 +57,19 @@ export class BattleAdapter {
         const psSpeciesName = toPSName(speciesName);
         const dex = Dex.species.get(psSpeciesName);
         
-        // Get move names in PS format
+        // Get move names in PS format - ensure all are strings
         const moves = pokemon.moves.map(m => {
             const moveId = typeof m === 'string' ? m : (m.id || m.name);
             const moveDex = Dex.moves.get(moveId);
-            return moveDex?.name || moveId;
-        });
+            return String(moveDex?.name || moveId || 'Tackle');
+        }).filter(m => m && typeof m === 'string').slice(0, 4);
 
         return [{
-            species: dex.name || psSpeciesName,
+            species: String(dex.name || psSpeciesName || 'Rattata'),
             level: pokemon.level || 5,
             moves: moves,
-            ability: pokemon.ability || 'No Ability',
+            ability: String(pokemon.ability || 'No Ability'),
+            item: '',
             nature: 'Hardy',
             ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
             evs: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 }
