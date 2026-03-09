@@ -33,9 +33,6 @@ export class BattleAdapter {
             p2: { name: 'Enemy', team: p2Team }
         });
 
-        // Start the battle
-        this.battle.start();
-        
         // Reset turn tracking
         this.turnInProgress = false;
         this.pendingPlayerMove = null;
