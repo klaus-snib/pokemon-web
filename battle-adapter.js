@@ -66,7 +66,7 @@ export class BattleAdapter {
 
         return [{
             species: String(dex.name || psSpeciesName || 'Rattata'),
-            level: String(pokemon.level || 5),
+            level: pokemon.level || 5,
             moves: moves,
             ability: String(pokemon.ability || 'No Ability'),
             item: '',
