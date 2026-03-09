@@ -339,7 +339,8 @@ class Pokemon {
                 accuracy: moveData.accuracy,
                 category: moveData.category,
                 boosts: moveData.boosts,
-                secondary: moveData.secondary
+                secondary: moveData.secondary,
+                fixedDamage: moveData.fixedDamage
             } : {
                 id: entry.move,
                 name: entry.move.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
@@ -4805,6 +4806,7 @@ class Game {
         const tm = TMS[tmId];
         const pokemon = this.team[pokemonIndex];
 
+        const tmMoveData = (typeof CANONICAL_MOVES !== 'undefined' && CANONICAL_MOVES[tm.move]) ? CANONICAL_MOVES[tm.move] : null;
         pokemon.moves.push({
             id: tm.move,
             name: tm.name.replace('TM: ', ''),
@@ -4813,7 +4815,8 @@ class Game {
             pp: tm.pp,
             maxPp: tm.pp,
             accuracy: tm.accuracy,
-            category: tm.category
+            category: tm.category,
+            fixedDamage: tmMoveData ? tmMoveData.fixedDamage : undefined
         });
 
         this.addMessage(`${pokemon.displayName} learned ${tm.name}!`, 'success');
