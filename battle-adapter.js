@@ -50,6 +50,11 @@ export class BattleAdapter {
             const moveDex = Dex.moves.get(moveId);
             return moveDex?.name || moveId;
         });
+
+        return {
+            species: dex.name || psSpeciesName,
+            level: pokemon.level || 5,
+            moves: moveNames,
             ability: pokemon.ability || 'none',
             // Calculate stats from base stats and level
             hp: pokemon.maxHp,
@@ -250,3 +255,10 @@ export class BattleAdapter {
 }
 
 export default BattleAdapter;
+
+// Expose to global scope for non-module scripts
+window.BattleAdapter = BattleAdapter;
+
+
+// Expose globally for use from non-module game.js
+window.BattleAdapter = BattleAdapter;
