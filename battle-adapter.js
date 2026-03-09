@@ -157,8 +157,23 @@ export class BattleAdapter {
         // Fallback: execute a turn where player passes
         const playerBefore = this.battle.p1.active[0]?.hp || 0;
         
-        // Enemy chooses move
+        // Enemy chooses move - check if enemy exists (not null/fainted)
         const enemy = this.battle.p2.active[0];
+        if (!enemy) {
+            // Enemy has fainted in PS state but game.js still called this
+            return {
+                damage: 0,
+                moveName: '',
+                effectiveness: 1,
+                crit: false,
+                flinched: false,
+                recoil: 0,
+                drain: 0,
+                statusApplied: null,
+                targetFainted: false
+            };
+        }
+        
         const moveCount = enemy.moveSlots.filter(m => m.pp > 0).length;
         const randomSlot = Math.floor(Math.random() * moveCount) + 1;
         
