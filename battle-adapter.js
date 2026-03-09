@@ -53,7 +53,12 @@ export class BattleAdapter {
      * Convert our Pokemon to a PS PokemonSet
      */
     toPSSet(pokemon, side) {
-        const speciesName = pokemon.species?.name || pokemon.species || pokemon.name;
+        // Extract species name - handle both string and object cases
+        let speciesName = pokemon.species?.name || pokemon.species || pokemon.name;
+        // Ensure speciesName is a string (not an object)
+        if (typeof speciesName === 'object') {
+            speciesName = speciesName?.name || speciesName?.id || 'Rattata';
+        }
         const psSpeciesName = toPSName(speciesName);
         const dex = Dex.species.get(psSpeciesName);
         
