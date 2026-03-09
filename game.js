@@ -2953,6 +2953,11 @@ class Game {
             }
             if (attackerTypes.includes(move.type)) {
                 stab = 1.5;
+                // Adaptability: 2x STAB instead of 1.5x
+                if (attacker.ability === 'adaptability') {
+                    stab = 2.0;
+                    this.addBattleLog(`${attacker.displayName}'s Adaptability boosted the attack!`, 'success');
+                }
             }
         }
 
@@ -2987,6 +2992,19 @@ class Game {
             abilityMult *= 1.5;
         }
 
+        // Rivalry: 1.25x same gender, 0.75x opposite gender
+        if (attacker.ability === 'rivalry' && move) {
+            const sameGender = attacker.gender && defender.gender && attacker.gender === defender.gender;
+            const oppositeGender = attacker.gender && defender.gender && attacker.gender !== defender.gender;
+            if (sameGender) {
+                abilityMult *= 1.25;
+                this.addBattleLog(`${attacker.displayName}'s Rivalry powered up!`, 'success');
+            } else if (oppositeGender) {
+                abilityMult *= 0.75;
+                this.addBattleLog(`${attacker.displayName}'s Rivalry weakened the attack...`, 'warning');
+            }
+        }
+
         // Sturdy: Survive OHKO at full HP
         let finalDamage = Math.max(1, Math.floor(base * variance * effectiveness * stab * crit * abilityMult));
         if (defender.ability === 'sturdy' && defender.hp === defender.maxHp && finalDamage >= defender.hp) {
@@ -3006,6 +3024,16 @@ class Game {
     applyEndOfTurnStatusDamage() {
         const player = this.team[this.activePokemonIndex];
         const enemy = this.battleEnemy;
+
+        // Shed Skin: 30% chance to cure status at end of turn
+        if (player && player.ability === 'shedskin' && player.status && Math.random() < 0.3) {
+            player.status = null;
+            this.addBattleLog(`${player.displayName}'s Shed Skin cured its status!`, 'success');
+        }
+        if (enemy && enemy.ability === 'shedskin' && enemy.status && Math.random() < 0.3) {
+            enemy.status = null;
+            this.addBattleLog(`${enemy.name}'s Shed Skin cured its status!`, 'success');
+        }
 
         // Player status damage
         if (player && player.status) {
@@ -3642,6 +3670,12 @@ class Game {
                 ${poke.displayName} Lv.${poke.level} (${poke.hp}/${poke.maxHp})
             `;
             btn.onclick = () => {
+                // Natural Cure: heal status on switch out (faint switch)
+                const outgoing = this.team[this.activePokemonIndex];
+                if (outgoing && outgoing.ability === 'naturalcure' && outgoing.status) {
+                    outgoing.status = null;
+                }
+                
                 this.activePokemonIndex = i;
                 this.awaitingFaintSwitch = false;
                 switchDiv.remove();
@@ -4084,6 +4118,13 @@ class Game {
                 ${typeBadges}
             `;
             btn.onclick = () => {
+                // Natural Cure: heal status on switch out
+                const outgoing = this.team[this.activePokemonIndex];
+                if (outgoing && outgoing.ability === 'naturalcure' && outgoing.status) {
+                    outgoing.status = null;
+                    this.addBattleLog(`${outgoing.displayName}'s Natural Cure healed its status!`, 'success');
+                }
+                
                 this.activePokemonIndex = i;
                 modal.classList.add('hidden');
                 this.addBattleLog(`Go, ${poke.displayName}!`);
