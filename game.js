@@ -2710,6 +2710,11 @@ class Game {
         this.awaitingFaintSwitch = false;
         this.battleWon = false; // Reset battle won flag
 
+        // Reset stat stages for all player Pokémon at start of each battle
+        this.team.forEach(p => {
+            p.statStages = { attack: 0, defense: 0, specialAttack: 0, specialDefense: 0, speed: 0, accuracy: 0, evasion: 0 };
+        });
+
         // Clear battle log
         document.getElementById('battle-log').innerHTML = '';
 
