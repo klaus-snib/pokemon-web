@@ -3373,6 +3373,11 @@ class Game {
         // Battle is won - set flag to prevent player fainting
         this.battleWon = true;
 
+        // Reset stat stages for all player Pokemon at end of battle
+        this.team.forEach(p => {
+            p.statStages = { attack: 0, defense: 0, specialAttack: 0, specialDefense: 0, speed: 0, accuracy: 0, evasion: 0 };
+        });
+
         // Give EXP - active Pokemon gets full, team gets 40%
         const expGain = Math.floor(enemy.level * 25 + 40);
         const active = this.team[this.activePokemonIndex];
