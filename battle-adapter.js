@@ -237,8 +237,11 @@ export class BattleAdapter {
             let effectiveness = 1;
             const types = [species?.types?.[0], species?.types?.[1]].filter(t => t && typeof t === 'string');
             for (const defType of types) {
-                const taken = typeChart[atkType]?.damageTaken?.[defType];
-                if (taken !== undefined) { effectiveness *= taken; }
+                // TypeChart indexed by defender type (lowercase); damageTaken by attacker type (capitalized)
+                // Values: 0=normal(1x), 1=super(2x), 2=resist(0.5x), 3=immune(0x)
+                const multipliers = { 0: 1, 1: 2, 2: 0.5, 3: 0 };
+                const taken = typeChart[defType.toLowerCase()]?.damageTaken?.[atkType];
+                if (taken !== undefined) { effectiveness *= (multipliers[taken] ?? 1); }
             }
             return effectiveness;
         } catch (e) {
