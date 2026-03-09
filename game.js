@@ -2684,6 +2684,12 @@ class Game {
 
     // ===== BATTLE SYSTEM =====
     startBattle() {
+        // Reset battle adapter for new battle
+        if (this.battleAdapter) {
+            this.battleAdapter.endBattle();
+            this.battleAdapter = null;
+        }
+        
         this.state = 'battle';
         this.activePokemonIndex = this.team.findIndex(p => p.isAlive);
         if (this.activePokemonIndex === -1) {
@@ -3511,6 +3517,13 @@ class Game {
         this.addMessage(`Earned $${this.battleReward ? this.battleReward.money : 0}!`);
 
         this.battleTurnInProgress = false;
+        
+        // Cleanup battle adapter
+        if (this.battleAdapter) {
+            this.battleAdapter.endBattle();
+            this.battleAdapter = null;
+        }
+        
         setTimeout(() => {
             this.state = 'playing';
             this.showScreen('game-screen');
@@ -3542,6 +3555,12 @@ class Game {
         }
 
         // All fainted - team wipe
+        // Cleanup battle adapter
+        if (this.battleAdapter) {
+            this.battleAdapter.endBattle();
+            this.battleAdapter = null;
+        }
+        
         this.strikes--;
         this.addMessage('All your Pokemon fainted!', 'danger');
         this.addMessage(`You lost a life! ${this.strikes} remaining. Your team has been healed.`, 'warning');

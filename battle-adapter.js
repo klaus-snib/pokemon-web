@@ -1,6 +1,6 @@
 /**
  * BattleAdapter - Wrapper for @pkmn/sim Pokemon Showdown battle engine
- * Translates between our game state and PS battle format
+ * Uses synchronous Battle API instead of streams
  */
 
 import { Battle } from '@pkmn/sim';
@@ -10,7 +10,6 @@ import { toPSName } from './species-mapping.js';
 export class BattleAdapter {
     constructor() {
         this.battle = null;
-        this.stream = null;
     }
 
     /**
@@ -21,49 +20,46 @@ export class BattleAdapter {
      */
     initBattle(playerPokemon, enemyPokemon) {
         // Convert our Pokemon to PS format
-        const p1 = this.toPSSpecies(playerPokemon, 'p1');
-        const p2 = this.toPSSpecies(enemyPokemon, 'p2');
+        const p1Team = this.toPSSet(playerPokemon, 'p1');
+        const p2Team = this.toPSSet(enemyPokemon, 'p2');
 
-        // Create battle stream
-        this.stream = new Battle({
-            formatid: 'gen9customgame',
-            p1: { name: 'Player', team: [p1] },
-            p2: { name: 'Enemy', team: [p2] }
+        // Create battle directly (synchronous)
+        this.battle = new Battle({
+            formatid: 'gen5customgame',
+            p1: { name: 'Player', team: p1Team },
+            p2: { name: 'Enemy', team: p2Team }
         });
 
-        this.battle = this.stream.battle;
+        // Start the battle
+        this.battle.start();
+        
         return this.battle;
     }
 
     /**
-     * Convert our Pokemon format to PS species format
+     * Convert our Pokemon to a PS PokemonSet
      */
-    toPSSpecies(pokemon, side) {
-        // Use species name from our data, mapped to PS format
+    toPSSet(pokemon, side) {
         const speciesName = pokemon.species?.name || pokemon.species || pokemon.name;
         const psSpeciesName = toPSName(speciesName);
         const dex = Dex.species.get(psSpeciesName);
         
         // Get move names in PS format
-        const moveNames = pokemon.moves.map(m => {
+        const moves = pokemon.moves.map(m => {
             const moveId = typeof m === 'string' ? m : (m.id || m.name);
             const moveDex = Dex.moves.get(moveId);
             return moveDex?.name || moveId;
         });
 
-        return {
+        return [{
             species: dex.name || psSpeciesName,
             level: pokemon.level || 5,
-            moves: moveNames,
-            ability: pokemon.ability || 'none',
-            // Calculate stats from base stats and level
-            hp: pokemon.maxHp,
-            atk: pokemon.attack,
-            def: pokemon.defense,
-            spa: pokemon.specialAttack,
-            spd: pokemon.specialDefense,
-            spe: pokemon.speed
-        };
+            moves: moves,
+            ability: pokemon.ability || 'No Ability',
+            nature: 'Hardy',
+            ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
+            evs: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 }
+        }];
     }
 
     /**
@@ -74,40 +70,79 @@ export class BattleAdapter {
     executePlayerMove(moveId) {
         if (!this.battle) throw new Error('Battle not initialized');
 
-        // Find move slot
         const moveSlot = this.findMoveSlot('p1', moveId);
         
-        // Send command to PS
-        this.stream.write(`>p1 move ${moveSlot}`);
+        // Store HP before move for damage calculation
+        const enemyBefore = this.battle.p2.active[0]?.hp || 0;
+        const playerBefore = this.battle.p1.active[0]?.hp || 0;
         
-        // Get battle output
-        const output = this.stream.read();
+        // Execute player move
+        this.battle.choose('p1', `move ${moveSlot}`);
         
-        // Parse PS output into our result format
-        return this.parsePSOutput(output, 'p1');
+        // Execute enemy move (random)
+        const enemy = this.battle.p2.active[0];
+        const moveCount = enemy.moveSlots.filter(m => m.pp > 0).length;
+        const randomSlot = Math.floor(Math.random() * moveCount) + 1;
+        this.battle.choose('p2', `move ${randomSlot}`);
+        
+        // Commit the turn (synchronous)
+        this.battle.commitDecisions();
+        
+        // Calculate results
+        const enemyAfter = this.battle.p2.active[0]?.hp || 0;
+        const playerAfter = this.battle.p1.active[0]?.hp || 0;
+        
+        const damage = enemyBefore - enemyAfter;
+        const playerDamage = playerBefore - playerAfter;
+        
+        const dexMove = Dex.moves.get(moveId);
+        
+        return {
+            damage: damage,
+            moveName: dexMove?.name || moveId,
+            effectiveness: this.calculateEffectiveness(dexMove?.type, this.battle.p2.active[0]),
+            crit: false, // Would need deeper log inspection
+            flinched: false,
+            recoil: 0,
+            drain: 0,
+            statusApplied: this.battle.p2.active[0]?.status,
+            targetFainted: enemyAfter <= 0,
+            playerDamage: playerDamage,
+            playerFainted: playerAfter <= 0
+        };
     }
 
     /**
-     * Execute enemy move (AI choice)
+     * Execute enemy move (when player switches or uses item)
      * @returns {Object} Battle result
      */
     executeEnemyMove() {
         if (!this.battle) throw new Error('Battle not initialized');
 
-        // Get enemy's active Pokemon
-        const enemy = this.battle.p2.active[0];
+        const playerBefore = this.battle.p1.active[0]?.hp || 0;
         
-        // Random move selection (keep our existing AI)
+        // Enemy chooses move
+        const enemy = this.battle.p2.active[0];
         const moveCount = enemy.moveSlots.filter(m => m.pp > 0).length;
         const randomSlot = Math.floor(Math.random() * moveCount) + 1;
         
-        // Send command
-        this.stream.write(`>p2 move ${randomSlot}`);
+        this.battle.choose('p2', `move ${randomSlot}`);
+        this.battle.choose('p1', 'pass'); // Player passes turn
+        this.battle.commitDecisions();
         
-        // Get output
-        const output = this.stream.read();
+        const playerAfter = this.battle.p1.active[0]?.hp || 0;
         
-        return this.parsePSOutput(output, 'p2');
+        return {
+            damage: playerBefore - playerAfter,
+            moveName: enemy.moveSlots[randomSlot - 1]?.move || 'Attack',
+            effectiveness: 1,
+            crit: false,
+            flinched: false,
+            recoil: 0,
+            drain: 0,
+            statusApplied: this.battle.p1.active[0]?.status,
+            targetFainted: playerAfter <= 0
+        };
     }
 
     /**
@@ -119,7 +154,7 @@ export class BattleAdapter {
         
         for (let i = 0; i < pokemon.moveSlots.length; i++) {
             if (pokemon.moveSlots[i].id === moveId || 
-                pokemon.moveSlots[i].move === dexMove.name) {
+                pokemon.moveSlots[i].move === dexMove?.name) {
                 return i + 1; // PS uses 1-indexed slots
             }
         }
@@ -127,138 +162,60 @@ export class BattleAdapter {
     }
 
     /**
-     * Parse Pokemon Showdown output into our result format
+     * Calculate type effectiveness
      */
-    parsePSOutput(output, attackerSide) {
-        const result = {
-            damage: 0,
-            effectiveness: 1, // Will calculate from type matchup
-            crit: false,
-            moveName: '',
-            flinched: false,
-            recoil: 0,
-            drain: 0,
-            statusApplied: null,
-            targetFainted: false,
-            logs: []
-        };
-
-        // Parse PS protocol messages
-        for (const line of output.split('\n')) {
-            if (!line) continue;
-            
-            const parts = line.split('|');
-            const cmd = parts[1];
-            
-            switch (cmd) {
-                case 'move':
-                    result.moveName = parts[3];
-                    break;
-                    
-                case 'damage':
-                    // Parse damage amount
-                    const damageMatch = line.match(/\[.*?\] (\d+)/);
-                    if (damageMatch) {
-                        result.damage = parseInt(damageMatch[1]);
-                    }
-                    break;
-                    
-                case 'crit':
-                    result.crit = true;
-                    break;
-                    
-                case 'flinch':
-                    result.flinched = true;
-                    break;
-                    
-                case 'status':
-                    result.statusApplied = parts[3];
-                    break;
-                    
-                case 'faint':
-                    result.targetFainted = true;
-                    break;
-                    
-                case 'heal':
-                    // Drain healing
-                    if (parts[2].includes(attackerSide)) {
-                        const healMatch = line.match(/\[.*?\] (\d+)/);
-                        if (healMatch) {
-                            result.drain = parseInt(healMatch[1]);
-                        }
-                    }
-                    break;
-                    
-                case 'damage':
-                    // Recoil damage to self
-                    if (parts[2].includes(attackerSide)) {
-                        const recoilMatch = line.match(/\[from\] Recoil/);
-                        if (recoilMatch) {
-                            const dmgMatch = line.match(/\[.*?\] (\d+)/);
-                            if (dmgMatch) {
-                                result.recoil = parseInt(dmgMatch[1]);
-                            }
-                        }
-                    }
-                    break;
-                    
-                case 'supereffective':
-                    result.effectiveness = 2;
-                    break;
-                    
-                case 'resisted':
-                    result.effectiveness = 0.5;
-                    break;
-                    
-                case 'immune':
-                    result.effectiveness = 0;
-                    break;
+    calculateEffectiveness(attackType, defender) {
+        if (!attackType || !defender) return 1;
+        
+        const typeChart = Dex.data.TypeChart;
+        const species = Dex.species.get(defender.species);
+        
+        let effectiveness = 1;
+        
+        // Check against both types
+        [species.types[0], species.types[1]].filter(Boolean).forEach(defType => {
+            if (typeChart[attackType]?.damageTaken?.[defType] !== undefined) {
+                effectiveness *= typeChart[attackType].damageTaken[defType];
             }
-            
-            result.logs.push(line);
-        }
-
-        return result;
+        });
+        
+        return effectiveness;
     }
 
     /**
-     * Get current battle state for UI updates
+     * Update our Pokemon state from PS battle state
      */
-    getBattleState() {
-        if (!this.battle) return null;
+    syncToOurPokemon(ourPokemon, side) {
+        if (!this.battle) return;
         
-        return {
-            p1: {
-                hp: this.battle.p1.active[0]?.hp || 0,
-                maxHp: this.battle.p1.active[0]?.maxhp || 0,
-                status: this.battle.p1.active[0]?.status || null
-            },
-            p2: {
-                hp: this.battle.p2.active[0]?.hp || 0,
-                maxHp: this.battle.p2.active[0]?.maxhp || 0,
-                status: this.battle.p2.active[0]?.status || null
-            },
-            turn: this.battle.turn
-        };
+        const psPokemon = side === 'p1' ? this.battle.p1.active[0] : this.battle.p2.active[0];
+        if (!psPokemon) return;
+        
+        ourPokemon.hp = psPokemon.hp;
+        ourPokemon.status = psPokemon.status;
+        
+        // Sync stat boosts
+        for (const [stat, boost] of Object.entries(psPokemon.boosts)) {
+            const ourStat = { 
+                atk: 'attack', def: 'defense', spa: 'specialAttack', 
+                spd: 'specialDefense', spe: 'speed', accuracy: 'accuracy', evasion: 'evasion'
+            }[stat];
+            if (ourStat) {
+                ourPokemon.statStages[ourStat] = boost;
+            }
+        }
     }
 
     /**
      * End battle and cleanup
      */
     endBattle() {
-        if (this.stream) {
-            this.stream.end();
+        if (this.battle) {
+            this.battle.destroy();
         }
         this.battle = null;
-        this.stream = null;
     }
 }
-
-export default BattleAdapter;
-
-// Expose to global scope for non-module scripts
-window.BattleAdapter = BattleAdapter;
-
 
 // Expose globally for use from non-module game.js
 window.BattleAdapter = BattleAdapter;
