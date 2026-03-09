@@ -3,14 +3,17 @@ import { resolve } from 'path'
 
 export default defineConfig({
   build: {
-    outDir: 'dist',
+    outDir: '.',  // Output to project root
+    emptyOutDir: false,  // Don't wipe existing files!
+    lib: {
+      entry: resolve(__dirname, 'battle-adapter.js'),
+      name: 'BattleAdapter',
+      fileName: 'battle-adapter.bundle',
+      formats: ['iife']  // IIFE = browser-ready, no module system needed
+    },
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html'),
-        adapter: resolve(__dirname, 'battle-adapter.js')
-      },
       output: {
-        entryFileNames: 'assets/[name]-[hash].js'
+        name: 'BattleAdapterLib'
       }
     }
   }

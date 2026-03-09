@@ -14,5 +14,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build battle adapter bundle
+        run: npm run build
       - name: Validate Pokemon data and JS syntax
         run: node validate-data.js

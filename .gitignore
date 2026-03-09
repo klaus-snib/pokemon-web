@@ -3,3 +3,6 @@ e2e-test.js
 auto-playtest.js
 dist/
 node_modules/
+battle-adapter.bundle.iife.js
+node_modules/
+dist/

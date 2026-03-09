@@ -1,3 +1,4 @@
+Cleaned: git+https://github.com/klaus-snib/pokemon-web.git
 {
   "name": "pokemon-web",
   "version": "1.0.0",
@@ -7,7 +8,9 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "vite build",
+    "dev": "vite"
   },
   "repository": {
     "type": "git",
@@ -24,5 +27,8 @@
     "@pkmn/data": "^0.10.7",
     "@pkmn/sim": "^0.10.7",
     "vite": "^7.3.1"
+  },
+  "dependencies": {
+    "@pkmn/dex": "^0.10.7"
   }
 }
