@@ -3026,11 +3026,11 @@ class Game {
         const enemy = this.battleEnemy;
 
         // Shed Skin: 30% chance to cure status at end of turn
-        if (player && player.ability === 'shedskin' && player.status && Math.random() < 0.3) {
+        if (player && player.ability === 'shed_skin' && player.status && Math.random() < 0.3) {
             player.status = null;
             this.addBattleLog(`${player.displayName}'s Shed Skin cured its status!`, 'success');
         }
-        if (enemy && enemy.ability === 'shedskin' && enemy.status && Math.random() < 0.3) {
+        if (enemy && enemy.ability === 'shed_skin' && enemy.status && Math.random() < 0.3) {
             enemy.status = null;
             this.addBattleLog(`${enemy.name}'s Shed Skin cured its status!`, 'success');
         }
@@ -3672,7 +3672,7 @@ class Game {
             btn.onclick = () => {
                 // Natural Cure: heal status on switch out (faint switch)
                 const outgoing = this.team[this.activePokemonIndex];
-                if (outgoing && outgoing.ability === 'naturalcure' && outgoing.status) {
+                if (outgoing && outgoing.ability === 'natural_cure' && outgoing.status) {
                     outgoing.status = null;
                 }
                 
@@ -4120,7 +4120,7 @@ class Game {
             btn.onclick = () => {
                 // Natural Cure: heal status on switch out
                 const outgoing = this.team[this.activePokemonIndex];
-                if (outgoing && outgoing.ability === 'naturalcure' && outgoing.status) {
+                if (outgoing && outgoing.ability === 'natural_cure' && outgoing.status) {
                     outgoing.status = null;
                     this.addBattleLog(`${outgoing.displayName}'s Natural Cure healed its status!`, 'success');
                 }
