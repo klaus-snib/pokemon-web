@@ -80,12 +80,29 @@ export class BattleAdapter {
         const enemyBefore = this.battle.p2.active[0]?.hp || 0;
         const playerBefore = this.battle.p1.active[0]?.hp || 0;
         
+        // DEBUG: Log state BEFORE turn
+        console.log('[BattleAdapter DEBUG] BEFORE turn:', JSON.stringify({
+            p1_hp: this.battle.p1.active[0]?.hp,
+            p2_hp: this.battle.p2.active[0]?.hp,
+            p2_exists: !!this.battle.p2.active[0],
+            p2_moveSlots: !!this.battle.p2.active[0]?.moveSlots
+        }));
+        
         // Execute player move
         const playerSlot = this.findMoveSlot('p1', playerMoveId);
         this.battle.choose('p1', `move ${playerSlot}`);
         
         // Execute enemy move (random selection)
         const enemy = this.battle.p2.active[0];
+        if (!enemy || !enemy.moveSlots) {
+            console.log('[BattleAdapter DEBUG] Cannot execute enemy move in executeTurn:', { enemy: !!enemy, moveSlots: !!enemy?.moveSlots });
+            // Return partial results
+            return {
+                player: { damage: 0, moveName: 'Error', effectiveness: 1, crit: false, flinched: false, targetFainted: false },
+                enemy: { damage: 0, moveName: 'Error', effectiveness: 1, crit: false, flinched: false, targetFainted: false }
+            };
+        }
+        
         const moveCount = enemy.moveSlots.filter(m => m.pp > 0).length;
         const randomSlot = Math.floor(Math.random() * moveCount) + 1;
         this.battle.choose('p2', `move ${randomSlot}`);
@@ -93,6 +110,16 @@ export class BattleAdapter {
         // Calculate results after both moves resolve
         const enemyAfter = this.battle.p2.active[0]?.hp || 0;
         const playerAfter = this.battle.p1.active[0]?.hp || 0;
+        
+        // DEBUG: Log state AFTER turn
+        console.log('[BattleAdapter DEBUG] AFTER turn:', JSON.stringify({
+            p1_hp: playerAfter,
+            p2_hp: enemyAfter,
+            p2_exists: !!this.battle.p2.active[0],
+            p2_moveSlots: !!this.battle.p2.active[0]?.moveSlots,
+            damage_to_p2: enemyBefore - enemyAfter,
+            damage_to_p1: playerBefore - playerAfter
+        }));
         
         const playerDexMove = Dex.moves.get(playerMoveId);
         const enemyMoveName = enemy.moveSlots[randomSlot - 1]?.move || 'Attack';
@@ -159,8 +186,22 @@ export class BattleAdapter {
         
         // Enemy chooses move - check if enemy exists (not null/fainted)
         const enemy = this.battle.p2.active[0];
+        
+        // DEBUG: Log PS state for diagnosis
+        console.log('[BattleAdapter DEBUG] p2.active[0]:', JSON.stringify({
+            exists: !!enemy,
+            species: enemy?.species,
+            hp: enemy?.hp,
+            maxhp: enemy?.maxhp,
+            fainted: enemy?.fainted,
+            hasMoveSlots: !!enemy?.moveSlots,
+            moveSlotsLength: enemy?.moveSlots?.length,
+            moveSlotsKeys: enemy?.moveSlots ? Object.keys(enemy.moveSlots) : null
+        }));
+        
         if (!enemy || !enemy.moveSlots) {
             // Enemy has fainted in PS state or moveSlots unavailable
+            console.log('[BattleAdapter DEBUG] Fallback triggered: enemy=' + !!enemy + ', moveSlots=' + !!enemy?.moveSlots);
             return {
                 damage: 0,
                 moveName: '',
