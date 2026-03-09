@@ -3237,11 +3237,21 @@ class Game {
 
             // Use BattleAdapter if available, fall back to calculateDamage
             let result;
-            if (this.battleAdapter && isPlayer) {
-                result = this.battleAdapter.executePlayerMove(move.id);
-            } else if (this.battleAdapter && !isPlayer) {
-                result = this.battleAdapter.executeEnemyMove();
-            } else {
+            try {
+                if (this.battleAdapter && isPlayer) {
+                    result = this.battleAdapter.executePlayerMove(move.id);
+                } else if (this.battleAdapter && !isPlayer) {
+                    result = this.battleAdapter.executeEnemyMove();
+                } else {
+                    result = this.calculateDamage(attacker, defender, move);
+                }
+                // Validate result has required fields
+                if (!result || typeof result.damage !== 'number') {
+                    throw new Error('BattleAdapter returned invalid result');
+                }
+            } catch (e) {
+                console.warn('BattleAdapter failed, falling back to calculateDamage:', e.message);
+                this.battleAdapter = null; // Disable adapter for this battle
                 result = this.calculateDamage(attacker, defender, move);
             }
             const fainted = defender.takeDamage(result.damage);
