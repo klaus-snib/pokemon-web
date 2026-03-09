@@ -355,17 +355,13 @@ class Pokemon {
             // If less than 4 moves, just add it
             if (this.moves.length < 4) {
                 this.moves.push(newMove);
-                // Store for notification (game will handle displaying this)
                 if (typeof game !== 'undefined' && game.addMessage) {
                     game.addMessage(`${this.displayName} learned ${newMove.name}!`, 'success');
                 }
             } else {
-                // At 4 moves - would need to forget one (simplified: auto-replace last move)
-                // In future: prompt player which move to forget
-                const oldMove = this.moves[3];
-                this.moves[3] = newMove;
-                if (typeof game !== 'undefined' && game.addMessage) {
-                    game.addMessage(`${this.displayName} learned ${newMove.name}! Forgot ${oldMove.name}.`, 'warning');
+                // At 4 moves - queue for player to decide which to replace
+                if (typeof game !== 'undefined' && game.queueMoveLearnPrompt) {
+                    game.queueMoveLearnPrompt(this, newMove);
                 }
             }
         }
@@ -3589,6 +3585,58 @@ class Game {
         if (nextGymIndex >= GYM_LEADERS.length) return 100; // No cap after all badges
         const bonus = DIFFICULTY_SETTINGS[this.difficulty]?.levelCapBonus ?? 2;
         return GYM_LEADERS[nextGymIndex].level + bonus;
+    }
+
+    queueMoveLearnPrompt(pokemon, newMove) {
+        // Show modal to let player choose which move to replace (or skip)
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modal-body');
+
+        const typeClass = `type-bg-${(newMove.type || 'normal').toLowerCase()}`;
+        const ppText = newMove.pp ? `${newMove.pp} PP` : '';
+        const powerText = newMove.power ? `Power: ${newMove.power}` : 'Status';
+
+        body.innerHTML = `
+            <h3>⭐ ${pokemon.displayName} wants to learn ${newMove.name}!</h3>
+            <p style="color:var(--text-muted);margin-bottom:1rem">Choose a move to forget, or skip learning:</p>
+            <div style="margin-bottom:0.75rem;padding:0.5rem;border:2px solid var(--accent);border-radius:8px">
+                <strong><span class="type-badge ${typeClass}">${(newMove.type||'normal').toUpperCase()}</span> ${newMove.name}</strong>
+                <small style="color:var(--text-muted);margin-left:0.5rem">${powerText} · ${ppText}</small>
+            </div>
+            <p style="margin-bottom:0.5rem;font-size:0.85rem;color:var(--text-muted)">Which move should ${pokemon.displayName} forget?</p>
+        `;
+
+        pokemon.moves.forEach((move, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'action-btn';
+            btn.style.cssText = 'width:100%;margin-bottom:0.4rem;text-align:left';
+            const mType = `type-bg-${(move.type || 'normal').toLowerCase()}`;
+            const mPp = move.pp !== undefined ? `${move.pp}/${move.maxPp || move.pp} PP` : '';
+            const mPow = move.power ? `Power: ${move.power}` : 'Status';
+            btn.innerHTML = `<span class="type-badge ${mType}">${(move.type||'normal').toUpperCase()}</span> ${move.name} <small style="color:var(--text-muted)">${mPow} · ${mPp}</small>`;
+            btn.onclick = () => {
+                const forgotten = pokemon.moves[i].name;
+                pokemon.moves[i] = newMove;
+                modal.classList.add('hidden');
+                this.addMessage(`${pokemon.displayName} forgot ${forgotten} and learned ${newMove.name}!`, 'success');
+                this.updateUI();
+                if (this.state === 'battle') this.updateBattleUI();
+            };
+            body.appendChild(btn);
+        });
+
+        // Skip button
+        const skipBtn = document.createElement('button');
+        skipBtn.className = 'action-btn';
+        skipBtn.style.cssText = 'width:100%;margin-top:0.5rem;opacity:0.7';
+        skipBtn.textContent = `✗ Don't learn ${newMove.name}`;
+        skipBtn.onclick = () => {
+            modal.classList.add('hidden');
+            this.addMessage(`${pokemon.displayName} did not learn ${newMove.name}.`, 'warning');
+        };
+        body.appendChild(skipBtn);
+
+        modal.classList.remove('hidden');
     }
 
     giveExp(amount, pokemon) {
