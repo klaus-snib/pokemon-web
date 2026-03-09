@@ -232,15 +232,16 @@ export class BattleAdapter {
             } else {
                 speciesName = '';
             }
-            const typeChart = Dex.data.TypeChart;
-            const species = Dex.species.get(speciesName);
+            // Use battle instance's dex (browser-compatible) instead of static Dex.data.TypeChart
+            // battle.dex.types.get(defType).damageTaken[atkType]: 0=1x, 1=2x, 2=0.5x, 3=0x
+            const battleDex = this.battle?.dex || Dex;
+            const species = battleDex.species.get(speciesName);
             let effectiveness = 1;
+            const multipliers = { 0: 1, 1: 2, 2: 0.5, 3: 0 };
             const types = [species?.types?.[0], species?.types?.[1]].filter(t => t && typeof t === 'string');
             for (const defType of types) {
-                // TypeChart indexed by defender type (lowercase); damageTaken by attacker type (capitalized)
-                // Values: 0=normal(1x), 1=super(2x), 2=resist(0.5x), 3=immune(0x)
-                const multipliers = { 0: 1, 1: 2, 2: 0.5, 3: 0 };
-                const taken = typeChart[defType.toLowerCase()]?.damageTaken?.[atkType];
+                const typeEntry = battleDex.types?.get?.(defType);
+                const taken = typeEntry?.damageTaken?.[atkType];
                 if (taken !== undefined) { effectiveness *= (multipliers[taken] ?? 1); }
             }
             return effectiveness;
