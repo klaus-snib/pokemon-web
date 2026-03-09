@@ -185,8 +185,8 @@ export class BattleAdapter {
             throw new Error('executeEnemyMove called without cached result. Call executePlayerMove() first.');
         }
 
-        // Return the cached enemy result with battleLog
-        const result = { ...this.pendingEnemyMove, battleLog: this.pendingBattleLog || [] };
+        // Return the cached enemy result — battleLog already logged by executePlayerMove, dont duplicate
+        const result = { ...this.pendingEnemyMove, battleLog: [] };
         this.pendingEnemyMove = null; // Clear after use
         this.pendingPlayerMove = null;
         this.pendingBattleLog = null;
