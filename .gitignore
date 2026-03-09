@@ -1,3 +1,5 @@
 balance-test.js
 e2e-test.js
 auto-playtest.js
+dist/
+node_modules/
