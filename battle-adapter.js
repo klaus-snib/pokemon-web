@@ -3,7 +3,7 @@
  * Uses synchronous Battle API instead of streams
  */
 
-import { Battle } from '@pkmn/sim';
+import { Battle, Teams } from '@pkmn/sim';
 import { Dex } from '@pkmn/dex';
 import { toPSName } from './species-mapping.js';
 
@@ -22,9 +22,13 @@ export class BattleAdapter {
      * @returns {Battle} PS Battle instance
      */
     initBattle(playerPokemon, enemyPokemon) {
-        // Convert our Pokemon to PS format
-        const p1Team = this.toPSSet(playerPokemon, 'p1');
-        const p2Team = this.toPSSet(enemyPokemon, 'p2');
+        // Convert our Pokemon to PS format and pack for Battle constructor
+        const p1TeamSet = this.toPSSet(playerPokemon, 'p1');
+        const p2TeamSet = this.toPSSet(enemyPokemon, 'p2');
+        
+        // Pack teams for Battle constructor (activates Pokemon on field)
+        const p1Team = Teams.pack(p1TeamSet);
+        const p2Team = Teams.pack(p2TeamSet);
 
         // Create battle directly (synchronous)
         this.battle = new Battle({
