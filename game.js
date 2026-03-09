@@ -2856,7 +2856,7 @@ class Game {
         const runBtn = document.querySelector('[data-action="run"]');
 
         if (catchBtn) {
-            const balls = (this.bag['pokeball'] || 0) + (this.bag['great_ball'] || 0);
+            const balls = (this.bag['pokeball'] || 0) + (this.bag['great_ball'] || 0) + (this.bag['ultra_ball'] || 0) + (this.bag['master_ball'] || 0);
             catchBtn.disabled = this.battleType !== 'wild' || balls === 0;
             catchBtn.style.opacity = (this.battleType !== 'wild' || balls === 0) ? '0.5' : '1';
             catchBtn.textContent = `🔴 Catch (${balls})`;
