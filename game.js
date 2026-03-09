@@ -3952,6 +3952,7 @@ class Game {
                 modal.classList.add('hidden');
                 this.addBattleLog(`Go, ${poke.displayName}!`);
                 this.updateBattleUI();
+                this.restoreBattleActions();
 
                 if (this.awaitingFaintSwitch) {
                     this.awaitingFaintSwitch = false;
