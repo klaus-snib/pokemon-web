@@ -5,6 +5,7 @@
 
 import { Battle } from '@pkmn/sim';
 import { Dex } from '@pkmn/dex';
+import { toPSName } from './species-mapping.js';
 
 export class BattleAdapter {
     constructor() {
@@ -38,15 +39,17 @@ export class BattleAdapter {
      * Convert our Pokemon format to PS species format
      */
     toPSSpecies(pokemon, side) {
-        const dex = Dex.species.get(pokemon.species.name || pokemon.species);
+        // Use species name from our data, mapped to PS format
+        const speciesName = pokemon.species?.name || pokemon.species || pokemon.name;
+        const psSpeciesName = toPSName(speciesName);
+        const dex = Dex.species.get(psSpeciesName);
         
-        return {
-            species: dex.name,
-            level: pokemon.level,
-            moves: pokemon.moves.map(m => {
-                const moveDex = Dex.moves.get(m.id);
-                return moveDex.name;
-            }),
+        // Get move names in PS format
+        const moveNames = pokemon.moves.map(m => {
+            const moveId = typeof m === 'string' ? m : (m.id || m.name);
+            const moveDex = Dex.moves.get(moveId);
+            return moveDex?.name || moveId;
+        });
             ability: pokemon.ability || 'none',
             // Calculate stats from base stats and level
             hp: pokemon.maxHp,
