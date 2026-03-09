@@ -344,6 +344,27 @@ export class BattleAdapter {
                 entries.push({ message: `${name} fainted!`, type: 'faint' });
                 continue;
             }
+            
+            // Parse recoil damage: |-damage|SIDE|HP/MAX|[from] Recoil
+            const recoilMatch = line.match(/^\|-damage\|[^:]*:\s*[^|]+\|[^|]+\|\[from\] Recoil/);
+            if (recoilMatch) {
+                entries.push({ message: 'It was hurt by recoil!', type: 'recoil' });
+                continue;
+            }
+            
+            // Parse drain heal: |-heal|SIDE|HP/MAX|[from] drain
+            const drainMatch = line.match(/^\|-heal\|[^:]*:\s*([^|]+)\|[^|]+\|\[from\] drain/);
+            if (drainMatch) {
+                const name = drainMatch[1].trim();
+                entries.push({ message: `${name} drained health!`, type: 'drain' });
+                continue;
+            }
+            
+            // Parse crit: |-crit|SIDE
+            if (line.startsWith('|-crit|')) {
+                entries.push({ message: 'Critical hit!', type: 'crit' });
+                continue;
+            }
         }
         
         return entries;
