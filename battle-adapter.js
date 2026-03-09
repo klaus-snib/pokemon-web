@@ -159,8 +159,8 @@ export class BattleAdapter {
         
         // Enemy chooses move - check if enemy exists (not null/fainted)
         const enemy = this.battle.p2.active[0];
-        if (!enemy) {
-            // Enemy has fainted in PS state but game.js still called this
+        if (!enemy || !enemy.moveSlots) {
+            // Enemy has fainted in PS state or moveSlots unavailable
             return {
                 damage: 0,
                 moveName: '',
@@ -175,6 +175,20 @@ export class BattleAdapter {
         }
         
         const moveCount = enemy.moveSlots.filter(m => m.pp > 0).length;
+        if (moveCount === 0) {
+            // No moves available
+            return {
+                damage: 0,
+                moveName: 'Struggle',
+                effectiveness: 1,
+                crit: false,
+                flinched: false,
+                recoil: 0,
+                drain: 0,
+                statusApplied: null,
+                targetFainted: false
+            };
+        }
         const randomSlot = Math.floor(Math.random() * moveCount) + 1;
         
         this.battle.choose('p2', `move ${randomSlot}`);
