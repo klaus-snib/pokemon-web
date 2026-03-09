@@ -3268,6 +3268,15 @@ class Game {
             }
             const fainted = defender.takeDamage(result.damage);
 
+            // Log PS battle events (moves, effectiveness, status, etc.)
+            if (result.battleLog && Array.isArray(result.battleLog)) {
+                for (const entry of result.battleLog) {
+                    if (entry && entry.message) {
+                        this.addBattleLog(entry.message, entry.type);
+                    }
+                }
+            }
+
             // Use move.name if available (from our game data), otherwise fall back to result.moveName
             const displayMoveName = move?.name || result.moveName || 'Attack';
             this.addBattleLog(`${attacker.displayName} used ${displayMoveName}! ${result.damage} damage!`);

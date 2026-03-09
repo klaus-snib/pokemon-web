@@ -13,6 +13,7 @@ export class BattleAdapter {
         this.turnInProgress = false;
         this.pendingPlayerMove = null;
         this.pendingEnemyMove = null;
+        this.pendingBattleLog = null;
     }
 
     /**
@@ -93,19 +94,14 @@ export class BattleAdapter {
         // Store HP before turn
         const enemyBefore = this.battle.p2.active[0]?.hp || 0;
         const playerBefore = this.battle.p1.active[0]?.hp || 0;
-        
-        // DEBUG: Log state BEFORE turn
-        console.log('[BattleAdapter DEBUG] BEFORE turn:', JSON.stringify({
-            p1_hp: this.battle.p1.active[0]?.hp,
-            p2_hp: this.battle.p2.active[0]?.hp,
-            p2_exists: !!this.battle.p2.active[0],
-            p2_moveSlots: !!this.battle.p2.active[0]?.moveSlots
-        }));
-        
+
+        // Track log index before turn
+        const logStartIndex = this.battle.log?.length || 0;
+
         // Execute player move
         const playerSlot = this.findMoveSlot('p1', playerMoveId);
         this.battle.choose('p1', `move ${playerSlot}`);
-        
+
         // Execute enemy move (random selection)
         const enemy = this.battle.p2.active[0];
         if (!enemy || !enemy.moveSlots) {
@@ -113,31 +109,25 @@ export class BattleAdapter {
             // Return partial results
             return {
                 player: { damage: 0, moveName: 'Error', effectiveness: 1, crit: false, flinched: false, targetFainted: false },
-                enemy: { damage: 0, moveName: 'Error', effectiveness: 1, crit: false, flinched: false, targetFainted: false }
+                enemy: { damage: 0, moveName: 'Error', effectiveness: 1, crit: false, flinched: false, targetFainted: false },
+                battleLog: []
             };
         }
-        
+
         const moveCount = enemy.moveSlots.filter(m => m.pp > 0).length;
         const randomSlot = Math.floor(Math.random() * moveCount) + 1;
         this.battle.choose('p2', `move ${randomSlot}`);
-        
+
         // Calculate results after both moves resolve
         const enemyAfter = this.battle.p2.active[0]?.hp || 0;
         const playerAfter = this.battle.p1.active[0]?.hp || 0;
-        
-        // DEBUG: Log state AFTER turn
-        console.log('[BattleAdapter DEBUG] AFTER turn:', JSON.stringify({
-            p1_hp: playerAfter,
-            p2_hp: enemyAfter,
-            p2_exists: !!this.battle.p2.active[0],
-            p2_moveSlots: !!this.battle.p2.active[0]?.moveSlots,
-            damage_to_p2: enemyBefore - enemyAfter,
-            damage_to_p1: playerBefore - playerAfter
-        }));
-        
+
+        // Parse PS battle log events
+        const battleLog = this.parsePSEvents(logStartIndex);
+
         const playerDexMove = Dex.moves.get(playerMoveId);
         const enemyMoveName = enemy.moveSlots[randomSlot - 1]?.move || 'Attack';
-        
+
         const results = {
             player: {
                 damage: enemyBefore - enemyAfter,
@@ -154,9 +144,10 @@ export class BattleAdapter {
                 crit: false,
                 flinched: false,
                 targetFainted: playerAfter <= 0
-            }
+            },
+            battleLog
         };
-        
+
         this.lastTurnResults = results;
         return results;
     }
@@ -169,14 +160,15 @@ export class BattleAdapter {
      */
     executePlayerMove(moveId) {
         if (!this.battle) throw new Error('Battle not initialized');
-        
+
         // Execute full turn and store results
         const results = this.executeTurn(moveId);
         this.pendingPlayerMove = results.player;
         this.pendingEnemyMove = results.enemy;
-        
-        // Return player move result for immediate application
-        return results.player;
+        this.pendingBattleLog = results.battleLog;
+
+        // Return player move result with battleLog for immediate application
+        return { ...results.player, battleLog: results.battleLog };
     }
 
     /**
@@ -187,16 +179,17 @@ export class BattleAdapter {
      */
     executeEnemyMove() {
         if (!this.battle) throw new Error('Battle not initialized');
-        
+
         // MUST already have cached result from executePlayerMove()
         if (!this.pendingEnemyMove) {
             throw new Error('executeEnemyMove called without cached result. Call executePlayerMove() first.');
         }
-        
-        // Return the cached enemy result
-        const result = this.pendingEnemyMove;
+
+        // Return the cached enemy result with battleLog
+        const result = { ...this.pendingEnemyMove, battleLog: this.pendingBattleLog || [] };
         this.pendingEnemyMove = null; // Clear after use
         this.pendingPlayerMove = null;
+        this.pendingBattleLog = null;
         return result;
     }
 
@@ -273,6 +266,90 @@ export class BattleAdapter {
     }
 
     /**
+     * Parse PS battle log events into human-readable log entries
+     * @param {number} startIndex - Index in battle.log to start parsing from
+     * @returns {Array} Array of {message, type} log entries
+     */
+    parsePSEvents(startIndex = 0) {
+        if (!this.battle || !this.battle.log) return [];
+        
+        const entries = [];
+        const log = this.battle.log;
+        let skipNext = false;
+        
+        for (let i = startIndex; i < log.length; i++) {
+            const line = log[i];
+            
+            // Skip split markers and their duplicates
+            if (line.startsWith('|split|')) {
+                skipNext = true;
+                continue;
+            }
+            if (skipNext) {
+                skipNext = false;
+                continue;
+            }
+            
+            // Parse move: |move|SIDE: Name|MoveName|TARGET
+            const moveMatch = line.match(/^\|move\|[^:]*:\s*([^|]+)\|([^|]+)/);
+            if (moveMatch) {
+                const pokemonName = moveMatch[1].trim();
+                const moveName = moveMatch[2].trim();
+                entries.push({ message: `${pokemonName} used ${moveName}!`, type: 'move' });
+                continue;
+            }
+            
+            // Parse super effective
+            if (line.startsWith('|-supereffective|')) {
+                entries.push({ message: "It's super effective!", type: 'effectiveness' });
+                continue;
+            }
+            
+            // Parse resisted (not very effective)
+            if (line.startsWith('|-resisted|')) {
+                entries.push({ message: "It's not very effective...", type: 'effectiveness' });
+                continue;
+            }
+            
+            // Parse immune
+            if (line.startsWith('|-immune|')) {
+                const match = line.match(/^\|-immune\|[^:]*:\s*([^|]+)/);
+                const name = match ? match[1].trim() : 'the target';
+                entries.push({ message: `It doesn't affect ${name}...`, type: 'effectiveness' });
+                continue;
+            }
+            
+            // Parse status
+            const statusMatch = line.match(/^\|-status\|[^:]*:\s*([^|]+)\|(\w+)/);
+            if (statusMatch) {
+                const name = statusMatch[1].trim();
+                const status = statusMatch[2];
+                const statusNames = { brn: 'burned', psn: 'poisoned', tox: 'badly poisoned', par: 'paralyzed', slp: 'asleep', frz: 'frozen' };
+                entries.push({ message: `${name} was ${statusNames[status] || status}!`, type: 'status' });
+                continue;
+            }
+            
+            // Parse flinch
+            if (line.startsWith('|-flinch|')) {
+                const match = line.match(/^\|-flinch\|[^:]*:\s*([^|]+)/);
+                const name = match ? match[1].trim() : 'The Pokemon';
+                entries.push({ message: `${name} flinched!`, type: 'flinch' });
+                continue;
+            }
+            
+            // Parse faint
+            const faintMatch = line.match(/^\|faint\|[^:]*:\s*([^|]+)/);
+            if (faintMatch) {
+                const name = faintMatch[1].trim();
+                entries.push({ message: `${name} fainted!`, type: 'faint' });
+                continue;
+            }
+        }
+        
+        return entries;
+    }
+
+    /**
      * Get current battle state for UI updates
      */
     getBattleState() {
@@ -304,6 +381,7 @@ export class BattleAdapter {
         this.turnInProgress = false;
         this.pendingPlayerMove = null;
         this.pendingEnemyMove = null;
+        this.pendingBattleLog = null;
     }
 }
 
