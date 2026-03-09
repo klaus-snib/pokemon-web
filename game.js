@@ -1244,8 +1244,8 @@ class Game {
         pokemon.maxHp = Math.floor((base.hp * 2 * level) / 100) + level + 10;
         pokemon.attack = Math.floor((base.atk * 2 * level) / 100) + 5;
         pokemon.defense = Math.floor((base.def * 2 * level) / 100) + 5;
-        pokemon.specialAttack = Math.floor(((pokemon.species.spa || base.atk) * 2 * level) / 100) + 5;
-        pokemon.specialDefense = Math.floor(((pokemon.species.spd_def || base.def) * 2 * level) / 100) + 5;
+        // specialAttack and specialDefense are getters - don't assign directly
+        // They calculate dynamically: Math.floor((spa/spd_def * 2 * level) / 100) + 5
         pokemon.speed = Math.floor((base.spd * 2 * level) / 100) + 5;
         pokemon.hp = pokemon.maxHp;
     }
