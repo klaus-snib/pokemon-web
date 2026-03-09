@@ -86,7 +86,6 @@ export class BattleAdapter {
         this.battle.choose('p2', `move ${randomSlot}`);
         
         // Commit the turn (synchronous)
-        this.battle.commitDecisions();
         
         // Calculate results
         const enemyAfter = this.battle.p2.active[0]?.hp || 0;
@@ -128,7 +127,6 @@ export class BattleAdapter {
         
         this.battle.choose('p2', `move ${randomSlot}`);
         this.battle.choose('p1', 'pass'); // Player passes turn
-        this.battle.commitDecisions();
         
         const playerAfter = this.battle.p1.active[0]?.hp || 0;
         
