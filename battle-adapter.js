@@ -215,19 +215,13 @@ export class BattleAdapter {
     calculateEffectiveness(attackType, defender) {
         try {
             if (!attackType || !defender) return 1;
-            // Normalize attack type - capitalize first letter
-            const atkType = String(attackType).charAt(0).toUpperCase() + String(attackType).slice(1).toLowerCase();
+            const atkType = String(attackType);
 
             // Get defender types from PS species object or fallback
             const rawSpecies = defender.species;
             let defTypes;
             if (rawSpecies && typeof rawSpecies === 'object' && rawSpecies.types) {
-                // Normalize defender types to capitalized format
-                defTypes = rawSpecies.types.map(t => 
-                    typeof t === 'string' 
-                        ? t.charAt(0).toUpperCase() + t.slice(1).toLowerCase() 
-                        : t
-                );
+                defTypes = rawSpecies.types;
             } else {
                 return 1; // can't determine types, assume neutral
             }
