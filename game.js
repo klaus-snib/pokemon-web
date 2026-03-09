@@ -3162,6 +3162,12 @@ class Game {
         const player = this.team[this.activePokemonIndex];
         const enemy = this.battleEnemy;
         const playerMove = player.moves[moveIndex] || player.moves[0];
+        
+        // Initialize BattleAdapter if available and not already initialized
+        if (window.BattleAdapter && !this.battleAdapter) {
+            this.battleAdapter = new window.BattleAdapter();
+            this.battleAdapter.initBattle(player, enemy);
+        }
         // Enemy picks random move (or uses default attack)
         const enemyMove = enemy.moves && enemy.moves.length > 0 ? enemy.moves[Math.floor(Math.random() * enemy.moves.length)] : null;
 
@@ -3223,7 +3229,15 @@ class Game {
                 return false; // Status moves don't faint
             }
 
-            const result = this.calculateDamage(attacker, defender, move);
+            // Use BattleAdapter if available, fall back to calculateDamage
+            let result;
+            if (this.battleAdapter && isPlayer) {
+                result = this.battleAdapter.executePlayerMove(move.id);
+            } else if (this.battleAdapter && !isPlayer) {
+                result = this.battleAdapter.executeEnemyMove();
+            } else {
+                result = this.calculateDamage(attacker, defender, move);
+            }
             const fainted = defender.takeDamage(result.damage);
 
             this.addBattleLog(`${attacker.displayName} used ${result.moveName}! ${result.damage} damage!`);
