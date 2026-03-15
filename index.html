@@ -59,6 +59,17 @@
                     <button id="meta-shop-btn" class="primary-btn">🛒 Meta Shop</button>
                     <button id="hall-of-fame-btn" class="secondary-btn">🏛️ Hall of Fame</button>
                 </div>
+                
+                <!-- Run Seed Section -->
+                <div id="seed-section" class="seed-section">
+                    <h3>🎲 Run Seed (Optional)</h3>
+                    <p class="seed-help">Enter a seed for a reproducible run, or leave blank for random.</p>
+                    <div class="seed-input-row">
+                        <input type="text" id="run-seed-input" placeholder="e.g., ABCD12" maxlength="8">
+                        <button id="random-seed-btn" class="secondary-btn">🎲 Random</button>
+                    </div>
+                    <div id="seed-info" class="seed-info"></div>
+                </div>
             </div>
 
             <!-- Main Game Screen -->
@@ -213,10 +224,11 @@
     <script src="moves-data.js?v=26"></script>
     <script src="learnsets-data.js?v=26"></script>
     <script src="tm-data.js?v=26"></script>
+    <script src="seeded-rng.js?v=1"></script>
     <script src="meta-progression.js?v=1"></script>
     <script src="audio.js?v=26"></script>
     <script src="championship-tournament.js"></script>
     <script src="battle-adapter.bundle.iife.js?v=2"></script>
-    <script src="game.js?v=28"></script>
+    <script src="game.js?v=29"></script>
 </body>
 </html>

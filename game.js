@@ -835,6 +835,10 @@ class Game {
         this.badgesNeeded = 8;
         this.selectedStarter = null;
 
+        // Seed for reproducible runs
+        this.seed = null;
+        this.rng = null;
+
         // Battle state
         this.battleEnemy = null;
         this.battleEnemyTeam = [];
@@ -953,6 +957,7 @@ class Game {
             towerWins: this.towerWins,
             e4Progress: this.e4Progress,
             inE4: this.inE4,
+            seed: this.seed, // Save the seed for reproducibility
             gymLeaders: GYM_LEADERS.map(g => ({ name: g.name, type: g.type, badge: g.badge, earlyTeam: g.earlyTeam, lateTeam: g.lateTeam, region: g.region, level: g.level })),
             eliteFour: this.eliteFour,
             champion: this.champion,
@@ -997,6 +1002,13 @@ class Game {
             this.towerWins = data.towerWins || 0;
             this.e4Progress = data.e4Progress || 0;
             this.inE4 = data.inE4 || false;
+            
+            // Restore seed and RNG
+            this.seed = data.seed;
+            if (this.seed) {
+                this.rng = new SeededRNG(this.seed);
+                console.log(`Restored run with seed: ${this.seed}`);
+            }
             // Restore shuffled leaders from save so refresh doesn't reshuffle
             if (data.gymLeaders && data.gymLeaders.length === 8) {
                 GYM_LEADERS.length = 0;
@@ -1058,6 +1070,33 @@ class Game {
         document.getElementById('difficulty').addEventListener('change', (e) => {
             this.difficulty = e.target.value;
         });
+
+        // Seed input handling
+        const seedInput = document.getElementById('run-seed-input');
+        const randomSeedBtn = document.getElementById('random-seed-btn');
+        const seedInfo = document.getElementById('seed-info');
+        
+        if (seedInput) {
+            seedInput.addEventListener('input', (e) => {
+                const value = e.target.value.trim().toUpperCase();
+                if (value) {
+                    seedInfo.textContent = `Seed: ${value} — Run will be reproducible`;
+                    seedInfo.classList.add('active');
+                } else {
+                    seedInfo.textContent = 'Random seed will be generated';
+                    seedInfo.classList.remove('active');
+                }
+            });
+        }
+        
+        if (randomSeedBtn && seedInput) {
+            randomSeedBtn.addEventListener('click', () => {
+                const newSeed = SeededRNG.generateSeed();
+                seedInput.value = newSeed;
+                seedInfo.textContent = `Seed: ${newSeed} — Run will be reproducible`;
+                seedInfo.classList.add('active');
+            });
+        }
 
         document.querySelector('.close-btn').addEventListener('click', () => {
             document.getElementById('modal').classList.add('hidden');
@@ -1331,6 +1370,14 @@ class Game {
     startGame() {
         this.deleteSave();
 
+        // Get seed from input or generate random
+        const seedInput = document.getElementById('run-seed-input');
+        this.seed = seedInput?.value?.trim()?.toUpperCase() || SeededRNG.generateSeed();
+        this.rng = new SeededRNG(this.seed);
+        
+        // Display seed info
+        console.log(`Starting run with seed: ${this.seed}`);
+
         // Reset all state
         this.achievements = new Set();
         this.catches = 0;
@@ -1344,7 +1391,11 @@ class Game {
         this.postGame = false;
         this.towerWins = 0;
         this.lastRivalBadge = 0;
-        this.rivalName = RIVAL_NAMES[Math.floor(Math.random() * RIVAL_NAMES.length)];
+        
+        // Use seeded RNG for rival name if available
+        this.rivalName = this.rng ? 
+            RIVAL_NAMES[this.rng.randomInt(0, RIVAL_NAMES.length - 1)] :
+            RIVAL_NAMES[Math.floor(Math.random() * RIVAL_NAMES.length)];
 
         // Shuffle gym leaders, E4, and champion for this run
         // Reassign the global GYM_LEADERS so rest of code picks it up

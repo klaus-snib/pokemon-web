@@ -1926,3 +1926,61 @@ letter-spacing: 0.5px;
     position: relative;
     z-index: 1;
 }
+
+/* Run Seed Section */
+.seed-section {
+    background: var(--bg-dark);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1rem;
+    border: 2px solid var(--bg-light);
+}
+
+.seed-section h3 {
+    color: var(--warning);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.seed-help {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.seed-input-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#run-seed-input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    background: var(--bg-light);
+    border: 2px solid var(--bg-light);
+    color: var(--text);
+    font-family: monospace;
+    font-size: 1rem;
+    text-transform: uppercase;
+}
+
+#run-seed-input:focus {
+    border-color: var(--warning);
+    outline: none;
+}
+
+#random-seed-btn {
+    white-space: nowrap;
+}
+
+.seed-info {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    min-height: 1.2rem;
+}
+
+.seed-info.active {
+    color: var(--success);
+}
