@@ -38,6 +38,27 @@
                         <option value="nightmare">Nightmare — $0, 1 life, 22 events, 8 badges</option>
                     </select>
                 </div>
+                
+                <!-- Meta-Progression Section -->
+                <div id="meta-progression-section" class="meta-section">
+                    <h3>🌟 Meta-Progression</h3>
+                    <div id="meta-stats">
+                        <span id="meta-shinies">✨ 0 Shinies</span>
+                        <span id="meta-ascension">🏆 Ascension 0</span>
+                        <span id="meta-runs">📊 0 Runs</span>
+                    </div>
+                    
+                    <div id="ascension-selection">
+                        <label>Ascension Level:</label>
+                        <select id="ascension-level">
+                            <option value="0">Ascension 0 — No modifiers</option>
+                        </select>
+                        <div id="ascension-modifiers"></div>
+                    </div>
+                    
+                    <button id="meta-shop-btn" class="primary-btn">🛒 Meta Shop</button>
+                    <button id="hall-of-fame-btn" class="secondary-btn">🏛️ Hall of Fame</button>
+                </div>
             </div>
 
             <!-- Main Game Screen -->
@@ -114,6 +135,37 @@
         </div>
     </div>
 
+    <!-- Meta Shop Modal -->
+    <div id="meta-shop-modal" class="modal hidden">
+        <div class="modal-content meta-shop">
+            <h2>🛒 Meta Shop</h2>
+            <div id="meta-shop-shinies">✨ 0 Shinies</div>
+            <div class="shop-tabs">
+                <button class="shop-tab active" data-tab="starters">Starters</button>
+                <button class="shop-tab" data-tab="items">Items</button>
+                <button class="shop-tab" data-tab="money">Money</button>
+                <button class="shop-tab" data-tab="upgrades">Upgrades</button>
+            </div>
+            <div id="shop-starters" class="shop-panel active">
+                <h3>Unlock New Starters</h3>
+                <div id="shop-starters-list" class="shop-grid"></div>
+            </div>
+            <div id="shop-items" class="shop-panel hidden">
+                <h3>Starting Items</h3>
+                <div id="shop-items-list" class="shop-grid"></div>
+            </div>
+            <div id="shop-money" class="shop-panel hidden">
+                <h3>Starting Money Bonuses</h3>
+                <div id="shop-money-list" class="shop-grid"></div>
+            </div>
+            <div id="shop-upgrades" class="shop-panel hidden">
+                <h3>Permanent Upgrades</h3>
+                <div id="shop-upgrades-list" class="shop-grid"></div>
+            </div>
+            <button id="close-meta-shop" class="close-btn">Close</button>
+        </div>
+    </div>
+
     <!-- Dev Menu Modal -->
     <div id="dev-modal" class="modal hidden">
         <div class="modal-content dev-modal-content">
@@ -161,9 +213,10 @@
     <script src="moves-data.js?v=26"></script>
     <script src="learnsets-data.js?v=26"></script>
     <script src="tm-data.js?v=26"></script>
+    <script src="meta-progression.js?v=1"></script>
     <script src="audio.js?v=26"></script>
     <script src="championship-tournament.js"></script>
     <script src="battle-adapter.bundle.iife.js?v=2"></script>
-    <script src="game.js?v=27"></script>
+    <script src="game.js?v=28"></script>
 </body>
 </html>

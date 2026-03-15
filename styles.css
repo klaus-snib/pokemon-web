@@ -1719,3 +1719,210 @@ letter-spacing: 0.5px;
 .hidden {
     display: none !important;
 }
+/* Meta-Progression Styles */
+.meta-section {
+    background: var(--bg-dark);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1rem;
+    border: 2px solid var(--accent);
+}
+
+.meta-section h3 {
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+#meta-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+#meta-stats span {
+    background: var(--bg-light);
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+}
+
+#ascension-selection {
+    margin: 1rem 0;
+}
+
+#ascension-selection label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+#ascension-selection select {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 8px;
+    background: var(--bg-light);
+    color: var(--text);
+    border: 1px solid var(--accent);
+}
+
+#ascension-modifiers {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+#ascension-modifiers .modifier {
+    padding: 0.25rem 0;
+    border-bottom: 1px solid var(--bg-light);
+}
+
+#ascension-modifiers .modifier:last-child {
+    border-bottom: none;
+}
+
+#meta-shop-btn, #hall-of-fame-btn {
+    margin: 0.5rem 0.25rem;
+}
+
+/* Meta Shop Modal */
+.meta-shop {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+#meta-shop-shinies {
+    text-align: center;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: linear-gradient(90deg, var(--bg-light), var(--bg-medium));
+    border-radius: 8px;
+}
+
+.shop-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.shop-tab {
+    flex: 1;
+    min-width: 80px;
+    padding: 0.5rem;
+    background: var(--bg-light);
+    border: 2px solid transparent;
+    border-radius: 8px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.shop-tab:hover {
+    background: var(--accent);
+}
+
+.shop-tab.active {
+    border-color: var(--accent);
+    background: var(--bg-dark);
+}
+
+.shop-panel {
+    display: none;
+}
+
+.shop-panel.active {
+    display: block;
+}
+
+.shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.shop-item {
+    background: var(--bg-light);
+    border-radius: 8px;
+    padding: 0.75rem;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.shop-item:hover {
+    border-color: var(--accent);
+}
+
+.shop-item.owned {
+    opacity: 0.6;
+    border-color: var(--success);
+}
+
+.shop-item.maxed {
+    opacity: 0.4;
+    border-color: var(--warning);
+}
+
+.shop-item h4 {
+    color: var(--accent-light);
+    margin-bottom: 0.25rem;
+}
+
+.shop-item .description {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.shop-item .cost {
+    font-weight: bold;
+    color: var(--warning);
+}
+
+.shop-item button {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.4rem;
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.shop-item button:hover:not(:disabled) {
+    background: var(--accent-light);
+}
+
+.shop-item button:disabled {
+    background: var(--bg-dark);
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+.shop-item.owned button {
+    background: var(--success);
+}
+
+/* Meta Rewards Display */
+.meta-rewards {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Starter unlock indicator */
+.starter-option {
+    position: relative;
+}
+
+.starter-option .name {
+    position: relative;
+    z-index: 1;
+}

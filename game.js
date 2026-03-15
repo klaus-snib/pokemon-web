@@ -1049,6 +1049,7 @@ class Game {
 
     // ===== INIT =====
     init() {
+        this.initMetaProgression();
         this.renderStartScreen();
         this.bindEvents();
     }
@@ -1254,9 +1255,16 @@ class Game {
         const grid = document.getElementById('starter-selection');
         grid.innerHTML = '';
 
-        // Get 3 random starters
-        const starterPool = typeof getRandomStarterPool === 'function' ?
+        // Get available starters including unlocked ones
+        const baseStarters = typeof getRandomStarterPool === 'function' ?
             getRandomStarterPool(3) : STARTERS.slice(0, 3);
+        
+        // Add unlocked starters to the pool
+        const unlockedStarters = this.meta ? this.getUnlockedStarters() : [];
+        const allStarters = [...new Set([...baseStarters, ...unlockedStarters])];
+        
+        // Shuffle and take up to 6
+        const starterPool = allStarters.sort(() => Math.random() - 0.5).slice(0, 6);
 
         starterPool.forEach(id => {
             const pokemon = POKEMON_DATA[id];
@@ -1267,10 +1275,15 @@ class Game {
             const typeBadges = pokemon.type2 ? 
                 `<span class="type-badge type-bg-${pokemon.type.toLowerCase()}">${pokemon.type}</span><span class="type-badge type-bg-${pokemon.type2.toLowerCase()}">${pokemon.type2}</span>` :
                 `<span class="type-badge type-bg-${pokemon.type.toLowerCase()}">${pokemon.type}</span>`;
+            
+            // Show unlock indicator for unlocked starters
+            const unlockIndicator = unlockedStarters.includes(id) ? '<span style="position:absolute;top:4px;right:4px;font-size:1.2rem">🔓</span>' : '';
+            
             div.innerHTML = `
                 <img src="${getSpriteUrl(id)}" alt="${pokemon.name}">
                 <span class="name">${pokemon.name}</span>
                 ${typeBadges}
+                ${unlockIndicator}
             `;
             div.addEventListener('click', () => this.selectStarter(id));
             grid.appendChild(div);
@@ -1350,6 +1363,9 @@ class Game {
         this.maxStrikes = settings.strikes;
         this.badgesNeeded = settings.badgesNeeded;
         this.maxEvents = settings.maxEvents || 35;
+
+        // Apply meta-progression unlocks
+        this.applyMetaUnlocks();
 
         // Initialize bag
         this.bag = {};
@@ -4744,6 +4760,18 @@ class Game {
             ${e4Html ? `<h4 style="margin-top:0.5rem">Elite Four</h4><div class="gym-lineup">${e4Html} ${champHtml}</div>` : ''}
         `;
 
+        // Award meta rewards
+        const earnedShinies = this.awardMetaRewards(true);
+        const metaDiv = document.createElement('div');
+        metaDiv.className = 'meta-rewards';
+        metaDiv.style.cssText = 'margin-top:1rem;padding:1rem;background:linear-gradient(90deg,var(--bg-light),var(--bg-medium));border-radius:8px;border:2px solid var(--accent);';
+        metaDiv.innerHTML = `
+            <h3>🌟 Meta Rewards</h3>
+            <p>You earned <strong>${earnedShinies} Shinies</strong>!</p>
+            <p style="font-size:0.85rem;color:var(--text-muted)">Total: ${this.meta.shinies} Shinies | Ascension ${this.meta.maxAscensionBeaten} Unlocked</p>
+        `;
+        document.getElementById('run-stats').appendChild(metaDiv);
+
         // Add continue exploring button
         const continueBtn = document.createElement('button');
         continueBtn.id = 'continue-postgame-btn';
@@ -4831,6 +4859,20 @@ class Game {
             <h4 style="margin-top:1rem">Gym Leaders</h4>
             <div class="gym-lineup">${goGymHtml}</div>
         `;
+
+        // Award meta rewards (even for defeat, though fewer)
+        const earnedShinies = this.awardMetaRewards(false);
+        if (earnedShinies > 0) {
+            const metaDiv = document.createElement('div');
+            metaDiv.className = 'meta-rewards';
+            metaDiv.style.cssText = 'margin-top:1rem;padding:1rem;background:linear-gradient(90deg,var(--bg-light),var(--bg-medium));border-radius:8px;border:2px solid var(--warning);';
+            metaDiv.innerHTML = `
+                <h3>🌟 Meta Rewards</h3>
+                <p>You earned <strong>${earnedShinies} Shinies</strong> for your efforts!</p>
+                <p style="font-size:0.85rem;color:var(--text-muted)">Total: ${this.meta.shinies} Shinies</p>
+            `;
+            document.getElementById('run-stats').appendChild(metaDiv);
+        }
     }
 
     restart() {
@@ -5000,6 +5042,228 @@ class Game {
         this.addMessage(`${pokemon.displayName} learned ${tm.name}!`, 'success');
         this.saveGame();
         this.updateUI();
+    }
+
+    // Initialize meta-progression on game start
+    initMetaProgression() {
+        this.meta = new MetaProgression();
+        this.updateMetaDisplay();
+        this.setupMetaShop();
+    }
+
+    // Update meta stats display on start screen
+    updateMetaDisplay() {
+        const shiniesEl = document.getElementById('meta-shinies');
+        const ascensionEl = document.getElementById('meta-ascension');
+        const runsEl = document.getElementById('meta-runs');
+        
+        if (shiniesEl) shiniesEl.textContent = `✨ ${this.meta.shinies} Shinies`;
+        if (ascensionEl) ascensionEl.textContent = `🏆 Ascension ${this.meta.maxAscensionBeaten}`;
+        if (runsEl) runsEl.textContent = `📊 ${this.meta.totalRuns} Runs`;
+        
+        this.populateAscensionSelect();
+    }
+
+    // Populate ascension level dropdown
+    populateAscensionSelect() {
+        const select = document.getElementById('ascension-level');
+        if (!select) return;
+        
+        // Clear existing options except first
+        while (select.options.length > 1) {
+            select.remove(1);
+        }
+        
+        // Add available ascension levels
+        for (let i = 1; i <= this.meta.ascensionLevel; i++) {
+            const modifier = ASCENSION_MODIFIERS[i];
+            if (modifier) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Ascension ${i} — ${modifier.name}`;
+                select.appendChild(option);
+            }
+        }
+        
+        // Show modifiers on change
+        select.addEventListener('change', () => {
+            this.showAscensionModifiers(parseInt(select.value));
+        });
+    }
+
+    // Display ascension modifiers
+    showAscensionModifiers(level) {
+        const container = document.getElementById('ascension-modifiers');
+        if (!container) return;
+        
+        const modifiers = this.meta.getAscensionModifiers(level);
+        if (modifiers.length === 0) {
+            container.innerHTML = '<p>No modifiers at this level.</p>';
+            return;
+        }
+        
+        container.innerHTML = modifiers.map(m => 
+            `<div class="modifier"><strong>${m.name}:</strong> ${m.description}</div>`
+        ).join('');
+    }
+
+    // Setup meta shop UI
+    setupMetaShop() {
+        const shopBtn = document.getElementById('meta-shop-btn');
+        const closeBtn = document.getElementById('close-meta-shop');
+        const modal = document.getElementById('meta-shop-modal');
+        
+        if (shopBtn) {
+            shopBtn.addEventListener('click', () => {
+                this.openMetaShop();
+            });
+        }
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+        }
+        
+        // Tab switching
+        document.querySelectorAll('.shop-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.shop-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.shop-panel').forEach(p => p.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(`shop-${tab.dataset.tab}`).classList.add('active');
+            });
+        });
+    }
+
+    // Open meta shop
+    openMetaShop() {
+        const modal = document.getElementById('meta-shop-modal');
+        const shiniesEl = document.getElementById('meta-shop-shinies');
+        
+        if (shiniesEl) shiniesEl.textContent = `✨ ${this.meta.shinies} Shinies`;
+        
+        this.populateShopItems('starters');
+        this.populateShopItems('items');
+        this.populateShopItems('money');
+        this.populateShopItems('upgrades');
+        
+        modal.classList.remove('hidden');
+    }
+
+    // Populate shop items for a category
+    populateShopItems(category) {
+        const container = document.getElementById(`shop-${category}-list`);
+        if (!container) return;
+        
+        container.innerHTML = '';
+        const items = META_UNLOCKS[category];
+        
+        for (const [key, item] of Object.entries(items)) {
+            const isOwned = this.meta.unlocks[category].has(key);
+            const currentLevel = this.meta.upgradeLevels[key] || 0;
+            const isMaxed = item.maxLevel && currentLevel >= item.maxLevel;
+            const cost = item.cost * (currentLevel + 1);
+            const canAfford = this.meta.shinies >= cost;
+            
+            const div = document.createElement('div');
+            div.className = `shop-item ${isOwned ? 'owned' : ''} ${isMaxed ? 'maxed' : ''}`;
+            
+            let buttonText = isMaxed ? 'Maxed' : (isOwned && !item.maxLevel ? 'Owned' : `Buy (${cost} ✨)`);
+            if (item.maxLevel && !isMaxed) {
+                buttonText = `Upgrade (${cost} ✨) — Level ${currentLevel}/${item.maxLevel}`;
+            }
+            
+            div.innerHTML = `
+                <h4>${item.name}</h4>
+                <p class="description">${item.description}</p>
+                <button ${(!canAfford || isMaxed) ? 'disabled' : ''}>${buttonText}</button>
+            `;
+            
+            const button = div.querySelector('button');
+            if (!isMaxed && canAfford) {
+                button.addEventListener('click', () => {
+                    const result = this.meta.purchaseUnlock(category, key);
+                    if (result.success) {
+                        this.addMessage(result.message, 'success');
+                        this.openMetaShop(); // Refresh
+                        this.updateMetaDisplay();
+                    } else {
+                        this.addMessage(result.message, 'error');
+                    }
+                });
+            }
+            
+            container.appendChild(div);
+        }
+    }
+
+    // Award meta rewards on game over
+    awardMetaRewards(victory) {
+        const runData = {
+            victory: victory,
+            difficulty: this.difficulty,
+            badges: this.badges,
+            catches: this.catches,
+            newAchievements: 0,
+            strikesUsed: this.maxStrikes - this.strikes,
+            duration: Date.now() - this.startTime,
+            ascensionLevel: this.currentAscension || 0
+        };
+        
+        const earned = this.meta.awardShinies(runData);
+        return earned;
+    }
+
+    // Apply meta unlocks at game start
+    applyMetaUnlocks() {
+        // Apply starting money bonus
+        const moneyBonus = this.meta.getStartingMoneyBonus();
+        if (moneyBonus > 0) {
+            this.money += moneyBonus;
+        }
+        
+        // Apply starting items
+        const startingItems = this.meta.getStartingItems();
+        for (const { item, quantity } of startingItems) {
+            this.bag[item] = (this.bag[item] || 0) + quantity;
+        }
+        
+        // Apply extra strikes upgrade
+        const upgradeEffects = this.meta.getUpgradeEffects();
+        this.maxStrikes += upgradeEffects.extraStrikes;
+        this.strikes = this.maxStrikes;
+        
+        // Apply ascension modifiers
+        this.applyAscensionModifiers();
+    }
+
+    // Apply ascension modifiers for current run
+    applyAscensionModifiers() {
+        const ascensionLevel = parseInt(document.getElementById('ascension-level')?.value || 0);
+        this.currentAscension = ascensionLevel;
+        
+        if (ascensionLevel <= 0) return;
+        
+        const modifiers = this.meta.getAscensionModifiers(ascensionLevel);
+        this.ascensionModifiers = modifiers;
+        
+        // Apply effects
+        for (const mod of modifiers) {
+            switch (mod.effect) {
+                case 'startStrikes':
+                    this.maxStrikes = Math.min(mod.value, this.maxStrikes);
+                    this.strikes = this.maxStrikes;
+                    break;
+            }
+        }
+    }
+
+    // Get unlocked starters for display
+    getUnlockedStarters() {
+        const baseStarters = ['bulbasaur', 'charmander', 'squirtle', 'pikachu'];
+        const unlocked = this.meta.getUnlockedStarters();
+        return [...baseStarters, ...unlocked.map(u => u.speciesId)];
     }
 }
 
